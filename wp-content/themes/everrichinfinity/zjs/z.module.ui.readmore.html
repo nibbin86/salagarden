@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>zjs UI - readmore</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	
+	<script type="text/javascript" src="z.js" data-debug="true"></script>
+	<script>
+		zjs.onready('ui.readmore, codeeditor', function(){
+			console.log('readmore module is ready to use!');
+		});
+	</script>
+	
+	<style>
+	body{font-family:arial,tahomal;padding:0;margin:0;font-size:24px;line-height:1.4;color:#444;background:#e9e8e8;}
+	.wrapper{width:80%;margin:0 auto;padding:50px 10px;background: #fff;box-shadow: 0 0 8px -3px #000;}
+	.your_custom_class_name{
+		font-size: 20px;
+		line-height: 1.4em;
+	}
+	.your_custom_class_name a{
+		color: blue;
+		cursor: pointer;
+	}
+	</style>
+	
+</head>
+<body>
+	
+	<div class="wrapper">
+		
+		<h3>This module provide an easy way to add "readmore" link to long content (support responve)</h3>
+
+		<textarea class="zcodeeditor" data-option="readOnly:true">
+<div 
+	class="zreadmore your_custom_class_name" 
+	data-option="handlerMethod: 'max-line', max: 8"
+>
+Lorem ipsum dolor sit amet, do eiusmod et <strong>dolore magna aliqua.</strong> <u>Ut enim ad minim veniam, quis nostrud <i>exercitation ullamco laboris nisi ut aliquip</i> ex ea commodo consequat</u>. Duis aute irure <a href="#">dolor in reprehenderit esse cillum dolore</a> eu fugiat nulla pariatur. <p>Excepteur sint occaecat cupidatat, Ut enim ad minim veniam, sed do eiusmod tempor incididunt.</p> incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+<a class="zreadmorelink">Read more</a>
+</div></textarea>
+		<br/>
+
+		<div class="zreadmore your_custom_class_name" data-option="handlerMethod: 'max-line', max: 8">
+			Lorem ipsum dolor sit amet, do eiusmod et <strong>dolore magna aliqua.</strong> <u>Ut enim ad minim veniam, quis nostrud <i>exercitation ullamco laboris nisi ut aliquip</i> ex ea commodo consequat</u>. Duis aute irure <a href="#">dolor in reprehenderit esse cillum dolore</a> eu fugiat nulla pariatur. <p>Excepteur sint occaecat cupidatat, Ut enim ad minim veniam, sed do eiusmod tempor incididunt.</p> incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+			<a class="zreadmorelink">Read more</a>
+		</div>
+
+
+	</div>
+	
+</body>
+</html>

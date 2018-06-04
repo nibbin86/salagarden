@@ -1,0 +1,6 @@
+.zui-toc{}
+.zui-toc li ul{display:none;}
+.zui-toc li.active>ul,
+.zui-toc li.pre-active>ul{display:block;}
+.zui-toc .active>a,
+.zui-toc .pre-active>.zui-toc-link{font-weight:bold;}

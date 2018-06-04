@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>ZJS UI - selectbox - Zepto support</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	
+	<script type="text/javascript" src="zepto.js"></script>
+	<script type="text/javascript" src="z.zepto.js"></script>
+	<script type="text/javascript" src="z.module.scrollbar.js"></script>
+
+	<script type="text/javascript" src="z.module.ui.button.js"></script>
+	<script type="text/javascript" src="z.module.ui.selectbox.js"></script>
+
+	<script>
+		$(function(){
+			
+			window.handlerEvent = function(event){
+				console.log('ui:selectbox:clickchange:', event.getData());
+				console.log('ui:selectbox:change:', event.getData());
+				console.log('original value:', $(this).getValue(''));
+				
+				alert('change: '+$(this).getValue());
+			};
+			
+			$('select[name=selectevent1]').on('ui:selectbox:change', handlerEvent);
+			
+		});
+	</script>
+	
+	<style>
+	body{font-family:arial,tahomal;padding:0;margin:0;font-size:14px;line-height:1.4;color:#444;background:#fff;}
+	.wrapper{width:900px;margin:0 auto;padding:50px 0;}
+
+	/* demo for render image inside selectbox */
+	.image-selectbox{
+		width: 300px;
+	}
+	.image-selectbox .zui-selectbox__button-wrap .zui-button{
+		height: auto;
+		padding: 5px 10px;
+	}
+	.image-selectbox .zui-selectbox__button-wrap .zui-button img{
+		width: 40px;
+	}
+	.image-selectbox .zui-selectbox__item{
+		height: auto;
+		padding: 5px 10px;
+	}
+	.image-selectbox .zui-selectbox__item img{
+		width: 40px;
+	}
+	</style>
+
+	<link rel="stylesheet" type="text/css" href="z.module.scrollbar.css" />
+	<link rel="stylesheet" type="text/css" href="z.module.ui.button.css" />
+	<link rel="stylesheet" type="text/css" href="z.module.ui.selectbox.css" />
+	
+</head>
+<body>
+	<form class="wrapper">
+	
+		<h3>normal selectbox with group</h3>
+		
+		<select name="collation" class="zselectbox">
+	
+			<option value="">(collation)</option>
+		
+			<optgroup label="armscii8">
+				<option>armscii8_bin</option>
+				<option>armscii8_general_ci</option>
+			</optgroup>
+		
+			<optgroup label="ascii">
+				<option selected>ascii_bin</option>
+				<option>ascii_general_ci</option>
+			</optgroup>
+		
+			<optgroup>
+				<option>utf8_bin</option>
+				<option>utf8_croatian_ci</option>
+				<option>utf8_czech_cs</option>
+				<option>utf8_general_ci</option>
+				<option>utf8_polish_ci</option>
+			</optgroup>
+		
+		</select>
+	
+		<select name="collation2" class="zselectbox-">
+	
+			<option value="">(collation)</option>
+		
+			<optgroup label="armscii8">
+				<option>armscii8_bin</option>
+				<option>armscii8_general_ci</option>
+			</optgroup>
+		
+		</select>
+	
+		<br/>
+		<br/>
+		
+		<select name="collation3" class="zselectbox">
+	
+			<option value="">(collation)</option>
+		
+			<optgroup label="armscii8">
+				<option>armscii8_bin</option>
+				<option>armscii8_general_ci</option>
+			</optgroup>
+		
+		</select>
+		
+		
+		<h3>selectbox with link</h3>
+		
+		<select name="collation4" class="zselectbox">
+	
+			<option data-href="#google">Google</option>
+			<option data-href="#april">April</option>
+			<option data-href="#yahoo">Yahoo</option>
+		
+		</select>
+		
+		
+		<h3>selectbox with disabled item</h3>
+		
+		<select name="collation5" class="zselectbox">
+	
+			<option disabled>draff</option>
+	
+			<optgroup label="armscii8">
+				<option>armscii8_bin</option>
+				<option>armscii8_general_ci</option>
+			</optgroup>
+			
+			<option disabled>armscii8_bin</option>
+			
+			<option>armscii8_bin</option>
+		
+		</select>
+
+
+		<h3>Custom template</h3>
+
+		<select class="zselectbox" data-option="
+				width: false,
+				customCssClass: 'image-selectbox',
+				itemtemplate: '<img src=\'${image}\' /> <b>${value}</b>. ${text}'
+			">
+
+			<optgroup label="You can set a template to render option data">
+
+				<option value="1" data-image="https://image.flaticon.com/icons/png/128/164/164826.png">option 1</option>
+
+				<option value="2" data-image="http://thammyvienngocdung.com/media/upload/images/flower%20icon.png">option 2</option>
+
+				<option value="3" data-image="http://www.iconsfind.com/wp-content/uploads/2013/11/20131108_527ce72064507.png">option 3</option>
+
+			</optgroup>
+
+			<optgroup label="you even can add different custom html for each option">
+
+				<option value="5" data-html="OPTION <b>FOUR</b>">option 4</option>
+				<option value="6" data-html="option <u>Five</u>">option 5</option>
+
+			</optgroup>
+
+		</select>
+		
+		
+		<h2>Events</h2>
+		
+		<h3>ui.selectbox.change</h3>
+		
+		<select name="selectevent1" class="zselectbox" data-option="itemtemplate:'${text} - <b>${value}</b>'">
+			<option value="1">option one</option>
+			<option value="2">option two</option>
+			<option value="3">option three</option>
+			<option value="4">option four</option>
+		</select>
+		
+		
+		<h3>inline html attribute "onchange"</h3>
+		
+		<select class="zselectbox" onchange="handlerEvent" data-option="itemtemplate:'${text} - <b>${value}</b>'">
+			<option value="5">option five</option>
+			<option value="6">option six</option>
+			<option value="7">option seven</option>
+			<option value="8">option eight</option>
+		</select>
+		
+		
+
+	</form>
+</body>
+</html>
