@@ -4,11 +4,11 @@
 <head>
 	<title>Demo z.module.scroll - zjs</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<script type="text/javascript" src="z.js" data-debug="true"></script>
+	<script type="text/javascript" src="z.min.js" data-debug="true"></script>
 	<script>
 		zjs.onready('scrollbar', function(){
-			zjs('.zscroll').on('scrollbar:scroll', function(event, element){
-				console.log('scrolltop: ' + event.getData().scrollTop);
+			zjs('.zscroll').on('scrollbar.scroll', function(event, element){
+				//console.log('scrolltop: ' + event.data.scrollTop);
 			});
 		})
 	</script>

@@ -14,9 +14,6 @@
 .imageslider-linear.fullwidth .image-view .image-view-wrap .image-hold-temp{background-size:cover;}
 .imageslider-linear.fullwidth .image-view .image-view-border{width:100%;height:100%;box-sizing:border-box;}
 
-/* disable slider */
-.imageslider-linear.slider-disabled .imageslider-wrap{height: 0 !important;overflow: hidden !important;pointer-events: none !important;transform: scaleY(0) !important;}
-
 .image-linkcover-wrap{position:absolute;top:0;left:0;width:100%;height:100%;}
 .image-linkcover-wrap a{display:block;width:100%;height:100%;}
 

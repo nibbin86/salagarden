@@ -1,4 +1,4 @@
-zjs.onready('parallax, ui.freezepanel, image.slider.theme.linear, bin.scrollto, ui.tabpanel', function(){
+zjs.onready('parallax, scrollbar, ui.freezepanel, image.slider.theme.linear, bin.scrollto, ui.tabpanel', function(){
 	
 	var menu_services = ['Tư vấn và tổ chức tang lễ', 'Hoả táng và lưu giữ tro cốt', 'Dịch vụ chăm sóc phần mộ', 'Tổ chức nghi lễ, sự kiện tâm linh'];
 	var galleryService = new Swiper('#Services .gallery-services', {

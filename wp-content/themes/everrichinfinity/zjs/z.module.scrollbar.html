@@ -9,8 +9,8 @@
 		zjs.require('scrollbar', function(){
 			if(zjs.isTouchDevice())alert('touch device');
 			zjs.onready(function(){
-				zjs('.zscroll').on('scrollbar:scroll', function(event, element){
-					console.log('scrolltop: ' + event.getData().scrollTop);
+				zjs('.zscroll').on('scrollbar.scroll', function(event, element){
+					//console.log('scrolltop: ' + event.data.scrollTop);
 				});
 			});
 		})

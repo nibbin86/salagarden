@@ -11,10 +11,8 @@
 .zui-tabpanel-content-wrapper{position:relative;}
 .zui-tabpanel-content{position:absolute;visibility:hidden;opacity:0;width:100%;}
 .zui-tabpanel-content.zui-active{visibility:visible;opacity:1;}
-.zui-tabpanel-content.zui-deactive{height:0px !important;visibility:hidden !important;}
-.zui-tabpanel-content.zui-deactive *{margin:0 !important;}
 
 .zui-tabpanel-autoheight{}
 .zui-tabpanel-autoheight .zui-tabpanel-content-wrapper{height:auto;}
-.zui-tabpanel-autoheight .zui-tabpanel-content{position:relative;}
-.zui-tabpanel-autoheight .zui-tabpanel-content.zui-active{}
+.zui-tabpanel-autoheight .zui-tabpanel-content{position:relative;display:none;}
+.zui-tabpanel-autoheight .zui-tabpanel-content.zui-active{display:block;}

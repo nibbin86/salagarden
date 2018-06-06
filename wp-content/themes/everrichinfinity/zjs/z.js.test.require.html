@@ -5,14 +5,8 @@
 		<title>test zjs require</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		
-		<script type="text/javascript" src="./z.js" data-debug="true" data-auto-load-js="false" data-load-css="false"></script>
-
-		<!-- <script>zjs.requireOption.autoLoadJs = false;</script> -->
-		<script type="text/javascript" src="./z.module.ui.js" data-debug="true"></script>
-		<script type="text/javascript" src="./z.module.ui.button.js" data-debug="true"></script>
-		<script type="text/javascript" src="./z.module.ui.button.file.js" data-debug="true"></script>
-
-		<script>zjs.onready('ui.button.file', function(){
+		<script type="text/javascript" src="./z.js" data-debug="true"></script>
+		<script>zjs.require('ui.*', function(){
 			
 			zjs(document.body).setStyle('background', 'blue');
 			
@@ -21,6 +15,6 @@
 	</head>
 	
 	<body>
-		<a class="zbutton">zbutton</a>
+		
 	</body>
 </html>

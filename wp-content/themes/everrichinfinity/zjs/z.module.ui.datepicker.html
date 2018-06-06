@@ -10,11 +10,11 @@
 		zjs.onready('ui.datepicker', function(){
 		
 			zjs('.zdatetimepicker, .zdatepicker')
-			.on('ui:datepicker:ready', function(event){
-				console.log('ui:datepicker:ready', this);
+			.on('ui.datepicker.ready', function(event){
+				console.log('ui.datepicker.ready', this);
 			})
-			.on('ui:datepicker:change', function(event){
-				console.log('ui:datepicker:change:', event.data);
+			.on('ui.datepicker.change', function(event){
+				console.log('ui.datepicker.change:', event.data);
 				console.log('original value:', this.getValue(''));
 			});
 			

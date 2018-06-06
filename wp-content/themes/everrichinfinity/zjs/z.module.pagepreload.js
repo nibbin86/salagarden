@@ -12,14 +12,8 @@ zjs.require('image.loader', function(){
 		domreadyMethod = zBody.getAttr('data-preload-domready-method', 'ready'),
 		customLoadingContainer = zBody.getAttr('data-preload-custom-loading-container', ''),
 		useCacheSecond = parseInt(zBody.getAttr('data-preload-cache-second', 0)),
-		useCacheBaseurl = zBody.getAttr('data-preload-cache-baseurl', ''),
-		autoRun = zBody.getAttr('data-preload-autorun', true);
+		useCacheBaseurl = zBody.getAttr('data-preload-cache-baseurl', '');
 	
-	// fix auto run option
-	if(autoRun !== 'true' || autoRun !== true){
-		autoRun = false;
-	}
-
 	if(useCacheBaseurl == '')
 		useCacheBaseurl = window.document.location.href;
 	
@@ -49,7 +43,7 @@ zjs.require('image.loader', function(){
 	// cho nen luon luon can phai 
 	// get list preload images
 	var preloadImages = [];
-	zjs('#zpagepreloadimages li').eachElement(function(liEl){
+	zjs('#zpagepreloadimages li').each(function(liEl){
 		preloadImages.push(zjs(liEl).getAttr('data-src'));
 	});
 
@@ -60,7 +54,7 @@ zjs.require('image.loader', function(){
 	
 	
 	// function thuc hien viec tao ra overlay va preload
-	var mainPreloadFunction = function(option){
+	var mainPreloadFunction = function(){
 	
 		// dau tien la se make 1 cai overlay
 		// (bug on IE)
@@ -103,7 +97,7 @@ zjs.require('image.loader', function(){
 				//zBody.removeClass('zpagepreload');
 				
 				// run trigger
-				zjs(window.document.body).trigger('pagepreload:done', {percent:100});
+				zjs(window.document.body).trigger('pagepreload.done', {percent:100});
 				
 			}).delay(200);
 			//zBody.removeClass('zpagepreload');
@@ -159,7 +153,7 @@ zjs.require('image.loader', function(){
 			zPagepreloadEl.removeSlow(1000);
 		
 			// run trigger
-			zBody.trigger('pagepreload:done', {percent:100});
+			zBody.trigger('pagepreload.done', {percent:100});
 		
 			// bay gio thi se set time vao cookie
 			var now = (new Date()).getTime();
@@ -168,36 +162,26 @@ zjs.require('image.loader', function(){
 	
 	
 		// run trigger
-		zBody.trigger('pagepreload:start', {percent:0});
+		zBody.trigger('pagepreload.start', {percent:0});
 	
 		// tien hanh preload image va call callback
-		// console.log('tien hanh chay: ', preloadImages);
-		var _loadingTextEl = zPagepreloadEl.find('.loading-text-percent');
-		var _loadingPercentEl = zPagepreloadEl.find('.loading-percent');
-		// auto force to use local cache on Cordova
-		var _options = zjs.extend({
+		zjs.loadImages({
 			images: preloadImages,
 			delay: 1400,
-			localCache: ((typeof cordova != 'undefined') && (typeof device != 'undefined') && device.platform != 'browser'),
 			onLoading: function(percent){
-				_loadingTextEl.html(percent.toString());
-				_loadingPercentEl.html('%');
+				zPagepreloadEl.find('.loading-text-percent').html(percent.toString());
+				zPagepreloadEl.find('.loading-percent').html('%');
 			
 				// run trigger
-				zBody.trigger('pagepreload:load', {percent:percent});
+				zBody.trigger('pagepreload.load', {percent:percent});
 			}, 
 			onFinish: function(){
 				readyImages = true;
 				if(readyDom)
 					removeOverlay();
 			}
-		}, option);
-
-		// console.log('option', JSON.stringify(_options));
-
-		// console.log('[PagePreload] localCache', localCache);
-		zjs.loadImages(_options);
-		// console.log('[PagePreload] end loadimages');
+		});
+	
 	
 		// kiem tra neu nhu body ma duoc gan scroll du
 		// thi se dung body
@@ -234,8 +218,8 @@ zjs.require('image.loader', function(){
 		
 		var domreadyFunction = function(){
 			// run trigger
-			zBody.trigger('pagepreload:cached', {percent:100});
-			zBody.trigger('pagepreload:done', {percent:100});
+			zBody.trigger('pagepreload.cached', {percent:100});
+			zBody.trigger('pagepreload.done', {percent:100});
 		
 			// bay gio thi se set time vao cookie
 			var now = (new Date()).getTime();
@@ -251,25 +235,10 @@ zjs.require('image.loader', function(){
 	};
 	
 	
-
-	// RUN IT AUTO?
 	// =========
-	if(autoRun){
-		// neu duoc thuc hien binh thuong thi ok
-		if(doItNormal)mainPreloadFunction();
-		else mainCacheFunction.delay(100);
-	}
-
-
-	zjs.extendCore({
-		pagepreloadAddImage: function(imageUrl){
-			// console.log('[zjs] pagepreloadAddImage', imageUrl);
-			preloadImages.push(imageUrl);
-		},
-		pagepreloadRun: function(){
-			mainPreloadFunction();
-		}
-	});
+	// neu duoc thuc hien binh thuong thi ok
+	if(doItNormal)mainPreloadFunction();
+	else mainCacheFunction.delay(100);
 	
 	
 	// ===============================

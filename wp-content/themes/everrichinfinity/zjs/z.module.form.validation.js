@@ -33,40 +33,7 @@
 			phonenumber: 'Not a phone number',
 			digits: 'Not a digits',
 			minlength: 'Value as least minlength',
-			repassword: 'The specified passwords do not match'
-		},
-		es:{
-			required: 'Se requiere campo',
-			email: 'No es un correo electrónico válido',
-			url: 'No es una URL válida',
-			date: 'No es una fecha válida',
-			number: 'No un número',
-			phonenumber: 'No es un número de teléfono',
-			digits: 'No un dígito',
-			minlength: 'Valor como mínimo minlength',
-			repassword: 'Las contraseñas especificadas no coinciden'
-		},
-		de:{
-			required: 'Feld ist erforderlich',
-			email: 'Keine gültige E-Mail',
-			url: 'Nicht eine gültige URL',
-			date: 'Nicht gültiges Datum',
-			number: 'Nicht eine Nummer',
-			phonenumber: 'Nicht eine Telefonnummer',
-			digits: 'Nicht eine Ziffern',
-			minlength: 'Wert so wenig minderlth',
-			repassword: 'Die eingegebenen Passwörter stimmen nicht überein'
-		},
-		it:{
-			required: 'Campo è richiesto',
-			email: 'Non è un\'e-mail valida',
-			url: 'Non un URL valido',
-			date: 'Non è una data valida',
-			number: 'non un numero',
-			phonenumber: 'Non un numero di telefono',
-			digits: 'Non una cifra',
-			minlength: 'Valore minima di lunghezza minima',
-			repassword: 'Le password specificate non corrispondono'
+			repassword: 'Password does not match'
 		},
 		vi:{
 			required: 'Còn thiếu thông tin này',
@@ -109,7 +76,6 @@
 			
 			// auto check right after blur
 			autoCheckWhenBlur: true,
-			autoCheckWhenInput: false,
 			
 			// Only show error on the first error-field
 			onlyone: false
@@ -117,9 +83,9 @@
 	});
 	
 	// trigger
-	//form:validation:success
-	//form:validation:failed
-	//form:validation:checking
+	//form.validation.success
+	//form.validation.failed
+	//form.validation.checking
 	
 	// template
 	var formclass = 'z-form-validation',
@@ -132,8 +98,7 @@
 	//[type=password], [type=file], select, textarea, [type=number], [type=search] ,[type=tel], 
 	//[type=url], [type=email], [type=datetime], [type=date], [type=month], [type=week], 
 	//[type=time], [type=datetime-local], [type=range], [type=color]
-	//var inputsQuery = 'input[type=text], input[type=email], input[type=password], input.zimagepicker, textarea, .'+option.radiogroupClass+', .'+option.checkboxClass;
-	var inputsQuery = '';
+	var inputsQuery = 'input[type=text], input[type=email], input[type=password], input.zimagepicker, textarea, .radiogroup, .checkbox';
 	
 	// - - - - - - - - -
 	
@@ -171,7 +136,6 @@
 			option = zjs.extend(option, useroption);
 		
 		// gio set them phan tips
-		if(!option.language in defaulttips)option.language = 'en';
 		option.tips = zjs.extend(defaulttips[option.language], option.tips);
 		
 		// fix option
@@ -183,9 +147,6 @@
 		
 		// save option
 		zForm.setData(optionkey, option);
-		
-		// set lai cai query
-		inputsQuery = 'input[type=text], input[type=email], input[type=password], input.zimagepicker, textarea, select, .'+option.radiogroupClass+', .'+option.checkboxClass;
 		
 		// - - -
 		// start coding your module
@@ -200,7 +161,7 @@
 			var currentZjsHookEnable = zjs.enablehook();
 			zjs.enablehook(false);
 			// bat dau man thoi
-			zForm.find(inputsQuery+', .'+option.customInputClass).eachElement(function(element){
+			zForm.find(inputsQuery+', .'+option.customInputClass).each(function(element){
 				var zInput = zjs(element);
 			
 				// xem coi neu nhu thang input nay la thang input dac biet thi thoi, ko ho tro
@@ -213,13 +174,7 @@
 				
 				// gio se tao ra cac tips element append vao san
 				// nhung chi hide no di thoi
-				var ztipEl = zjs(tiphtml).hide();
-				var _makeTipClass = zInput.getAttr('name');
-				if(zInput.hasClass(option.checkboxClass) && !zInput.is('input')){
-					_makeTipClass = zInput.find('> input[type=checkbox]').getAttr('name');
-				}
-				ztipEl.addClass(tipclass+'-'+_makeTipClass);
-
+				var ztipEl = zjs(tiphtml).addClass(tipclass+'-'+zInput.getAttr('name')).hide();
 				// quan trong -> xac dinh coi nen append vao dau thi dep ne
 				// xem coi cai input nay co phai la 1 cai autosuggestion hay khong?
 				// neu la vay thi phai append dang sau cai wrap element moi hop ly
@@ -232,39 +187,24 @@
 				
 				// bind event cho input
 				if(option.autoCheckWhenBlur){
-					zInput.on('blur, ui:autosuggestion:blur, ui:datepicker:blur', function(){
-						//console.log('on ui.datepicker.blur');
-						handlerTestResult(this, checkInput(this, option, zForm), option);
-					});
-				};
-				if(option.autoCheckWhenInput){
-					zInput.on('input, ui:autosuggestion:input', function(){
+					zInput.on('blur, ui.autosuggestion.blur, ui.datepicker.blur', function(){
 						//console.log('on ui.datepicker.blur');
 						handlerTestResult(this, checkInput(this, option, zForm), option);
 					});
 				};
 				// neu nhu day la radiogroup thi phai xu ly khi cac thang con (radio) cua no click
-				if(zInput.hasClass(option.radiogroupClass)){
+				if(zInput.hasClass('radiogroup')){
 					//zInput.find('input[type=radio]').live('click', function(){
 					zInput.on('click', 'input[type=radio]', function(){
 						handlerTestResult(zInput, checkInput(zInput, option, zForm), option);
 					});
 				};
-				// neu nhu la checkbox thi co 2 truong hop
-				// 1: <div class="checkbox required"><input type="checkbox"></div>
-				// 2: <input type="checkbox" class="checkbox required">
 				// neu nhu la checkbox thi phai xu ly khi thang con (checkbox) cua no click
-				if(zInput.hasClass(option.checkboxClass)){
-					if(zInput.is('input')){
-						zInput.on('click', function(){
-							handlerTestResult(zInput, checkInput(zInput, option, zForm), option);
-						});
-					}else{
-						//zInput.find('input[type=checkbox]').live('click', function(){
-						zInput.on('click', 'input[type=checkbox]', function(){
-							handlerTestResult(zInput, checkInput(zInput, option, zForm), option);
-						});
-					}
+				if(zInput.hasClass('checkbox')){
+					//zInput.find('input[type=checkbox]').live('click', function(){
+					zInput.on('click', 'input[type=checkbox]', function(){
+						handlerTestResult(zInput, checkInput(zInput, option, zForm), option);
+					});
 				};
 			
 				// quan trong khong kem do la add class cho thang cha cua thang input
@@ -309,14 +249,14 @@
 					// nen khong cho lam gi tiep theo
 					return;
 				};
-				this.trigger('form:validation:success', {}, function(customEvent){
+				this.trigger('form.validation.success', {}, function(customEvent){
 					if(customEvent.isDefaultPrevented)
 						event.preventDefault();
 				});
 			}
 			else{
 				this.addClass('zvalidation-invalid')
-				.trigger('form:validation:failed', {
+				.trigger('form.validation.failed', {
 					status: zForm.getData(passstatuskey)
 				});
 			}
@@ -326,7 +266,7 @@
 		
 		// bind event khong cho tuy tien enter
 		zjs(window).on('keydown', function(event){
-			if(event.getKeyCode() == 13){
+			if(event.keyCode() == 13){
 				// check coi cai thang input nay co thang form cha la thang nao?
 				var _iszForm = zjs(event.target()).findUp('form');
 				if(_iszForm.count() > 0){
@@ -368,8 +308,8 @@
 		var passStatus = {};
 		
 		//var inputsQuery = 'input[type=text], input[type=email], textarea, .radiogroup';	
-		//zForm.find('input,textarea').eachElement(function(element){
-		zForm.find('input,textarea,select,.'+option.radiogroupClass+',.'+option.checkboxClass+',.'+option.customInputClass).eachElement(function(element){
+		//zForm.find('input,textarea').each(function(element){
+		zForm.find('input,textarea,.radiogroup,.checkbox,.'+option.customInputClass).each(function(element){
 			var zInput = zjs(element);
 			
 			//console.log('before', element);
@@ -417,20 +357,7 @@
 			}catch(err){};
 			
 			// tu dong focus vao cai input dau tien bi error
-			var firstErrorElm = zForm.find('.'+option.errorClass).item(0);
-			
-			if(firstErrorElm.is('input') || firstErrorElm.is('textarea') || firstErrorElm.is('select')){
-				firstErrorElm.focus();
-			}
-			else if('isAutosuggestion' in firstErrorElm && firstErrorElm.isAutosuggestion()){
-				firstErrorElm.autosuggestionFocus();
-			}
-			else if(firstErrorElm.hasClass('radiogroup')){
-				// scroll toi
-				if('moduleTransition' in zjs){
-					zjs(document.body).playTransition('scrollTop', firstErrorElm.getAbsoluteTop() - 100, {time: 800})
-				}
-			};
+			zForm.find('.'+option.errorClass).focus();
 			
 			return false;
 		};
@@ -446,7 +373,7 @@
 		var option = zForm.getData(optionkey, false);
 		if(!option)return;
 		
-		zForm.find('input,textarea,select,.'+option.checkboxClass).eachElement(function(element){
+		zForm.find('input,textarea').each(function(element){
 			var zInput = zjs(element);
 			
 			// xem coi thang input nay co cai tip-element nao khong
@@ -504,7 +431,7 @@
 			var tipText = option.tips[test.type];
 			if(zInput.getAttr('data-tip-'+test.type, '') != '')
 				tipText = zInput.getAttr('data-tip-'+test.type, '');
-			ztipEl.show().find('.'+tiptextclass).setInnerHTML(tipText);
+			ztipEl.show().find('.'+tiptextclass).html(tipText);
 		};
 		
 		// kiem tra coi day co phai la 1 datepicker khong
@@ -536,20 +463,14 @@
 		
 		// 0. trong truong hop dac biet
 		// check required cua groupradio
-		if(zInput.hasClass(option.radiogroupClass)){
+		if(zInput.hasClass('radiogroup')){
 			// edit value phai la value cua 1 trong so nhung thang radio duoc check
 			value = zInput.find('input[type=radio]:checked').getValue('').trim();
 		};
 		
-		// neu la checkbox thi co 2 truong hop
-		if(zInput.hasClass(option.checkboxClass)){
-			if(zInput.is('input')){
-				// reset value if checkbox isn't checked
-				if(!zInput.is(':checked'))value = '';
-			}else{
-				// edit value phai la value cua thang checkbox duoc check
-				value = zInput.find('input[type=checkbox]:checked').getValue('').trim();
-			}
+		if(zInput.hasClass('checkbox')){
+			// edit value phai la value cua thang checkbox duoc check
+			value = zInput.find('input[type=checkbox]:checked').getValue('').trim();
 		};
 		
 		if(zInput.hasClass(option.customInputClass)){
@@ -591,13 +512,6 @@
 			else if(name.indexOf('digits')>=0 || classname.indexOf('digits')>=0 || zInput.getAttr('data-tip-digits','')!='')testType = 'digits';
 			else if(name.indexOf('date')>=0 /*|| classname.indexOf('date')>=0*/ || zInput.getAttr('data-tip-date','')!='' || inputType == 'date')testType = 'date';
 			
-			// doi khi field name co ten la "number"
-			// nhung luc su dung van cho phep nhap vao ky tu
-			// nen se check them 1 xiu nua
-			if(testType == 'number' && zInput.hasClass('allow-alphabet')){
-				testType = '';
-			}
-
 			// test thoi
 			if(testType != '' && !testMethods[testType](value, element))return {pass:false, type:testType};
 		};
@@ -610,7 +524,7 @@
 		};
 		
 		// 3. thu ba la check mat khau nhap lai coi chinh xac hay khong
-		if(inputType == 'password' && (name.indexOf('repassword')>=0 || name.indexOf('pass[pass2]')>=0 || classname.indexOf('repassword')>=0 || zInput.getAttr('data-tip-repassword','')!='')){
+		if(inputType == 'password' && (name.indexOf('repassword')>=0 || classname.indexOf('repassword')>=0 || zInput.getAttr('data-tip-repassword','')!='')){
 			// xem coi trong nay co bao nhieu thang password
 			var passwordInputEls = zForm.find('input[type="password"]');
 			if(passwordInputEls.count() > 1){
@@ -618,7 +532,7 @@
 				var _currentPassInputIndex = -1;
 				
 				// get ra cai password field truoc do
-				passwordInputEls.eachElement(function(_passInputEl, _passInputIndex){
+				passwordInputEls.each(function(_passInputEl, _passInputIndex){
 					if(zInput.isTheSame(_passInputEl)){
 						_currentPassInputIndex = _passInputIndex;
 						return;
@@ -635,7 +549,7 @@
 		};
 		
 		// n. custom check 
-		zForm.trigger('form:validation:checking', {element:element, option:option}, function(customEvent){
+		zForm.trigger('form.validation.checking', {element:element, option:option}, function(customEvent){
 			//if(customEvent.isDefaultPrevented)
 			//	event.preventDefault();
 		});
@@ -752,15 +666,15 @@
 	// EXTEND METHOD cho zjs-instance
 	zjs.extendMethod({
 		formValidation: function(useroption){
-			return this.eachElement(function(element){formValidation(element, useroption)});
+			return this.each(function(element){formValidation(element, useroption)});
 		},
 		formValidationReset: function(){
-			return this.eachElement(function(element){formErrorReset(element)});
+			return this.each(function(element){formErrorReset(element)});
 		},
 		formValidationCheck: function(){
 			// ket qua cuoi cung
 			var result = false;
-			this.eachElement(function(element){
+			this.each(function(element){
 				result = formCheck(element, false);
 			});
 			return result;

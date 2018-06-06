@@ -9603,3 +9603,516 @@ CLIENT -> SERVER: Email: tandatnguyen7331@gmail.com
 CLIENT -> SERVER: 
 CLIENT -> SERVER: .
 CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 11:48:09 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <2b32b5f338dc99c9c9c770b95183054b@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Maichauquoc
+CLIENT -> SERVER: Điện thoại: 0972929424
+CLIENT -> SERVER: Email: maiquocdinh1824@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:10 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <76784f1b5c24163352f86b6d4882454b@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:11 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <2112682e5d7fa1a1e36d2c72f589eb65@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:12 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <414f6c53e2934ac655ddf29326b731a6@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:13 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <d3738fd1cdd839f8af5c7fc614b88643@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:13 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <be83cadf90cfd3236ae948a6e6b4dc80@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:13 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <7355a396ad92aedf3953dc9be3c31d1a@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Mon, 4 Jun 2018 12:03:16 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <c387985621f08f3a0959901a5401df27@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: van daunguyen
+CLIENT -> SERVER: Điện thoại: 01686311714
+CLIENT -> SERVER: Email: vandaunguyen@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 00:22:40 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <b53f42b2a27e38656911589de13d9d58@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê quang huy
+CLIENT -> SERVER: Điện thoại: 0931184894
+CLIENT -> SERVER: Email: quanghuya2ltt@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 00:50:22 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <f6e4d7debca9491aef79642afac47b8c@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: HUYEN TRANG
+CLIENT -> SERVER: Điện thoại: 0962821406
+CLIENT -> SERVER: Email: xubabie.nghichngom@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 02:45:08 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <e108a700ccdc7df132d52f2d9216bb21@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Nguyễn ngọc Hưng
+CLIENT -> SERVER: Điện thoại: 0913859371
+CLIENT -> SERVER: Email: nguyenngochung66@yahoo.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 13:45:06 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <850024fe05130d75ee0b8379430faabd@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Kim Đồng
+CLIENT -> SERVER: Điện thoại: 0903384551
+CLIENT -> SERVER: Email: kimdong198@email.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 13:45:09 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <c58959fda4e9017cb58b7aa819df30e5@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Kim Đồng
+CLIENT -> SERVER: Điện thoại: 0903384551
+CLIENT -> SERVER: Email: kimdong198@email.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 13:45:10 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <d05d0a50bfde7ab55c6205845c60b47d@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Kim Đồng
+CLIENT -> SERVER: Điện thoại: 0903384551
+CLIENT -> SERVER: Email: kimdong198@email.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 13:45:11 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <d02470095a8c9547e4a301faeac97a48@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Kim Đồng
+CLIENT -> SERVER: Điện thoại: 0903384551
+CLIENT -> SERVER: Email: kimdong198@email.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: Date: Tue, 5 Jun 2018 13:45:11 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <ca9532d57b941c147a1c47894f8d6ddd@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Kim Đồng
+CLIENT -> SERVER: Điện thoại: 0903384551
+CLIENT -> SERVER: Email: kimdong198@email.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vy.le@beegreen.vn>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Wed, 6 Jun 2018 07:41:12 +0000
+CLIENT -> SERVER: To: marketing@beegreen.vn
+CLIENT -> SERVER: From: Sala Garden <marketing@beegreen.vn>
+CLIENT -> SERVER: Cc: vy.le@beegreen.vn
+CLIENT -> SERVER: Subject: =?UTF-8?Q?Th=C3=B4ng_tin_li=C3=AAn_h=E1=BB=87_Sala_Garden?=
+CLIENT -> SERVER: Message-ID: <0f116385dc81295816bdf2554e11948c@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Tên khách hàng: Lê Thị Trang
+CLIENT -> SERVER: Điện thoại: 0988218912
+CLIENT -> SERVER: Email: trangduonggiang@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<khanhvu14@gmail.com>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Wed, 6 Jun 2018 08:31:58 +0000
+CLIENT -> SERVER: To: khanhvu14@gmail.com
+CLIENT -> SERVER: From: WordPress <marketing@beegreen.vn>
+CLIENT -> SERVER: Subject: [SALA GARDEN] New User Registration
+CLIENT -> SERVER: Message-ID: <b81c07581a9cd7eb8320a2965ac6dd18@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: 
+CLIENT -> SERVER: New user registration on your site SALA GARDEN:
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Username: thanh
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Email: vithanhsg@gmail.com
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: STARTTLS
+CLIENT -> SERVER: EHLO dangky.salagarden.vn
+CLIENT -> SERVER: AUTH LOGIN
+CLIENT -> SERVER: bmh1dGJlb29vMjAwMEBnbWFpbC5jb20=
+CLIENT -> SERVER: UW5tZXNjcHNua3N0ZXRwbA==
+CLIENT -> SERVER: MAIL FROM:<marketing@beegreen.vn>
+CLIENT -> SERVER: RCPT TO:<vithanhsg@gmail.com>
+CLIENT -> SERVER: DATA
+CLIENT -> SERVER: Date: Wed, 6 Jun 2018 08:31:58 +0000
+CLIENT -> SERVER: To: vithanhsg@gmail.com
+CLIENT -> SERVER: From: WordPress <marketing@beegreen.vn>
+CLIENT -> SERVER: Subject: [SALA GARDEN] Your username and password info
+CLIENT -> SERVER: Message-ID: <5aa0019b2dd527ef258d0ee8751d5c25@dangky.salagarden.vn>
+CLIENT -> SERVER: X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+CLIENT -> SERVER: MIME-Version: 1.0
+CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+CLIENT -> SERVER: 
+CLIENT -> SERVER: Username: thanh
+CLIENT -> SERVER: 
+CLIENT -> SERVER: To set your password, visit the following address:
+CLIENT -> SERVER: 
+CLIENT -> SERVER: <http://dangky.salagarden.vn/wp-login.php?action=rp&key=xwnz5uLEBlnO8cOXJuIq&login=thanh>
+CLIENT -> SERVER: 
+CLIENT -> SERVER: http://dangky.salagarden.vn/wp-login.php
+CLIENT -> SERVER: 
+CLIENT -> SERVER: .
+CLIENT -> SERVER: QUIT

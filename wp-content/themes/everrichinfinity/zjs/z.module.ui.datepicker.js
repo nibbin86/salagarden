@@ -19,14 +19,6 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			orbefore: 'or before',
 			orafter: 'or after'
 		},
-		de: {
-			format:'DD.MM.YYYY',
-			calendarTitleFormat:'MMMM, YYYY',
-			timesliderLabel:{h:'hour',m:'minute',s:'second'},
-			firstOfWeek: 0,
-			orbefore: 'or before',
-			orafter: 'or after'
-		},
 		vi: {
 			format:'DD-MM-YYYY',
 			calendarTitleFormat:'MMMM, YYYY',
@@ -77,10 +69,9 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 	});
 	
 	// trigger
-	//ui:datepicker:change
-	//ui:datepicker:changeMonth
-	//ui:datepicker:ready
-	//ui:datepicker:blur
+	//ui.datepicker.change
+	//ui.datepicker.changeMonth
+	//ui.datepicker.ready
 	
 	// template
 	var datepickerclass = 'zui-datepicker',
@@ -197,7 +188,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 					_today = moment().format('YYYY-MM-DD'),
 					_tomorrow = moment().add(1,'day').format('YYYY-MM-DD'),
 					_yesterday = moment().add(-1,'day').format('YYYY-MM-DD');
-				zjs.foreach(_maybeDates, function(_maybeDate){
+				_maybeDates.each(function(_maybeDate){
 					_maybeDate = _maybeDate.trim();
 					_maybeDate = _maybeDate.replace('today', _today).replace('tomorrow', _tomorrow).replace('yesterday', _yesterday)
 								.replace('to', '<<').replace('before', '<').replace('after', '>');
@@ -236,7 +227,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 					// neu nhu chi can 1 thang thoa man, thi lap tuc xac dinh la disabled
 					var _disabled = false,
 						_method = '';
-					zjs.foreach(_disabledDates, function(_disabledDate){
+					_disabledDates.each(function(_disabledDate){
 							 if(_disabledDate.comparison == '=' )_method = 'isSame';
 						else if(_disabledDate.comparison == '<' )_method = 'isBefore';
 						else if(_disabledDate.comparison == '>' )_method = 'isAfter';
@@ -326,21 +317,21 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			
 			if(option.hour){
 				var hourEl = zDatepickerTimePanelEl.find('.hour'), hourrefererEl = hourEl.find('span');
-				hourEl.find('label').setInnerHTML(locale[option.language].timesliderLabel.h);
+				hourEl.find('label').html(locale[option.language].timesliderLabel.h);
 				hourEl.find('input').setValue(selectdatetime.hour())
 					.makeUiSlider({min:option.hourmin,max:option.hourmax,step:option.hourstep,referer:hourrefererEl})
-					.on('ui:slider:change', function(event){
-						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).hour(event.getData().value);
+					.on('ui.slider.change', function(event){
+						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).hour(event.data.value);
 						// show ra button luon
-						zDatepickerWrapEl.find('.'+zbuttonlabelclass).setInnerHTML(selectdatetime.format(option.format));
+						zDatepickerWrapEl.find('.'+zbuttonlabelclass).html(selectdatetime.format(option.format));
 						// trigger
 						// nhung phai kiem tra neu nhu day la chu dong thay doi value slider
 						// thi moi phai run trigger
 						// chu neu nhu gian tiep bi thay doi slider value (thong qua sliderSetValue) thi thoi
-						if(event.getData().via == 'setvalue')return;
+						if(event.data.via == 'setvalue')return;
 						var value = selectdatetime.format('YYYY-MM-DD HH:mm:ss');
 						zDatepickerEl.setAttr('value',value).setValue(value);
-						zDatepickerEl.trigger('ui:datepicker:change', {value:value});
+						zDatepickerEl.trigger('ui.datepicker.change', {value:value});
 					});
 			}else{
 				zDatepickerTimePanelEl.find('.hour').remove();
@@ -348,18 +339,18 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			
 			if(option.minute){
 				var minuteEl = zDatepickerTimePanelEl.find('.minute'), minuterefererEl = minuteEl.find('span');
-				minuteEl.find('label').setInnerHTML(locale[option.language].timesliderLabel.m);
+				minuteEl.find('label').html(locale[option.language].timesliderLabel.m);
 				minuteEl.find('input').setValue(selectdatetime.minute())
 					.makeUiSlider({min:option.minutemin,max:option.minutemax,step:option.minutestep,referer:minuterefererEl})
-					.on('ui:slider:change', function(event){
-						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).minute(event.getData().value);
+					.on('ui.slider.change', function(event){
+						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).minute(event.data.value);
 						// show ra button luon
-						zDatepickerWrapEl.find('.'+zbuttonlabelclass).setInnerHTML(selectdatetime.format(option.format));
+						zDatepickerWrapEl.find('.'+zbuttonlabelclass).html(selectdatetime.format(option.format));
 						// trigger
-						if(event.getData().via == 'setvalue')return;
+						if(event.data.via == 'setvalue')return;
 						var value = selectdatetime.format('YYYY-MM-DD HH:mm:ss');
 						zDatepickerEl.setAttr('value',value).setValue(value);
-						zDatepickerEl.trigger('ui:datepicker:change', {value:value});
+						zDatepickerEl.trigger('ui.datepicker.change', {value:value});
 					});
 			}else{
 				zDatepickerTimePanelEl.find('.minute').remove();
@@ -367,18 +358,18 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			
 			if(option.second){
 				var secondEl = zDatepickerTimePanelEl.find('.second'), secondrefererEl = secondEl.find('span');
-				secondEl.find('label').setInnerHTML(locale[option.language].timesliderLabel.s);
+				secondEl.find('label').html(locale[option.language].timesliderLabel.s);
 				secondEl.find('input').setValue(selectdatetime.second())
 					.makeUiSlider({min:option.secondmin,max:option.secondmax,step:option.secondstep,referer:secondrefererEl})
-					.on('ui:slider:change', function(event){
-						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).second(event.getData().value);
+					.on('ui.slider.change', function(event){
+						var selectdatetime = zDatepickerEl.getData(selectdatetimekey).second(event.data.value);
 						// show ra button luon
-						zDatepickerWrapEl.find('.'+zbuttonlabelclass).setInnerHTML(selectdatetime.format(option.format));
+						zDatepickerWrapEl.find('.'+zbuttonlabelclass).html(selectdatetime.format(option.format));
 						// trigger
-						if(event.getData().via == 'setvalue')return;
+						if(event.data.via == 'setvalue')return;
 						var value = selectdatetime.format('YYYY-MM-DD HH:mm:ss');
 						zDatepickerEl.setAttr('value',value).setValue(value);
-						zDatepickerEl.trigger('ui:datepicker:change', {value:value});
+						zDatepickerEl.trigger('ui.datepicker.change', {value:value});
 					});
 			}else{
 				zDatepickerTimePanelEl.find('.second').remove();
@@ -413,7 +404,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			if(!option.disabledDate || !option.disabledDate(selectdatetime.format('YYYY-MM-DD'))){
 				zDatepickerEl.setAttr('value', valueForOrgInput).setValue(valueForOrgInput);
 				// run trigger
-				zDatepickerEl.trigger('ui:datepicker:change', {value:valueForOrgInput});
+				zDatepickerEl.trigger('ui.datepicker.change', {value:valueForOrgInput});
 			};
 		};
 		
@@ -456,7 +447,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				_html += getHtmlForSelectYear(_moment.year());
 				_html += '</select>';
 			};
-			zDatepickerNavMonthWrap.setInnerHTML(_html);
+			zDatepickerNavMonthWrap.html(_html);
 			
 			// navigation input month & year
 			zDatepickerNavInputMonth = zDatepickerNavMonthWrap.find('.zui-calendar-input-month');
@@ -499,7 +490,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				zDatepickerPanelEl.append(drawCalendar(calendardatetime, selectdatetime, option));
 				
 				// trigger
-				zDatepickerEl.trigger('ui:datepicker:changeMonth', {value:calendardatetime.format(option.time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD')});
+				zDatepickerEl.trigger('ui.datepicker.changeMonth', {value:calendardatetime.format(option.time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD')});
 				
 			};
 			
@@ -509,7 +500,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				zDatepickerNavInputYear
 				.on('keydown', function(event){
 					// neu nhu khong nhap dung, thi thoi se khong cho nhap nua
-					if([48,49,50,51,52,53,54,55,56,57,/*left right*/ 37,39,/*backspace tab enter*/ 8,9,13].indexOf(event.getKeyCode())<0){
+					if([48,49,50,51,52,53,54,55,56,57,/*left right*/ 37,39,/*backspace tab enter*/ 8,9,13].indexOf(event.keyCode())<0){
 						event.preventDefault();
 						return;
 					};
@@ -536,17 +527,17 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			if(zDatepickerInputEl)
 				if(zDatepickerInputEl.hasClass('isfocus'))
 					preventBlurEventOnInputFieldEl = true;
-			var self = zjs(this);
+			
 			event.preventDefault();
 			event.stop();
 			var calendardatetime = zDatepickerEl.getData(calendardatetimekey),
 				selectdatetime = zDatepickerEl.getData(selectdatetimekey);
-			calendardatetime.month(calendardatetime.month() + self.getAttr('data-count').toInt());
+			calendardatetime.month(calendardatetime.month() + this.attr('data-count').toInt());
 			// ve lai cai lich
  			zDatepickerPanelEl.find('.'+calendarwrapclass).remove();
 			zDatepickerPanelEl.append(drawCalendar(calendardatetime, selectdatetime, option));
 			// trigger
-			zDatepickerEl.trigger('ui:datepicker:changeMonth', {value:calendardatetime.format(option.time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD')});
+			zDatepickerEl.trigger('ui.datepicker.changeMonth', {value:calendardatetime.format(option.time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD')});
 		});
 		
 		
@@ -592,7 +583,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			zDatepickerInputEl.on('focus', function(event){
 				event.preventDefault();
 				preventBlurEventOnInputFieldEl = false;
-				var self = zjs(this);
+				
 				// kiem tra coi button nay co active chua truoc tien
 				//var actived = zDatepickerEl.hasClass(zbuttonactiveclass);
 				// check xem cac zselectbox khac hide active stage
@@ -603,7 +594,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				// neu nhu ma chua co active thi moi active
 				// co roi thi thoi (se hide luon, vi o tren la vua hide all luon)
 				//if(actived)return;
-				self.addClass('isfocus');
+				this.addClass('isfocus');
 				//(function(){
 				zDatepickerEl.addClass(zbuttonactiveclass);
 				zDatepickerPanelWrapEl.removeClass(contextualpanelwraphideclass);
@@ -622,7 +613,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				// khong thoi lai mat cong
 				if(option.format != 'DD/MM/YYYY')return;
 				// neu nhu khong nhap dung, thi thoi se khong cho nhap nua
-				if([48,49,50,51,52,53,54,55,56,57,/*left right*/ 37,39,/*backspace tab enter */ 8,9,13, /* dau / */ 191].indexOf(event.getKeyCode())<0){
+				if([48,49,50,51,52,53,54,55,56,57,/*left right*/ 37,39,/*backspace tab enter */ 8,9,13, /* dau / */ 191].indexOf(event.keyCode())<0){
 					event.preventDefault();
 					return;
 				};
@@ -630,8 +621,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			
 			zDatepickerInputEl.on('keyup', function(event){
 				event.preventDefault();
-				var self = zjs(this);
-				tempInputingValue = self.getValue('');
+				tempInputingValue = this.getValue('');
 				if(tempInputingValue)
 					tempInputingValue = tempInputingValue.trim();
 				
@@ -676,7 +666,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			// thi moi update thiet su cai thong tin 
 			zDatepickerInputEl.on('blur', function(event){
 				
-				var self = zjs(this);
+				var self = this;
 				tempInputingValue = self.getValue('');
 				if(tempInputingValue)
 					tempInputingValue = tempInputingValue.trim();
@@ -730,7 +720,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 						// set luon attribute value (doc comment o tren)
 						zDatepickerEl.setAttr('value',value).setValue(value);
 						// run trigger
-						zDatepickerEl.trigger('ui:datepicker:change', {value:value});
+						zDatepickerEl.trigger('ui.datepicker.change', {value:value});
 					}
 					
 					// neu nhu xui xui xoa het tron data
@@ -738,11 +728,11 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 						zDatepickerInputEl.setValue('');
 						zDatepickerEl.setAttr('value','').setValue('');
 						// run trigger
-						zDatepickerEl.trigger('ui:datepicker:change', {value:''});
+						zDatepickerEl.trigger('ui.datepicker.change', {value:''});
 					};
 					
 					// trigger blur run cuoi cung
-					zDatepickerEl.trigger('ui:datepicker:blur', {});
+					zDatepickerEl.trigger('ui.datepicker.blur', {});
 					
 					// xong roi thi trigger cai validation thoi
 					//if('moduleFormValidationOption' in zjs && zjs.isObject(zjs.moduleFormValidationOption))
@@ -751,7 +741,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 					// hide het cai context panel show ra
 					//zjs(document).trigger('click');
 					//console.log('zDatepickerPanelEl.addClass(contextualpanelwraphideclass);');
-					//console.log('zDatepickerPanelEl', zDatepickerPanelEl.item(0, self));
+					//console.log('zDatepickerPanelEl', zDatepickerPanelEl.item(0, this));
 					zDatepickerPanelWrapEl.addClass(contextualpanelwraphideclass);
 					
 					self.removeClass('isfocus');
@@ -777,7 +767,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			if(orgPlaceholder == '')
 				orgPlaceholder = option.format;
 			// gi thi gi chu cung can phai kiem tra co bi disabledDate hay khong?
-			zDatepickerButtonEl.find('.'+zbuttonlabelclass).setInnerHTML((!option.disabledDate || !option.disabledDate(selectdatetime.format('YYYY-MM-DD'))) ? selectdatetime.format(option.format) : orgPlaceholder);
+			zDatepickerButtonEl.find('.'+zbuttonlabelclass).html((!option.disabledDate || !option.disabledDate(selectdatetime.format('YYYY-MM-DD'))) ? selectdatetime.format(option.format) : orgPlaceholder);
 			
 			// bind event click cho button
 			zDatepickerButtonEl.on('click', function(event, el){
@@ -832,7 +822,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			};
 			
 			var zCellEl = zjs(this),
-				value = zCellEl.getAttr('data-date');
+				value = zCellEl.attr('data-date');
 			
 			// vay la thay doi selectdatetime luon
 			var selectdatetime = zDatepickerEl.getData(selectdatetimekey);
@@ -848,7 +838,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			
 			// show ra button luon
 			if(zDatepickerButtonEl)
-				zDatepickerButtonEl.find('.'+zbuttonlabelclass).setInnerHTML(selectdatetime.format(option.format));
+				zDatepickerButtonEl.find('.'+zbuttonlabelclass).html(selectdatetime.format(option.format));
 			
 			// show ra input field luon
 			if(zDatepickerInputEl)
@@ -869,8 +859,8 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			// set luon attribute value (doc comment o tren)
 			zDatepickerEl.setAttr('value',value).setValue(value);
 			// run trigger
-			zDatepickerEl.trigger('ui:datepicker:change', {value:value});
-			zDatepickerEl.trigger('ui:datepicker:blur', {});
+			zDatepickerEl.trigger('ui.datepicker.change', {value:value});
+			zDatepickerEl.trigger('ui.datepicker.blur', {});
 			
 			// xong roi thi trigger cai validation thoi
 			//if('moduleFormValidationOption' in zjs && zjs.isObject(zjs.moduleFormValidationOption))
@@ -892,13 +882,13 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			var zCalendarWrapEl = zjs('<div>').addClass(calendarwrapclass);
 		
 			// append month name
-			zjs(calendarrowmonthhtml).setInnerHTML(date.format(option.calendarTitleFormat)).appendTo(zCalendarWrapEl);
+			zjs(calendarrowmonthhtml).html(date.format(option.calendarTitleFormat)).appendTo(zCalendarWrapEl);
 			// sau khi append month name xong roi
 			// thi xem coi tien the thi thay luon 2 cai select box change month & year
-			if(zDatepickerNavInputMonth)zDatepickerNavInputMonth.setInnerHTML(getHtmlForSelectMonth(date.month()));
+			if(zDatepickerNavInputMonth										)zDatepickerNavInputMonth.html(getHtmlForSelectMonth(date.month()));
 			if(zDatepickerNavInputYear){
 				if(option.calendarYearFieldUseInput)zDatepickerNavInputYear.setValue(date.year());
-				else zDatepickerNavInputYear.setInnerHTML(getHtmlForSelectYear(date.year()));
+				else zDatepickerNavInputYear.html(getHtmlForSelectYear(date.year()));
 			};
 		
 			// append day of week
@@ -910,7 +900,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 			if(option.firstOfWeek==1)firstdayofweek.add(1,'day');
 			// gio moi di in ra
 			for(var i=0;i<7;i++){
-				zjs(calendarcellweekdayhtml).setInnerHTML(firstdayofweek.format(option.full ? 'dddd':'dd')).appendTo(zCalendarHeadRow);
+				zjs(calendarcellweekdayhtml).html(firstdayofweek.format(option.full ? 'dddd':'dd')).appendTo(zCalendarHeadRow);
 				firstdayofweek.add(1,'day');
 			};
 		
@@ -941,7 +931,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 					for(i = option.firstOfWeek; i < firstday; i++) {
 						if(option.selectweek && i == option.firstOfWeek)
 							zRowEl.setAttr('data-date', cur.format('YYYY-MM-DD'));			
-						zjs(calendarcellhtml).setInnerHTML('&nbsp;').addClass(calendarcellemptyclass).appendTo(zRowEl);
+						zjs(calendarcellhtml).html('&nbsp;').addClass(calendarcellemptyclass).appendTo(zRowEl);
 						j++;
 					};
 				};
@@ -950,7 +940,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 				var wday = cur.day();
 				// o dau thi khong biet, chu trong setvalue thi
 				// phai set theo 1 chuan thoi (YYYY-MM-DD HH:mm:ss)
-				var zCellEl = zjs(calendarcellhtml).setInnerHTML(day).appendTo(zRowEl);
+				var zCellEl = zjs(calendarcellhtml).html(day).appendTo(zRowEl);
 			
 				// neu nhu khong phai la selectweek thi se set date cho cell
 				var _allowSetAttr = true;
@@ -1010,7 +1000,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 		zDatepickerPanelEl.append(drawCalendar(selectdatetime, selectdatetime, option));
 		
 		// trigger event
-		zDatepickerEl.trigger('ui:datepicker:ready', {value:valueForOrgInput});
+		zDatepickerEl.trigger('ui.datepicker.ready', {value:valueForOrgInput});
 	};
 	
 	// bind event cho document luon
@@ -1040,7 +1030,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 		zDatepickerEl.setData(selectdatetimekey, moment(selectdatetime));
 		
 		// show ra button luon
-		zDatepickerWrapEl.find('.'+zbuttonlabelclass).setInnerHTML(selectdatetime.format(option.format));
+		zDatepickerWrapEl.find('.'+zbuttonlabelclass).html(selectdatetime.format(option.format));
 		
 		// set lai 3 cai ui slider time
 		var zDatepickerTimePanelEl = zDatepickerWrapEl.find('.'+datepickertimepanelclass);
@@ -1057,7 +1047,7 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 		var valueForOrgInput = selectdatetime.format(option.time ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
 		zDatepickerEl.setAttr('value', valueForOrgInput).setValue(valueForOrgInput);
 		// run trigger
-		zDatepickerEl.trigger('ui:datepicker:change', {value:valueForOrgInput, via:'api'});
+		zDatepickerEl.trigger('ui.datepicker.change', {value:valueForOrgInput, via:'api'});
 	};
 	
 	
@@ -1065,10 +1055,10 @@ zjs.require('ui, ui.button, ui.slider, moment', function(){
 	// EXTEND METHOD cho zjs-instance
 	zjs.extendMethod({
 		makeDatepicker: function(useroption){
-			return this.eachElement(function(element){makeDatepicker(element, useroption)});
+			return this.each(function(element){makeDatepicker(element, useroption)});
 		},
 		datepickerSetValue: function(value){
-			return this.eachElement(function(element){datepickerSetValue(element, value)});
+			return this.each(function(element){datepickerSetValue(element, value)});
 		}
 	});
 	

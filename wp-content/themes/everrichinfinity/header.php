@@ -29,28 +29,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php wp_head(); ?>
 </head>
 
-<body <?php body_class('zparallax'); ?> data-preload-domready-method="scrollbar.ready"
+<body <?php body_class('zparallax zscroll'); ?> data-preload-domready-method="scrollbar.ready"
+
 		data-option="
 
-					// OPTION FOR PARALLAX MODULE
-					indicator: false,
-					autoscaleusecss: false,
+					property:'margin',
+					horizontal:false,
+					autoscaleusecss:false,
+					snapElements:'.zparallax-section',
+					log:true,
 
-					// OPTION FOR SCROLL
-					scrolltime: 1000,
-					transition: 2,
-
-					// OPTION FOR SCROLLBAR MODULE
-					usecss: true,
-					scrollline: 200,
-					scrolllinetouchpad: 80,
-					alwayshide: false,
-					shadow: false,
-					snapElements: '.zparallax-section',
-					looseSnap: true,
-
-					customUsedefaultCssClass: 'ismobile',
-					autoUseDefaultWhenWidthLessThan: 600,
+					// customUsedefaultCssClass: 'ismobile',
+					// autoUseDefaultWhenWidthLessThan: 600,
 
 					debug: false
 					">
@@ -60,7 +50,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<div class="sidebuttons">
+<div class="sidebuttons zscrollnotinclude">
 	<div class="btn-item btn-register">
 		<div class="zparallax-navigation" rel="#contact" data-name="contact"><img src="<?php echo get_template_directory_uri(); ?>/images/icons/regis-btn.png" alt="" /></div>
 	</div>
@@ -68,27 +58,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<div class="zparallax-navigation" rel="#banner" data-name="banner"><img src="<?php echo get_template_directory_uri(); ?>/images/icons/gotop-btn.png" alt="" /></div>
 	</div>
 </div>
-<div class="MainContainer">
-		<header class="zfreezepanel">
-			<div class="wrapper row container">
-					<div class="logo col-md-2">
-					 	<a href="<?php echo site_url(); ?>"><img src="<?php echo get_template_directory_uri(); ?>/images/logo/logo.png"></a>
-					</div>
-				<div class="Menu col-md-10">
-					<div class="mobile-menu">
-						<span class="bar-1"></span>
-						<span class="bar-2"></span>
-						<span class="bar-3"></span>
-					</div>
-					<ul>
-						<li><a id="overal_li" rel="#ProjectSize" class="zparallax-navigation menu-item" data-name="banner">TRANG CHỦ</a></li>
-						<li><a id="Locations_li" rel="#Location" class="zparallax-navigation menu-item" data-name="location">VỊ TRÍ</a></li>
-						<li><a id="Featured_li" rel="#Featured" class="zparallax-navigation menu-item" data-name="featured">TIỆN ÍCH</a></li>
-						<li><a id="Services_li" rel="#Services" class="zparallax-navigation menu-item" data-name="services">DỊCH VỤ</a></li>
-						<li><a id="Products_li" rel="#Products" class="zparallax-navigation menu-item" data-name="products">SẢN PHẨM</a></li>
-						<li><a href="tel: 0937709696" class="phone-number"><i class="fas fa-phone-volume animated infinite tada"></i>  093 770 9696</a></li>
-						<?php /* ?><li><a   class="noLineRight contact zparallax-navigation" id="contactUs" rel="#contact" data-name="contact">LIÊN HỆ</a></li><?php */ ?>
-					</ul>
-				</div>
+<header class="zscrollnotinclude">
+	<div class="wrapper row container">
+			<div class="logo col-md-2">
+			 	<img src="<?php echo get_template_directory_uri(); ?>/images/logo/logo.png">
 			</div>
-		</header>
+		<div class="Menu col-md-10">
+			<div class="mobile-menu">
+				<span class="bar-1"></span>
+				<span class="bar-2"></span>
+				<span class="bar-3"></span>
+			</div>
+			<ul>
+				<li><a id="overal_li" rel="#ProjectSize" class="zparallax-navigation menu-item" data-name="banner">TRANG CHỦ</a></li>
+				<li><a id="Locations_li" rel="#Location" class="zparallax-navigation menu-item" data-name="location">VỊ TRÍ</a></li>
+				<li><a id="Featured_li" rel="#Featured" class="zparallax-navigation menu-item" data-name="featured">TIỆN ÍCH</a></li>
+				<li><a id="Services_li" rel="#Services" class="zparallax-navigation menu-item" data-name="services">DỊCH VỤ</a></li>
+				<li><a id="Products_li" rel="#Products" class="zparallax-navigation menu-item" data-name="products">SẢN PHẨM</a></li>
+				<li><a href="tel: 0937709696" class="phone-number"><i class="fas fa-phone-volume animated infinite tada"></i>  093 770 9696</a></li>
+				<?php /* ?><li><a   class="noLineRight contact zparallax-navigation" id="contactUs" rel="#contact" data-name="contact">LIÊN HỆ</a></li><?php */ ?>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="MainContainer">

@@ -132,7 +132,7 @@ zjs.require('ui, transition', function(){
 		// get ra toan bo session
 		var listSectionNames = [];
 		zSectionEls = zParallaxEl.find('.'+option.sectionclass);
-		zSectionEls.eachElement(function(el, index){			
+		zSectionEls.each(function(el, index){			
 			
 			var _zSectionEl = zjs(el);
 			
@@ -158,8 +158,8 @@ zjs.require('ui, transition', function(){
 			
 			// tao ra 1 cai indicator tuong ung voi section
 			if(option.indicator){
-				var _indicatorHtml = option.indicatorTemplate;if(zjs.isFunction(_indicatorHtml))_indicatorHtml = _indicatorHtml(index, sectionName);
-				_indicatorHtml = _indicatorHtml.format({index:index, name:sectionName});
+				var _indicatorHtml = option.indicatorTemplate;if(zjs.isFunction(_indicatorHtml))_indicatorHtml = _indicatorHtml(index);
+				_indicatorHtml = _indicatorHtml.format({index:index});
 				var _zIndicatorEl = zjs(_indicatorHtml)
 					.addClass('zparallax-indicator')
 					.setAttr('data-name', sectionName)
@@ -194,7 +194,7 @@ zjs.require('ui, transition', function(){
 			lastFullScreenSection = '';
 			
 		// save lai original property value
-		zElementEls.eachElement(function(el){
+		zElementEls.each(function(el){
 			
 			var zEl = zjs(el);
 			
@@ -247,16 +247,11 @@ zjs.require('ui, transition', function(){
 		// luu lai scrollbarOption neu nhu su dung scroll du
 		var scrollbarOption = false;
 		
-		var updateNavigation = function(_sectionName){
-			zCustomNavigationEls.removeClass('active');
-			zCustomNavigationEls.filter('[data-name="'+_sectionName+'"]').addClass('active');
-		};
-
 		// ham xu ly khi ma scroll
 		var onscroll = function(){
 			
 			// neu nhu dang scroll timer thi stop cai da
-			if(!scrollByTimer && scrollTimer)scrollTimer.stop({force: true});
+			if(!scrollByTimer && scrollTimer)scrollTimer.stop();
 			
 			scrollByTimer = false;
 			
@@ -270,7 +265,7 @@ zjs.require('ui, transition', function(){
 			zParallaxEl.setData(parallaxcurrentscrollkey, currentScroll);
 			
 			// move element
-			zElementEls.eachElement(function(el){
+			zElementEls.each(function(el){
 				
 				var zEl = zjs(el);
 				
@@ -346,9 +341,8 @@ zjs.require('ui, transition', function(){
 				};
 				
 				// update custom navigation
-				if(!zjs.isMobileDevice()){
-					updateNavigation(_currentSectionName);
-				}
+				zCustomNavigationEls.removeClass('active');
+				zCustomNavigationEls.filter('[data-name="'+_currentSectionName+'"]').addClass('active');
 				
 				// save  lai
 				zParallaxEl.setData(parallaxcurrentsectionkey, _currentSectionName);
@@ -454,7 +448,7 @@ zjs.require('ui, transition', function(){
 			var totalWidth = 0;
 			
 			// resize autoscale section
-			zSectionEls.eachElement(function(el){
+			zSectionEls.each(function(el){
 				
 				var _zSectionEl = zjs(el),
 					autoscale = _zSectionEl.getData(sectionautoscalekey);
@@ -479,12 +473,11 @@ zjs.require('ui, transition', function(){
 			
 			// fix scroll
 			onscroll();
-			// update navigation
-			updateNavigation(currentSection);
 		};
 		
 		// first resize
 		onresize();
+		
 		
 		// bind event for scroll & resize
 		zParallaxEl.on('scrollbar.scroll', onscroll);
@@ -518,15 +511,11 @@ zjs.require('ui, transition', function(){
 				parallaxScrollToSection(element, document.location.hash.replace('#', ''));
 			}).delay(1000);
 		}
-
-		// add a internal trigger to update navigation
-		zParallaxEl.on('parallax:scroll:stop', function(){
-			updateNavigation(this.parallaxGetCurrentSection());
-		});
 	};
 	
 	// function scroll to section
 	var parallaxScrollToSection = function(element, sectionName){
+		
 		// fix param
 		sectionName = sectionName || '';
 		
@@ -557,15 +546,13 @@ zjs.require('ui, transition', function(){
 		// thi phai scroll kieu mac dinh
 		// nhung phai xem coi co smooth khong
 		if(option.scrolltime > 0){
-			if(scrollTimer)scrollTimer.stop({force: true});
+			if(scrollTimer)scrollTimer.stop();
 			else scrollTimer = zjs.timer({
 				onProcess: function(current){
 					scrollByTimer = true;
 					window.scrollTo(option.horizontal ? current : 0, option.horizontal ? 0 : current);
 				},
-				onStop: function(){
-					zParallaxEl.trigger('parallax:scroll:stop');
-				}
+				onFinish: function(){}
 			});
 			scrollTimer.set({
 				from: option.horizontal ? zjs(window).scrollLeft() : zjs(window).scrollTop(),
@@ -701,13 +688,13 @@ zjs.require('ui, transition', function(){
 	// EXTEND METHOD cho zjs-instance
 	zjs.extendMethod({
 		makeParallax: function(useroption){
-			return this.eachElement(function(element){makeParallax(element, useroption)});
+			return this.each(function(element){makeParallax(element, useroption)});
 		},
 		parallaxScrollToSection: function(sectionName){
-			return this.eachElement(function(element){parallaxScrollToSection(element, sectionName)});
+			return this.each(function(element){parallaxScrollToSection(element, sectionName)});
 		},
 		parallaxScrollToNextSection: function(){
-			return this.eachElement(function(element){parallaxScrollToNextSection(element)});
+			return this.each(function(element){parallaxScrollToNextSection(element)});
 		},
 		parallaxGetRatioVisible: function(sectionName){
 			return parallaxGetRatioVisible(this.item(0, true), sectionName);

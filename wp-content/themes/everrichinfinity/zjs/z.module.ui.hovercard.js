@@ -5,11 +5,7 @@ zjs.require('ui', function(){
 	var optionkey = 'zmoduleuihovercardoption',
 		wrapelkey = 'zmoduleuihovercardwrapel',
 		hovercardelkey = 'zmoduleuihovercardel',
-		ajaxloadedkey = 'zmoduleuihovercardajaxloaded',
-		isusecustomelkey = 'zmoduleuihovercardcustomwrapel',
-		parentwrapelkey = 'zmoduleuihovercardparentwrapel',
-		iswrapelkey = 'zmoduleuihovercardiswrapel',
-		wrapelbelongcount = 'zmoduleuihovercardwrapelbelongcount';
+		ajaxloadedkey = 'zmoduleuihovercardajaxloaded';
 	
 	
 	// extend core mot so option
@@ -23,7 +19,7 @@ zjs.require('ui', function(){
 			autoFixPosition:true,
 			autoFixArrowPosition:true,
 			hideWhenHoverCard:false,
-			// 
+			//
 			customCssClass:'',
 			left:'auto',
 			right:'auto',
@@ -31,16 +27,12 @@ zjs.require('ui', function(){
 			bottom:'auto',
 			// 
 			appendToBody:false,
-			ajaxContent:false,
-			ajaxContentDataStructure:'',
-			ajaxLoadingHtml: '<div class="loading-icon"></div>',
-			cacheAjax: true,
-			customContentElement:false,
+			ajaxContent:false
 		}
 	});
 	
 	// trigger
-	//
+	//ui.datepicker.change
 	
 	// template
 	var hovercardclass = 'zui-hovercard',
@@ -49,21 +41,15 @@ zjs.require('ui', function(){
 		// zui commont class name
 		contextualpanelwrapclass = 'zui-contextual-panel-wrap',
 		contextualpanelwraphideclass = 'zui-hide',
-		contextualpanelwrapactiveclass = 'active',
-
 		uihideclass = 'zui-uihide',
 		uiuninithideclass = 'zui-uiuninithide',
 		
-		hovercardjspanelclass = 'js-hovercard-panel',
 		hovercardpanelwrapclass = 'zui-hovercard-panel-wrap',
 		hovercardpanelfixedclass = 'zui-fixed',
 		hovercardpanelwraptooltipclass = 'zui-tooltip',
 		hovercardpanelarrowclass = 'zui-hovercard-panel-arrow',
 		hovercardpanelclass = 'zui-hovercard-panel',
 		hovercardpanelinnerclass = 'zui-hovercard-panel-inner',
-
-		// ajax
-		ajaxLoadingClass = 'ajax-loading',
 		
 		// horizontal
 		hovercardpanelwrapleftclass = 'zui-left',
@@ -80,9 +66,6 @@ zjs.require('ui', function(){
 									'</div>'+
 								'</div>';
 	
-	// Cache
-	var ajaxCache = [];
-
 	// - - - - - - - - -
 	
 	// MAIN FUNCTIONS
@@ -100,7 +83,7 @@ zjs.require('ui', function(){
 		if(option){
 			zHovercardEl.setData(optionkey, zjs.extend(option, useroption));
 			return;
-		}
+		};
 		
 		// - - - 
 		// neu ma chua co thi se lam binh thuong
@@ -115,8 +98,6 @@ zjs.require('ui', function(){
 		// extend from user option ?
 		if(typeof useroption!='undefined')
 			option = zjs.extend(option, useroption);
-		// fix option 
-		// 
 		// save option
 		zHovercardEl.setData(optionkey, option);
 		
@@ -127,46 +108,26 @@ zjs.require('ui', function(){
 		zHovercardEl.addClass(hovercardclass);
 		
 		// tao ra cai panel 
-		var zHovercardPanelwrapEl,
-			useCustomWrapElement = false;
-
-		if(zjs.isString(option.customContentElement)){
-			zHovercardPanelwrapEl = zjs(option.customContentElement);
-			useCustomWrapElement = true;
-		}
-		else{
-			// build wrap element 
-			zHovercardPanelwrapEl = zjs(hovercardpanelwraphtml);
-			// insert vao cung cap voi thang element goc luon
-			// muc dich la de de dang xac dinh vi tri toa do
-			// cua thang panel sau nay
-			// nhung neu nhu ma append to body thi khac
-			if(option.appendToBody){
-				// set position cua body luon cho no chac an
-				var position = zjs(document.body).getStyle('position');
-				if(position == '' || position == 'static')
-					zjs(document.body).setStyle('position', 'relative');
-				zHovercardPanelwrapEl.appendTo(top.document.body).setStyle('z-index',10);
-			}else
-				zHovercardPanelwrapEl.insertAfter(zHovercardEl);
-			
-			// add them custom class
-			if(option.customCssClass !=''){
-				zHovercardPanelwrapEl.addClass(option.customCssClass);
-			}
-		}
+		var zHovercardPanelwrapEl = zjs(hovercardpanelwraphtml);
+		// insert vao cung cap voi thang element goc luon
+		// muc dich la de de dang xac dinh vi tri toa do
+		// cua thang panel sau nay
+		// nhung neu nhu ma append to body thi khac
+		if(option.appendToBody){
+			// set position cua body luon cho no chac an
+			var position = zjs(document.body).getStyle('position');
+			if(position == '' || position == 'static')
+				zjs(document.body).setStyle('position', 'relative');
+			zHovercardPanelwrapEl.appendTo(top.document.body).setStyle('z-index',10);
+		}else
+			zHovercardPanelwrapEl.insertAfter(zHovercardEl);
 		
-		// set js to detect later
-		zHovercardPanelwrapEl.addClass(hovercardjspanelclass).setData(hovercardelkey, zHovercardEl);
-
+		// add them custom class
+		if(option.customCssClass !='')
+			zHovercardPanelwrapEl.addClass(option.customCssClass);
+			
 		// save lai de sau nay truy xuat den
 		zHovercardEl.setData(wrapelkey, zHovercardPanelwrapEl);
-
-		// gio phai truy tim thang cha, lo nhu no la 1 panel wrap thi sao?
-		var zHovercardParentPanelwrapEl = zHovercardEl.findUp('.'+hovercardjspanelclass);
-		if(zHovercardParentPanelwrapEl.count()>0){
-			zHovercardEl.setData(parentwrapelkey, zHovercardParentPanelwrapEl);
-		}
 		
 		
 		// BIND EVENT MOUSE HOVER/OUT
@@ -181,7 +142,6 @@ zjs.require('ui', function(){
 		
 			// on mousehover handler
 			function(){
-				// console.log('mouse in');
 				// clear timer ngay
 				window.clearTimeout(waitBeforeHide);waitBeforeHide = false;
 				hovercardShow(element);
@@ -190,10 +150,7 @@ zjs.require('ui', function(){
 			// on mouseout handler
 			// bay gio se wait 1 ty truoc khi hide cai panel di
 			function(event){
-				// console.log('mouse out');
-				waitBeforeHide = window.setTimeout(function(){
-					hovercardHide(element, (option.hideWhenHoverCard ? false : event));
-				}, option.timeBeforeHide);
+				waitBeforeHide = window.setTimeout(function(){hovercardHide(element, (option.hideWhenHoverCard ? false : event));}, option.timeBeforeHide);
 			},
 			
 			// time wait to call hover hander
@@ -207,24 +164,15 @@ zjs.require('ui', function(){
 				window.clearTimeout(waitBeforeHide);waitBeforeHide = false;
 			})
 			.on('mouseout', function(event){
-				// console.log('mouse out');
 				// bay gio se wait 1 ty truoc khi hide cai panel di
-				waitBeforeHide = window.setTimeout(function(){
-					hovercardHide(element, event);
-				}, option.timeBeforeHide);
+				waitBeforeHide = window.setTimeout(function(){hovercardHide(element, event);}, option.timeBeforeHide);
 			});
-		}
+		};
 		
 		
-		// neu su dung custom element thi coi nhu xong
-		if(useCustomWrapElement){
-			zHovercardEl.setData(isusecustomelkey, true);
-			return;
-		}
-
-
 		// SET CONTENT FOR PANEL
 		// - - - -
+		
 		var zHovercardPanelinnerEl = zHovercardPanelwrapEl.find('.'+hovercardpanelinnerclass);
 		var text = zHovercardEl.getAttr(option.attribute, '');
 		if(text){
@@ -237,8 +185,8 @@ zjs.require('ui', function(){
 				zHovercardEl.removeAttr('title');
 			};
 				
-			zHovercardPanelinnerEl.setInnerHTML(text);
-		}
+			zHovercardPanelinnerEl.html(text);
+		};
 		// save cai hovercard elemnent luon
 		// (de hook truy xuat)
 		zHovercardPanelinnerEl.setData(hovercardelkey, zHovercardEl);
@@ -256,9 +204,8 @@ zjs.require('ui', function(){
 	hovercardShow = function(element){
 		var zHovercardEl = zjs(element),
 			option = zHovercardEl.getData(optionkey),
-			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey),
-			useCustomWrapElement = zHovercardEl.getData(isusecustomelkey);
-
+			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey);
+		
 		// neu nhu khong co panel wrap element thi 
 		// chung to day khong phai la mot hovercard
 		if(!zHovercardPanelwrapEl)return;
@@ -272,101 +219,62 @@ zjs.require('ui', function(){
 		// tot nhat la try catch cho nay, boi vi ham getStyle
 		// se di sau vao computed style de get
 		// nen rat co the browser chua support
-		if(!useCustomWrapElement){
-			try{
-				var position = zHovercardEl.getStyle('position', '');
-				if((position=='' || position=='static') && !zHovercardEl.is('tr'))
-					zHovercardEl.addClass(hovercardfixclass);
-			}catch(err){}
-		}
-	
-		// bay gio se hien ra cai panel truoc, roi tinh tiep
-		zHovercardPanelwrapEl.removeClass(uihideclass).addClass(contextualpanelwrapactiveclass);
-		// bay gio moi di fix align lai position cua hovercard
-		hovercardAlign(element);
-		(function(){
-			hovercardAlign(element);
-		}).delay(200);
-
-		// neu nhu thang hovercard nay co 1 thang wrap lam cha
-		// thi se set thang cha dang bi phu thuoc 1 thang, khong cho thang cha hide
-		var zHovercardParentPanelwrapEl = zHovercardEl.getData(parentwrapelkey);
-		if(zHovercardParentPanelwrapEl){
-			var belongCount = zHovercardParentPanelwrapEl.getData(wrapelbelongcount, 0).toInt() + 1;
-			zHovercardParentPanelwrapEl.setData(wrapelbelongcount, belongCount);
-		}
+		try{
+			var position = zHovercardEl.getStyle('position', '');
+			if((position=='' || position=='static') && !zHovercardEl.is('tr'))
+				zHovercardEl.addClass(hovercardfixclass);
+		}catch(err){};
+		
 		
 		// LOAD CONTENT VIA AJAX
-		if(!useCustomWrapElement && option.ajaxContent && !zHovercardEl.getData(ajaxloadedkey)){
-			
-			zHovercardPanelwrapEl.addClass(ajaxLoadingClass);
+		// --
+		// neu nhu co get content via ajax
+		// thi se thuc hien get truoc
+		// roi sau do moi di align
+		if(option.ajaxContent && !zHovercardEl.getData(ajaxloadedkey)){
+		
 			var zHovercardPanelinnerEl = zHovercardPanelwrapEl.find('.'+hovercardpanelinnerclass);
-
-			zHovercardPanelinnerEl.setInnerHTML(option.ajaxLoadingHtml);
-			hovercardAlign(element);
-
-			var ajaxCallback = function(html){
-				zHovercardEl.setData(ajaxloadedkey, true);
-				zHovercardPanelinnerEl.setInnerHTML(html);
-				// set hovercard content and align
-				zHovercardPanelwrapEl.removeClass(ajaxLoadingClass);
-				hovercardAlign(element);
-			};
-
-			// find in ajax cache first
-			var urlHash = 'aj'+option.ajaxContent.hashCode();
-			// console.log('urlHash', urlHash);
-			if(option.cacheAjax && (typeof ajaxCache[urlHash] !== 'undefined')){
-				ajaxCallback(ajaxCache[urlHash]);
-				return;
-			}
-
-			var ajaxDataType = (option.ajaxContentDataStructure != '') ? 'json' : 'html';
+			
+			//ajaxContent
 			zjs.ajax({
-				url:option.ajaxContent,
-				dataType:ajaxDataType,
-				success:function(response){
-					var html = response;
-					if(ajaxDataType === 'json' && zjs.isObject(response)){
-						html = zjs.getValueByKey(response, option.ajaxContentDataStructure);
-					}
-					if(html){
-						if(option.cacheAjax){
-							ajaxCache[urlHash] = html;
-						}
-						ajaxCallback(html);
-					}
+				url:option.ajaxContent,type:'raw',cache:false,
+				onComplete:function(html){
+					zHovercardEl.setData(ajaxloadedkey, true);
+					zHovercardPanelinnerEl.html(html);
+					// show hover card and align
+					hovercardHide(element);
+					hovercardShow(element);
 				}
 			});
 		}
+		
+		// neu nhu khong thi align hovercard luon
+		else{
+			// bay gio se hien ra cai panel truoc, roi tinh tiep
+			zHovercardPanelwrapEl.removeClass(uihideclass);
+			// bay gio moi di fix align lai position cua hovercard
+			hovercardAlign(element);
+		};
+		
 	},
 	
 	
 	// ham nay se giup hide di cai panel cua hovercard
 	hovercardHide = function(element, event){
 		var zHovercardEl = zjs(element),
-			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey),
-			useCustomWrapElement = zHovercardEl.getData(isusecustomelkey);
-
+			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey);
 		// neu nhu khong co panel wrap element thi 
 		// chung to day khong phai la mot hovercard
 		if(!zHovercardPanelwrapEl)return;
 		
-		// check coi neu nhu dang belong theo thang nao do
-		// thi se khong duoc hide
-		var belongCount = zHovercardPanelwrapEl.getData(wrapelbelongcount, 0).toInt();
-		if(belongCount>0)return;
-
 		// tien hanh kiem tra xem coi neu nhu chuot dang hover vao panel
 		// thi minh se thoi khong hide card nua
-		// console.log('event', event);
 		if(event){
 			var hovercardPanelwrapEl = zHovercardPanelwrapEl.item(0, true);
 			try{
 				// xem coi thang to element la di toi dau
 				// tuc la mouse dang hover vao dau
-				var toElement = event.getToTarget();
-				// console.log('toElement', toElement);
+				var toElement = event.toTarget();
 			
 				// neu nhu ma mouse dang hover vao thang panel luon
 				// hoac chi la thang con cua thang panel thoi
@@ -377,62 +285,31 @@ zjs.require('ui', function(){
 					toElement = toElement.parentNode;
 				};
 			}catch(err){};
-		}
+		};
 		
 		// bay gio se hide di card panel di thoi
-		if(useCustomWrapElement){
-			zHovercardPanelwrapEl.removeClass(contextualpanelwrapactiveclass);
-		}
-		else{	
-			zHovercardEl.removeClass(hovercardfixclass);
-			zHovercardPanelwrapEl.addClass(uihideclass)
-					.removeClass(contextualpanelwrapactiveclass)
-					.removeClass(hovercardpanelwrapleftclass)
-					.removeClass(hovercardpanelwraprightclass)
-					.removeClass(hovercardpanelwraptopclass)
-					.removeClass(hovercardpanelwrapbottomclass)
-					.top('auto').bottom('auto').left('auto').top('auto');
-		}
-
-		// sau khi hide di thi phai set belong count cho thang wrap cha (neu co)
-		var zHovercardParentPanelwrapEl = zHovercardEl.getData(parentwrapelkey);
-		if(zHovercardParentPanelwrapEl){
-			belongCount = zHovercardParentPanelwrapEl.getData(wrapelbelongcount, 0).toInt() - 1;
-			if(belongCount<0)belongCount = 0;
-			zHovercardParentPanelwrapEl.setData(wrapelbelongcount, belongCount);
-
-			// trigger cai event hide luon cho thang cha
-			hovercardHide(zHovercardParentPanelwrapEl.getData(hovercardelkey), event);
-		}
+		zHovercardEl.removeClass(hovercardfixclass);
+		zHovercardPanelwrapEl.addClass(uihideclass)
+				.removeClass(hovercardpanelwrapleftclass)
+				.removeClass(hovercardpanelwraprightclass)
+				.removeClass(hovercardpanelwraptopclass)
+				.removeClass(hovercardpanelwrapbottomclass)
+				.top('auto').bottom('auto').left('auto').top('auto');
 	},
 	
 	
 	// ham nay giup canh chinh vi tri cua hover card
 	hovercardAlign = function(element){
+	
 		var zHovercardEl = zjs(element),
-			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey),
-			useCustomWrapElement = zHovercardEl.getData(isusecustomelkey);
-
+			zHovercardPanelwrapEl = zHovercardEl.getData(wrapelkey);
 		// neu nhu khong co panel wrap element thi 
 		// chung to day khong phai la mot hovercard
-		if(!zHovercardPanelwrapEl || useCustomWrapElement)return;
+		if(!zHovercardPanelwrapEl)return;
 		
 		var zHovercardArrowEl = zHovercardPanelwrapEl.find('.'+hovercardpanelarrowclass),
 			zHovercardPanelinnerEl = zHovercardPanelwrapEl.find('.'+hovercardpanelinnerclass);
 		
-		// reset before align
-		if(useCustomWrapElement){
-			// zHovercardPanelwrapEl.removeClass(contextualpanelwrapactiveclass);
-		}
-		else{	
-			zHovercardPanelwrapEl
-					.removeClass(hovercardpanelwrapleftclass)
-					.removeClass(hovercardpanelwraprightclass)
-					.removeClass(hovercardpanelwraptopclass)
-					.removeClass(hovercardpanelwrapbottomclass)
-					.top('auto').bottom('auto').left('auto').top('auto');
-		}
-
 		
 		// co gang lay ra position & size hien tai cua thang element
 		var eleft = zHovercardEl.left(),
@@ -441,13 +318,6 @@ zjs.require('ui', function(){
 			ebottom = zHovercardEl.bottom(),
 			ewidth = zHovercardEl.width(),
 			eheight = zHovercardEl.height();
-
-		// console.log('eleft', eleft);
-		// console.log('eright', eright);
-		// console.log('etop', etop);
-		// console.log('ebottom', ebottom);
-		// console.log('ewidth', ewidth);
-		// console.log('eheight', eheight);
 		
 		// get ra size cua thang panel luon cho de tinh toan
 		var pwidth = zHovercardPanelwrapEl.width(),
@@ -488,10 +358,10 @@ zjs.require('ui', function(){
 					if(position=='fixed'){
 						positionFixed = true;
 						break;
-					}
-				}catch(err){}
+					};
+				}catch(err){};
 				elem = elem.parentNode;
-			}
+			};
 			
 			// fix position
 			if(option.autoFixPosition == true){
@@ -500,22 +370,21 @@ zjs.require('ui', function(){
 				if(vertical == 'top'){
 					var bodyHeight = zjs(document.body).height();
 					if(bodyHeight - ebottom - eheight - pheight < (positionFixed ? 0 : document.body.scrollTop))vertical = 'bottom';
-				}
+				};
 				if(vertical == 'bottom'){
 					var windowInnerHeight = zWindowEl.height();
 					if(etop + eheight + pheight > (positionFixed ? 0 : document.body.scrollTop) + windowInnerHeight)vertical = 'top';
-				}
-
+				};
 				// horizontal
-				if(horizontal == 'left'){
-					var windowInnerWidth = zWindowEl.width();
-					if(eleft + ewidth + pwidth > document.body.scrollLeft + windowInnerWidth)horizontal = 'right';
-				}
 				if(horizontal == 'right'){
 					var bodyWidth = zjs(document.body).width();
 					if(bodyWidth - eright - ewidth - pwidth < document.body.scrollLeft)horizontal = 'left';
-				}
-			}
+				};
+				if(horizontal == 'left'){
+					var windowInnerWidth = zWindowEl.width();
+					if(eleft + ewidth + pwidth > document.body.scrollLeft + windowInnerWidth)horizontal = 'right';
+				};
+			};
 		}
 		
 		// NOT APPEND TO BODY
@@ -536,8 +405,8 @@ zjs.require('ui', function(){
 				// tuc la neu truong truong hop left chuyen qua right,
 				// ma right van khong duoc thi chuyen lai qua left
 				if(horizontal == 'right' && pwidth > ewidth + eleft)horizontal = 'left';
-			}
-		}
+			};
+		};
 		
 		
 		// FIX DONE!
@@ -547,45 +416,20 @@ zjs.require('ui', function(){
 		// horizontal
 		if(horizontal == 'center'){
 			// set panel hien thi canh theo center cua element
-			// nhung cung phai fix lai cho hop ly
-			var pleft = eleft - pwidth/2 + ewidth/2;
-			var aleft = pwidth/2;
-			if(option.appendToBody){
-				var windowInnerWidth = zWindowEl.width();
-				var new_pleft = pleft;
-				if(pleft + pwidth + 10 > document.body.scrollLeft + windowInnerWidth){
-					new_pleft = document.body.scrollLeft + windowInnerWidth - pwidth - 10;
-				}
-				if(pleft - 10 < document.body.scrollLeft){
-					new_pleft = document.body.scrollLeft + 10;
-				}
-				if(pleft !== new_pleft){
-					aleft-= (new_pleft - pleft);
-					pleft = new_pleft;
-				}
-			}
 			zHovercardPanelwrapEl.addClass(hovercardpanelwrapleftclass);
-			zHovercardPanelwrapEl.left(pleft);
-			zHovercardArrowEl.left(aleft).right('auto');
+			zHovercardPanelwrapEl.left(eleft - pwidth/2 + ewidth/2);
+			zHovercardArrowEl.left(pwidth/2);
 		}else if(horizontal == 'left'){
 			// set panel hien thi canh theo left cua element
 			zHovercardPanelwrapEl.addClass(hovercardpanelwrapleftclass);
 			zHovercardPanelwrapEl.left(option.left == 'auto' ? eleft : parseInt(option.left));
-			if(option.autoFixArrowPosition){
-				var aleft = (option.left == 'auto' ? ewidth/2 : ewidth/2 + eleft - option.left);
-				if(aleft > pwidth/2)aleft = pwidth/2;
-				zHovercardArrowEl.left(aleft).right('auto');
-			}
+			if(option.autoFixArrowPosition)zHovercardArrowEl.left(option.left == 'auto' ? ewidth/2 : ewidth/2 + eleft - option.left);
 		}else if(horizontal == 'right'){
 			// canh theo right cua element
 			zHovercardPanelwrapEl.addClass(hovercardpanelwraprightclass);
 			zHovercardPanelwrapEl.right(option.right == 'auto' ? eright : parseInt(option.right));
-			if(option.autoFixArrowPosition){
-				var aright = (option.right == 'auto' ? ewidth/2 : ewidth/2 + eright - option.right);
-				if(aright > pwidth/2)aright = pwidth/2;
-				zHovercardArrowEl.right(aright).left('auto');
-			}
-		}
+			if(option.autoFixArrowPosition)zHovercardArrowEl.right(option.right == 'auto' ? ewidth/2 : ewidth/2 + eright - option.right);
+		};
 		
 		// vertical
 		if(vertical == 'top'){
@@ -596,7 +440,7 @@ zjs.require('ui', function(){
 			// set panel hien thi canh theo bottom cua element
 			zHovercardPanelwrapEl.addClass(hovercardpanelwrapbottomclass);
 			zHovercardPanelwrapEl.top(option.top == 'auto' ? etop + eheight : option.top);
-		}
+		};
 		
 		// position fixed
 		// neu nhu co position fixed thi se them class vo
@@ -609,18 +453,18 @@ zjs.require('ui', function(){
 	// EXTEND METHOD cho zjs-instance
 	zjs.extendMethod({
 		makeHovercard: function(useroption){
-			return this.eachElement(function(element){makeHovercard(element, useroption)});
+			return this.each(function(element){makeHovercard(element, useroption)});
 		},
 		hovercardShow: function(useroption){
-			return this.eachElement(function(element){hovercardShow(element)});
+			return this.each(function(element){hovercardShow(element)});
 		},
 		hovercardHide: function(useroption){
-			return this.eachElement(function(element){hovercardHide(element, false)});
+			return this.each(function(element){hovercardHide(element, false)});
 		},
 		hovercardPanel: function(){
 			// tap hop cac panel lai
 			var zPanelEls = [];
-			this.eachElement(function(element){
+			this.each(function(element){
 				var zHovercardPanelwrapEl = zjs(element).getData(wrapelkey);
 				// neu nhu khong co panel wrap element thi 
 				// chung to day khong phai la mot hovercard

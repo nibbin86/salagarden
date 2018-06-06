@@ -31,9 +31,8 @@ zjs.require('ui', function(){
 	
 	// template
 	var accordionclass = 'zui-accordion',
-		wrapclass = 'zui-accordion-wrap',
 		titleclass = 'zui-accordion-title',
-		sessionclass = 'zui-accordion-session',
+		sessionclass = 'zui-accordion-session';
 		contentclass = 'zui-accordion-content';
 	
 		
@@ -115,7 +114,7 @@ zjs.require('ui', function(){
 				
 				// bind event cho thang title nay luon
 				// (nham support cho thang sidenav)
-				zEl.on('ui:toc:out:trigger', function(event){
+				zEl.on('ui.sidenav.out.trigger', function(event){
 					// neu nhu dang active thi thoi
 					if(this.hasClass('active'))return;
 					// neu nhu khong active thi moi cho phep haha
@@ -126,8 +125,7 @@ zjs.require('ui', function(){
 					// nen phai bao ve cho cai thang sidenav biet
 					event.preventDefault();
 				});
-				
-				zjs('<div></div>').addClass(wrapclass).insertAfter(zEl).append(zEl);	
+					
 				var sessionEl = zjs('<div></div>').addClass(sessionclass).insertAfter(zEl);
 				lastContentEl = zjs('<div></div>').addClass(contentclass).appendTo(sessionEl);
 			}else if(lastContentEl){
@@ -137,7 +135,7 @@ zjs.require('ui', function(){
 		
 		// neu nhu ma chon option separate thi phai hide het di cai da
 		if(option.separate){
-			zAccordionEl.find('>.'+wrapclass+'>.'+sessionclass).hide();
+			zAccordionEl.find('>.'+sessionclass).hide();
 			//zAccordionEl.find('>.'+sessionclass).each(function(el, i){
 			//	zjs(el).hide();
 			//});
@@ -216,40 +214,32 @@ zjs.require('ui', function(){
 		//var currentIndex = zAccordionEl.getData(currentindexkey).toInt();
 		//if(currentIndex == index){
 		// get ra cai thang title o vi tri nay
-		// var thisIndexTitle = zAccordionEl.find('.zui-accordion-title').item(index);
-		var thisIndexWrap = zAccordionEl.find('>.'+wrapclass).item(index);
-		if(thisIndexWrap.hasClass('active')){	
+		var thisIndexTitle = zAccordionEl.find('.zui-accordion-title').item(index);
+		if(thisIndexTitle.hasClass('active')){	
 			// neu nhu cai thang nay dang la thang active roi thi thoi
 			// neu nhu cho phep close cai thang dang active, thi se xu ly
 			// con khong thi return luon
 			if(option.allowclose){
 				// tim ra cac thang session la con truc tiep cua cai thang accordion nay
-				// var thisIndexSession = zAccordionEl.find('>.'+wrapclass+'>.'+sessionclass).item(index);
-				var thisIndexTitle = thisIndexWrap.find('>.'+titleclass),
-					thisIndexSession = thisIndexWrap.find('>.'+sessionclass);
+				var thisIndexSession = zAccordionEl.find('>.'+sessionclass).item(index);
 				if(thisIndexSession.hasClass('active')){
 					thisIndexSession.hideScale({time:500});
 					thisIndexSession.removeClass('active');
-				}
+				};
 		
+				// tim cac thang title truc tiep cua thang accordion de active
 				thisIndexTitle.removeClass('active');
-				thisIndexWrap.removeClass('active');
-			}
+			};
 			
 			return;
-		}
+		};
 		
 		
 		// tim ra cac thang session la con truc tiep cua cai thang accordion nay
-		// zAccordionEl.find('>.'+sessionclass).each(function(el, i){
-		zAccordionEl.find('>.'+wrapclass).each(function(el, i){
-			var zWrapEl = zjs(el),
-				zEl = zWrapEl.find('>.'+sessionclass),
-				zTitleEl = zWrapEl.find('>.'+titleclass);
-
+		zAccordionEl.find('>.'+sessionclass).each(function(el, i){
+			var zEl = zjs(el);
 			if(i == index){
-				zWrapEl.addClass('active');
-				zTitleEl.addClass('active');
+				
 				zEl.showScale({time:500}).addClass('active');
 				
 				var zHeaderEl = false,
@@ -266,9 +256,9 @@ zjs.require('ui', function(){
 							if(sectionName=='')sectionName = _tempHeaderEl.getAttr('id', '');
 							zHeaderEl = _tempHeaderEl;
 							return false;
-						}
+						};
 					});
-				}
+				};
 				
 				// xem coi co su dung hash khong
 				// neu nhu co su dung thi se change document hash
@@ -277,15 +267,12 @@ zjs.require('ui', function(){
 					if(!fromHash)
 						zjs(element).setData(preventhashchangeeventkey, true);
 					document.location.hash = sectionName;
-				}
+				};
 				
 				// xem coi co su dung autoscroll khong?
 				//console.log('forceScroll', forceScroll, 'zHeaderEl', zHeaderEl);
 				if((forceScroll || option.autoscroll) && zHeaderEl){
 					
-					// scroll cai thang nay to bottom cua thang header dung truoc no
-					// neu day la header dau tien: scroll toi top cua cai accodion wrap 
-
 					// bay gio phai scroll cai thang nay to top
 					//console.log('zHeaderEl top', );
 					// boi vi top cua cai thang header se thay doi lien tuc
@@ -321,7 +308,7 @@ zjs.require('ui', function(){
 						}
 					});
 					fixTopTimer.run();
-				}
+				};
 				
 			}
 			// neu nhu khong cho rieng biet thi moi close
@@ -329,12 +316,24 @@ zjs.require('ui', function(){
 			else{
 				if(!option.separate){
 					if(zEl.hasClass('active'))zEl.hideScale({time:500});else zEl.hide();
-					zWrapEl.removeClass('active');
-					zTitleEl.removeClass('active');
 					zEl.removeClass('active');
 				}
-			}
+			};
 		});
+		
+		// tim cac thang title truc tiep cua thang accordion de active
+		zAccordionEl.find('>.'+titleclass).each(function(el, i){
+			var zEl = zjs(el);
+			if(i == index){
+				zjs(el).addClass('active');
+			}
+			else{
+				if(!option.separate){
+					zEl.removeClass('active');
+				}
+			};
+		});
+		
 		
 		// ho tro cho cai thang sidenav luon
 		// se update lai cai thang sidenav cho dung

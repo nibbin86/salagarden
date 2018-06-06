@@ -2,14 +2,11 @@
 zjs.require('ui', function(){
 	
 	var optionkey = 'zmoduleuitabpaneloption',
+		scrollbarContentElkey = 'zmodulescrollbarcontentel',
 		tabindexkey = 'data-tabindex',
 		contentwrapidkey = 'zmoduleuitabpanelcontentwrapid',
 		navwrapelkey = 'zmoduleuitabpanelnavwrapel',
-		currenttabindexkey = 'zmoduleuitabpanelcurrindex',
-
-		// support 
-		scrollbarContentElkey = 'zmodulescrollbarcontentel',
-		imageSliderOptionkey = 'zmoduleimageslideroption';
+		currenttabindexkey = 'zmoduleuitabpanelcurrindex';
 	
 	// extend core mot so option
 	zjs.extendCore({
@@ -18,25 +15,13 @@ zjs.require('ui', function(){
 			autoheight:false,
 			transition:0,
 			activetab:0,
-			useurlhash:false,
-			hover:false,
-
-			contentWrapperClass: '',
-
-			// option for responsive 
-			// auto disable this "tab" module
-			// when the width less than a [number]
-			autoDisableWhenWidthLessThan: 0, 
-			autoDisableWithMobile: false, 
-
-			// like option for mobile, but this is for desktop
-			autoDisableWhenWidthLargerThan: 0, 
+			useurlhash:false
 		}
 	});
 	
 	// trigger
-	//ui:tabpanel:load
-	//ui:tabpanel:change
+	//ui.tabpanel.load
+	//ui.tabpanel.change
 	
 	// template
 	var tabpanelclass = 'zui-tabpanel',
@@ -46,16 +31,13 @@ zjs.require('ui', function(){
 		contentwrapclass = 'zui-tabpanel-content-wrapper',
 		contentclass = 'zui-tabpanel-content',
 		contentactiveclass = 'zui-active',
-		contentdeactiveclass = 'zui-deactive',
-		disableclass = 'zui-disable',
 		
-		_contentwrapperhtml = '<div></div>',
-		_contenthtml = '<div></div>';
+		_contentwrapperhtml = '<div class="'+contentwrapclass+'"></div>',
+		_contenthtml = '<div class="'+contentclass+'"></div>';
 		
 	
 	// static variable
-	var lastindex = 0,
-		windowEl = zjs(window);
+	var lastindex = 0;
 		
 	// - - - - - - - - -
 	
@@ -101,16 +83,7 @@ zjs.require('ui', function(){
 			option.activetab = 0;
 		// use has
 		option.useurlhash=(!!option.useurlhash);
-		// use hover to change tab
-		option.hover = (!!option.hover);
-		// auto disable option
-		option.autoDisableWhenWidthLessThan = parseInt(option.autoDisableWhenWidthLessThan);
-		if(option.autoDisableWhenWidthLessThan < 0)
-			option.autoDisableWhenWidthLessThan = 0;
-		//
-		option.autoDisableWhenWidthLargerThan = parseInt(option.autoDisableWhenWidthLargerThan);
-		if(option.autoDisableWhenWidthLargerThan < 0)
-			option.autoDisableWhenWidthLargerThan = 0;
+			
 		// save option
 		zTabPanelEl.setData(optionkey, option);
 		
@@ -127,10 +100,6 @@ zjs.require('ui', function(){
 		var zNavWrapEl = false,
 			zContentWrapEl = zjs(_contentwrapperhtml).setData(contentwrapidkey, zjs.getUniqueId()),
 			zContentWrapElIndom = false;
-
-		if(option.contentWrapperClass != '')
-			zContentWrapEl.addClass(option.contentWrapperClass);
-		zContentWrapEl.addClass(contentwrapclass);
 		
 		// 
 		function initnavwrap(__ztempEl){
@@ -151,16 +120,10 @@ zjs.require('ui', function(){
 			
 			// sau khi tim duoc navigation roi
 			// thi se di bind event cho navigation
-
-			var clickEventName = [];
-			if(zjs.browser.isTouchPad)clickEventName.push('tap');
-			else if(option.hover)clickEventName.push('hover');
-			else clickEventName.push('click');
-
 			zNavWrapEl.child().each(function(el){
 				if(el.nodeType==3)zjs(el).remove();
 				if(zjs(el).is('li')){
-					zjs(el).setAttr(tabindexkey, index++).on(clickEventName.join(','), function(event, el){
+					zjs(el).setAttr(tabindexkey, index++).click(function(event, el){
 						tabpanelSelectTab(element, this.attr(tabindexkey).toInt());
 					});
 				};
@@ -200,25 +163,13 @@ zjs.require('ui', function(){
 					zContentWrapElIndom = true;
 					zContentWrapEl.insertBefore(zEl);
 				};
-				var tabContentEl = zjs(_contenthtml).appendTo(zContentWrapEl);
-				tabContentEl.append(el);
-				var customTabContentClass = zjs(el).getAttr('data-tabpanel-class', '');
-				if(customTabContentClass != '')
-					tabContentEl.addClass(customTabContentClass);
-				tabContentEl.addClass(contentclass);
+				zjs(_contenthtml).appendTo(zContentWrapEl).append(el);
 				
 				// neu nhu thang el nay la zscrollbar thi se link cho no cai size wrapper luon
 				var zScrollbarEl = zjs(el).getData(scrollbarContentElkey);
 				if(!option.autoheight && typeof zjs.moduleScrollbar != 'undefined' && zScrollbarEl){
 					zScrollbarEl.scrollbarSetWrapperSizeElement(zContentWrapEl);
 				};
-
-				// neu nhu thang el nay la slider
-				// thi se cho thang slider nay chay xong thi phai trigger resize cai thang tabpanel lai luon
-				// var imageSliderOption = zjs(el).getData(imageSliderOptionkey);
-				// if(option.autoheight && typeof zjs.moduleImageSliderOption != 'undefined' && imageSliderOption){
-					// console.log('imageSliderOption', el, imageSliderOption);
-				// }
 			};
 		});
 		
@@ -269,44 +220,12 @@ zjs.require('ui', function(){
 			});
 		};
 		
-
-		// Handler disable/enable case
-		if(option.autoDisableWhenWidthLargerThan > 0){
-			var minW = option.autoDisableWhenWidthLargerThan,
-				isMinW = (windowEl.width() >= minW);
-
-			var handlerDisableOrNotDisableByWidthLarger = function(){
-				if(minW > 0){
-					// xem coi qua cot moc 600px chua?
-					if(windowEl.width() >= minW && !isMinW){
-						isMinW = true;
-						zTabPanelEl.addClass(disableclass);
-					}
-	
-					if(windowEl.width() < minW && isMinW){
-						isMinW = false;
-						zTabPanelEl.removeClass(disableclass);
-					}
-				};
-			};
-			
-			// bind event xu ly khi window resize
-			windowEl.on('resize', function(){
-				handlerDisableOrNotDisableByWidthLarger();
-			});
-			
-			// first handler
-			isMinW = !isMinW;
-			handlerDisableOrNotDisableByWidthLarger();
-		}
-
-
 		// select first tab for default
 		if(!_focusedFirsttab)
 			tabpanelSelectTab(element, option.activetab);
 		
 		// run trigger
-		zTabPanelEl.trigger('ui:tabpanel:load');
+		zTabPanelEl.trigger('ui.tabpanel.load');
 	},
 	
 	// select tab by hash, neu lam dc thi return true
@@ -354,7 +273,6 @@ zjs.require('ui', function(){
 			topWrapContentId = topWrapContentEl.getData(contentwrapidkey),
 			tabName = '';
 		
-		var zCurrentContentEl = null;
 		topWrapContentEl.find('.'+contentclass).each(function(el){
 			
 			var zContentEl = zjs(el);
@@ -369,12 +287,9 @@ zjs.require('ui', function(){
 			
 			var tabindex = zContentEl.getAttr(tabindexkey, 0).toInt();
 	
-			if(index != tabindex){
-				zContentEl.removeClass(contentactiveclass).addClass(contentdeactiveclass);
-			}
+			if(index != tabindex)zContentEl.removeClass(contentactiveclass);
 			else{
-				zCurrentContentEl = zContentEl;
-				zContentEl.addClass(contentactiveclass).removeClass(contentdeactiveclass).style('z-index',lastindex++);
+				zContentEl.addClass(contentactiveclass).style('z-index',lastindex++);
 			}
 		});
 		
@@ -383,9 +298,9 @@ zjs.require('ui', function(){
 			zNavWrapEl.find('> li').each(function(el){
 				var zLi = zjs(el),
 					tabindex = zLi.attr(tabindexkey).toInt();
-				if(index != tabindex)zLi.removeClass(contentactiveclass).addClass(contentdeactiveclass);
+				if(index != tabindex)zLi.removeClass(contentactiveclass);
 				else{
-					zLi.addClass(contentactiveclass).removeClass(contentdeactiveclass);
+					zLi.addClass(contentactiveclass);
 					// tranh thu get tabname luon
 					tabName = zLi.getAttr('data-name', '');
 					// neu khong co thi get id
@@ -405,27 +320,8 @@ zjs.require('ui', function(){
 		};
 			
 		
-		// neu nhu autoheight 
-		// thi se anh huong den height toan cuc
-		// nen can phai refresh lai vai thang module
-		if(option.autoheight){
-			(function(){
-				zjs('.zfreezepanel').trigger('trigger:refreshpanel');
-			}).delay(200);
-
-			// support Image Slider refresh size
-			var imageSliderOption = zCurrentContentEl.child().getData(imageSliderOptionkey);
-			if(option.autoheight && typeof zjs.moduleImageSliderOption != 'undefined' && imageSliderOption){
-				// console.log('here');
-				// (function(){console.log('here2');
-					zCurrentContentEl.child().slideRefresh();
-				// }).delay(1000);
-			}
-		};
-		
-		
 		// trigger event
-		zTabPanelEl.trigger('ui:tabpanel:change', {index:index});
+		zTabPanelEl.trigger('ui.tabpanel.change', {index:index});
 	};
 	
 	

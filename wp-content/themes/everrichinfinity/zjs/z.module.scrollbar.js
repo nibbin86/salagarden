@@ -85,10 +85,10 @@
 	// .zscrollnotinclude
 	
 	// trigger
-	//scrollbar:start
-	//scrollbar:ready
-	//scrollbar:scroll
-	//scrollbar:windowResize
+	//scrollbar.start
+	//scrollbar.ready
+	//scrollbar.scroll
+	//scrollbar.windowResize
 	
 	//data-snap-modify-px
 	
@@ -98,11 +98,6 @@
 		
 		_scrollbarUsedefaultClass = 'zui-scrollbar-usedefault';
 	
-	
-	// support module ui.popup
-	var popuppredefineclass = 'zpopup',
-		popupclass = 'zui-popup',
-		popupcoverclass = 'zui-popup-page-cover';
 	
 	// main function
 	var makeScrollbar = function(element, useroption){
@@ -144,7 +139,7 @@
 		// extend from user option ?
 		if(typeof useroption!='undefined')
 			option = zjs.extend(option, useroption);
-
+		
 		// fix option
 		if(option.horizontal)option.shadow = false;
 		
@@ -180,9 +175,9 @@
 			containerRealWidth = contentElement.width(),
 			containerRealHeight = contentElement.height();
 		// fix real width, tai vi neu co box-sizing thi phien
-		try{if(contentElement.getStyle('box-sizing') == 'border-box'){
-			containerRealWidth -= (contentElement.getStyle('border-left', true) + contentElement.getStyle('border-right', true));
-			containerRealHeight -= (contentElement.getStyle('border-top', true) + contentElement.getStyle('border-bottom', true));
+		try{if(contentElement.style('box-sizing') == 'border-box'){
+			containerRealWidth -= (contentElement.style('border-left', true) + contentElement.style('border-right', true));
+			containerRealHeight -= (contentElement.style('border-top', true) + contentElement.style('border-bottom', true));
 		}}catch(err){};
 			
 			
@@ -216,7 +211,7 @@
 		if(!option.nonui && isBodyScroll){
 			// hien tai content element dang la body
 			// nen se fix style cho thang body
-			contentElement.setStyle('overflow', 'hidden');
+			contentElement.style('overflow', 'hidden');
 			// replace content Element
 			contentElement = zjs('<div></div>');
 			// bay gio phai tao ra 1 cai bien moi
@@ -225,11 +220,7 @@
 			// trong qua trinh copy nay se tam thoi disable zjs hook cho chac an
 			var _currentHook = zjs.enablehook();
 			zjs.enablehook(false);
-			bodyElement.child().eachElement(function(el){
-				if(el.tagName == 'SCRIPT' || el.tagName == 'LINK')return;
-				//if(zjs(el).hasClass(popuppredefineclass) || zjs(el).hasClass(popupclass) || zjs(el).hasClass(popupcoverclass))return;
-				if(!zjs(el).hasClass('zscrollnotinclude'))contentElement.append(el);
-			});
+			bodyElement.child().each(function(el){if(!zjs(el).hasClass('zscrollnotinclude'))contentElement.append(el)});
 			zjs.enablehook(_currentHook);
 			// create windowEl de ma get width, height
 			windowEl = zjs(window);
@@ -336,19 +327,19 @@
 		if(!option.nonui){
 		
 			// tim vi tri dat thang container cho hop ly
-			if(isBodyScroll)containerElement.prependTo(element);
+			if(isBodyScroll)containerElement.appendTo(element);
 			else containerElement.insertBefore(element);
 			// set style cho thang container cho hop ly
-			containerElement.addClass(option.customCssClass).setStyle({position:'relative', overflow:'hidden', width:containerWidth, height:containerHeight});
+			containerElement.addClass(option.customCssClass).style({position:'relative', overflow:'hidden', width:containerWidth, height:containerHeight});
 			containerElement.addClass(isBodyScroll?'body-scroll':'not-body-scroll').addClass(option.horizontal?'zui-scrollbar-horizontal':'zui-scrollbar-vertical');
 		
 			// sau do append content vao container
 			containerElement.append(contentElement);
 		
 			// fix style cho content element	
-			contentElement.setStyle({position:'absolute', left:0, top:0, overflow:'visible'});
-			if(option.horizontal)contentElement.setStyle({width:'auto', height:containerHeight});
-			else contentElement.setStyle({height:'auto', width:containerWidth});
+			contentElement.style({position:'absolute', left:0, top:0, overflow:'visible'});
+			if(option.horizontal)contentElement.style({width:'auto', height:containerHeight});
+			else contentElement.style({height:'auto', width:containerWidth});
 	
 			if(option.innerWidth && !isNaN(option.innerWidth))contentElement.width(option.innerWidth);
 			if(option.innerHeight && !isNaN(option.innerHeight))contentElement.height(option.innerHeight);
@@ -356,10 +347,10 @@
 			// style cho scrollbar wrapper
 			if(!option.alwayshide){
 				containerElement.append(scrollbarWrapElement);
-				scrollbarWrapElement.setStyle({position:'absolute', opacity:option.autohide?0:1, display:option.alwayshide?'none':'block'});
+				scrollbarWrapElement.style({position:'absolute', opacity:option.autohide?0:1, display:option.alwayshide?'none':'block'});
 				if(option.horizontal)scrollbarWrapElement.width(containerWidth);
 				else scrollbarWrapElement.height(containerHeight);
-				scrollbarElement.setStyle('position','absolute');
+				scrollbarElement.style('position','absolute');
 			};
 		
 		};
@@ -418,8 +409,8 @@
 		
 		// first run callback & trigger a event
 		option.onResize(-scrollPosition(), containerWidth, containerHeight);
-		if(isBodyScroll)bodyElement.trigger('scrollbar:windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
-		else contentElement.trigger('scrollbar:windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
+		if(isBodyScroll)bodyElement.trigger('scrollbar.windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
+		else contentElement.trigger('scrollbar.windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
 		
 		// shadow element
 		var shadowElement = option.shadow ? zjs(_shadowHtml).appendTo(containerElement).hide() : false;
@@ -456,8 +447,8 @@
 		// timer lam nhiem vu hide, show scrollbar wrap
 		var scrollbarHideTimer = zjs.timer({
 			from: 50,to: 0,time: 2000,
-			onProcess: function(current){if(!option.nonui && option.autohide && !option.alwayshide)scrollbarWrapElement.setStyle('opacity', current);},
-			onFinish: function(from, to){if(!option.nonui && option.autohide && !option.alwayshide)scrollbarWrapElement.setStyle('opacity', to);}
+			onProcess: function(current){if(!option.nonui && option.autohide && !option.alwayshide)scrollbarWrapElement.style('opacity', current);},
+			onFinish: function(from, to){if(!option.nonui && option.autohide && !option.alwayshide)scrollbarWrapElement.style('opacity', to);}
 		});
 		
 		// ham lam nhiem vu kiem tra coi
@@ -523,19 +514,10 @@
 			
 			// run callback & trigger a event
 			if(!option.nonui)option.onScroll(-to, containerWidth, containerHeight);
-			if(option.nonui)contentElement.trigger('scrollbar:scroll', {scrollTop:-to});
-			else if(isBodyScroll)bodyElement.trigger('scrollbar:scroll', {
-				scrollTop:-to, 
-				scrollBottom:option.horizontal?(contentWidth-containerWidth+to):(contentHeight-containerHeight+to), 
-				width:containerWidth, 
-				height:containerHeight
-			});
-			else contentElement.trigger('scrollbar:scroll', {
-				scrollTop:-to, 
-				scrollBottom:option.horizontal?(contentWidth-containerWidth+to):(contentHeight-containerHeight+to), 
-				width:containerWidth, 
-				height:containerHeight
-			});
+			
+			if(option.nonui)contentElement.trigger('scrollbar.scroll', {scrollTop:-to});
+			else if(isBodyScroll)bodyElement.trigger('scrollbar.scroll', {scrollTop:-to, scrollBottom:contentWidth-containerWidth+to, width:containerWidth, height:containerHeight});
+			else contentElement.trigger('scrollbar.scroll', {scrollTop:-to, scrollBottom:contentWidth-containerWidth+to, width:containerWidth, height:containerHeight});
 		};
 		
 		// ham thuc su di chuyen content element
@@ -606,19 +588,17 @@
 		// 		// _movingsmoothbysnap_startbytouchpad = false;
 		// 	}
 		// });
-		
+		// 
 		var nativeBodyMoveContentEl = function(to){
 			//if(option.horizontal)document.body.scrollLeft = -to;
 			//else document.body.scrollTop = -to;
-			// nativeBodyMoveContentElTimer.stop();
+			nativeBodyMoveContentElTimer.stop();
 			var _form = scrollPosition(),
 				_to = to;
 			// 300, 299 la khoang lan chuot co ban cua window	
 			//if(Math.abs(_to - _form) < 280){
 			// ma thoi de < 10 cho detech chinh xac la mac hon
 			// if(Math.abs(_to - _form) < 280){
-				// quyet dinh la khong dung hieu ung gi het
-				// cu the ma di thoi
 				if(option.horizontal)document.body.scrollLeft = -to;
 				else document.body.scrollTop = -to;
 			// }
@@ -661,7 +641,7 @@
 				
 				if(!option.nonui){
 					scrollbarHideTimer.stop();
-					if(!option.alwayshide)scrollbarWrapElement.setStyle('opacity', 1);
+					if(!option.alwayshide)scrollbarWrapElement.style('opacity', 1);
 					// run timer de fadeOut scrollbar
 					if(!option.smooth)scrollbarHideTimer.run();
 				};
@@ -711,7 +691,7 @@
 				scrollbarHideTimer.stop();
 			
 				// fix scrollbar show
-				if(!option.alwayshide)scrollbarWrapElement.setStyle('opacity', 1);
+				if(!option.alwayshide)scrollbarWrapElement.style('opacity', 1);
 			};
 			
 			
@@ -847,14 +827,14 @@
 				var moveok = false;
 				
 				// tinh toan cac thong so de bat dau scroll
-				//var _to = _newScrollPositionMergeWithSnap(scrollPosition(), e.getDeltaY(), e.isTouchpad());
+				//var _to = _newScrollPositionMergeWithSnap(scrollPosition(), e.deltaY(), e.isTouchpad());
 				// update: cho phep option la lan len hay lan xuong luon
 				var _to = scrollPosition();
 					_to = _newScrollPositionMergeWithSnap(
 						scrollPosition(), 
-						e.getDeltaY(), 
+						e.deltaY(), 
 						e.isTouchpad(), 
-						((e.getDeltaY() > 0 && option.snapScrollUp) || (e.getDeltaY() < 0 && option.snapScrollDown))
+						((e.deltaY() > 0 && option.snapScrollUp) || (e.deltaY() < 0 && option.snapScrollDown))
 					);
 				
 				// xem coi move co can smooth hay khong
@@ -906,37 +886,37 @@
 				var moveok = false;
 				var _to = 0;
 				
-				if(!moveok && (event.getKeyCode()==40||event.getKeyCode()==38||event.getKeyCode()==37||event.getKeyCode()==39)){
+				if(!moveok && (event.keyCode()==40||event.keyCode()==38||event.keyCode()==37||event.keyCode()==39)){
 					_to = _newScrollPositionMergeWithSnap(
 						scrollPosition(), 
-						(event.getKeyCode() == 40 || event.getKeyCode() == 39) ? -1 : 1, 
+						(event.keyCode() == 40 || event.keyCode() == 39) ? -1 : 1, 
 						false, 
-						((event.getKeyCode() == 40 && option.snapScrollDown) || (event.getKeyCode() == 39 && option.snapScrollUp))
+						((event.keyCode() == 40 && option.snapScrollDown) || (event.keyCode() == 39 && option.snapScrollUp))
 					);
 					moveok = runMoveContentEl(_to);
 				};
-				if(!moveok && option.horizontal && (event.getKeyCode()==37||event.getKeyCode()==39)){
+				if(!moveok && option.horizontal && (event.keyCode()==37||event.keyCode()==39)){
 					_to = _newScrollPositionMergeWithSnap(
 						scrollPosition(), 
-						event.getKeyCode() == 39 ? -1 : 1, 
+						event.keyCode() == 39 ? -1 : 1, 
 						false,
 						true
 					);
 					moveok = runMoveContentEl(_to);
 				};
-				if(!moveok && event.getKeyCode()==36){
+				if(!moveok && event.keyCode()==36){
 					if(option.horizontal)return runMoveContentEl(contentWidth);
 					moveok = runMoveContentEl(contentHeight);
 				};
-				if(!moveok && event.getKeyCode()==35){
+				if(!moveok && event.keyCode()==35){
 					if(option.horizontal)return runMoveContentEl(-contentWidth);
 					moveok = runMoveContentEl(-contentHeight);
 				};
-				if(!moveok && event.getKeyCode()==33){
+				if(!moveok && event.keyCode()==33){
 					if(option.horizontal)moveok = runMoveContentEl(scrollPosition() + containerWidth);
 					else moveok = runMoveContentEl(scrollPosition() + containerHeight);
 				};
-				if(!moveok && event.getKeyCode()==34){
+				if(!moveok && event.keyCode()==34){
 					if(option.horizontal)moveok = runMoveContentEl(scrollPosition() - containerWidth);
 					else moveok = runMoveContentEl(scrollPosition() - containerHeight);
 				};
@@ -976,7 +956,6 @@
 		var _scrollbarElementPosition = 0;
 		if(!option.alwayshide)
 			scrollbarElement.drag({
-				// willPreventDefault: true,
 				onStart: function (event) {
 					event.preventDefault();
 					event.stopPropagation();
@@ -1223,7 +1202,7 @@
 			
 				// run callback & trigger a event
 				option.onResize(-scrollPosition(), containerWidth, containerHeight);
-				bodyElement.trigger('scrollbar:windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
+				bodyElement.trigger('scrollbar.windowResize', {scrollTop:-scrollPosition(), width:containerWidth, height:containerHeight});
 			});
 			
 			// first handler
@@ -1241,8 +1220,8 @@
 		
 		
 		// sau khi lam xong het roi, thi bay gio se trigger 1 cai event khi khoi tao xong
-		if(isBodyScroll)bodyElement.trigger('scrollbar:ready');
-		else contentElement.trigger('scrollbar:ready');
+		if(isBodyScroll)bodyElement.trigger('scrollbar.ready');
+		else contentElement.trigger('scrollbar.ready');
 	
 		
 		// support scroll den dung vi tri cua hash
@@ -1279,7 +1258,7 @@
 			if(_zSnapEls.count()>0){
 				if(!zjs.isArray(_contentElementSnapPositions))
 					_contentElementSnapPositions = [];
-				_zSnapEls.eachElement(function(_snapElements){
+				_zSnapEls.each(function(_snapElements){
 					_snapElements = zjs(_snapElements);
 					
 					_contentElementSnapPositions.push( (isBodyScroll ? (
@@ -1371,24 +1350,24 @@
 	// extend method cho zjs-instance
 	zjs.extendMethod({
 		makeScrollbar: function(useroption){
-			return this.eachElement(function(element){makeScrollbar(element, useroption)});
+			return this.each(function(element){makeScrollbar(element, useroption)});
 		},
 		pauseScrollEvent: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.pauseScrollEvent == 'function')
 					listFunctions.pauseScrollEvent();
 			});
 		},
 		continueScrollEvent: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.continueScrollEvent == 'function')
 					listFunctions.continueScrollEvent();
 			});
 		},
 		refreshScroll: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.refreshScroll == 'function')
 					listFunctions.refreshScroll();
@@ -1396,11 +1375,11 @@
 			});
 		},
 		scrollbarRefreshSnapPositions: function(){
-			return this.eachElement(function(element){scrollbarRefreshSnapPositions(element)});
+			return this.each(function(element){scrollbarRefreshSnapPositions(element)});
 		},
 		
 		scrollLineUp: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollLineUp == 'function')
 					listFunctions.scrollLineUp();
@@ -1410,7 +1389,7 @@
 			return this.scrollLineUp();
 		},
 		scrollLineDown: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollLineDown == 'function')
 					listFunctions.scrollLineDown();
@@ -1420,42 +1399,42 @@
 			return this.scrollLineDown();
 		},
 		scrollPageUp: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollPageUp == 'function')
 					listFunctions.scrollPageUp();
 			});
 		},
 		scrollPageDown: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollPageDown == 'function')
 					listFunctions.scrollPageDown();
 			});
 		},
 		scrollNextSnap: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollNextSnap == 'function')
 					listFunctions.scrollNextSnap();
 			});
 		},
 		scrollPrevSnap: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollPrevSnap == 'function')
 					listFunctions.scrollPrevSnap();
 			});
 		},
 		scrollToTop: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollToTop == 'function')
 					listFunctions.scrollToTop();
 			});
 		},
 		scrollToEnd: function(){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollToEnd == 'function')
 					listFunctions.scrollToEnd();
@@ -1463,14 +1442,14 @@
 		},
 		scrollToBottom: function(){return this.scrollToEnd();},
 		scrollTo: function(pixel,notSmooth){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollTo == 'function')
 					listFunctions.scrollTo(pixel,notSmooth);
 			});
 		},
 		scrollToElement: function(query, pixel, notSmooth){
-			return this.eachElement(function(element){
+			return this.each(function(element){
 				var listFunctions = zjs(element).getData(listFunctionsKey);
 				if(typeof listFunctions.scrollToElement == 'function')
 					listFunctions.scrollToElement(query, pixel, notSmooth);
@@ -1504,12 +1483,12 @@
 		scrollbarUseDefault: function(bool){
 			// scrolltop cai da roi tinh sau
 			this.scrollToTop();
-			return this.eachElement(function(element){scrollbarUseDefault(element, bool)});
+			return this.each(function(element){scrollbarUseDefault(element, bool)});
 		},
 		
 		//
 		scrollbarSetWrapperSizeElement: function(wrapperElement){
-			return this.eachElement(function(element){scrollbarSetWrapperSizeElement(element, wrapperElement)});
+			return this.each(function(element){scrollbarSetWrapperSizeElement(element, wrapperElement)});
 		}
 	});
 	

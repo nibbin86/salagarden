@@ -52,9 +52,6 @@ body {
   font-weight: 300;
   font-size: 16px;
 }
-body .imageslider-linear .nav-wrap {
-  height: auto;
-}
 .d-table {
   display: table;
   width: 100%;
@@ -63,9 +60,7 @@ body .imageslider-linear .nav-wrap {
     display: table-cell;
     vertical-align: middle;
     width: 100%; }
-.zparallax-navigation {
-  cursor: pointer;
-}
+
 .row {
   margin-left: 0px;
   margin-right: 0px; }
@@ -99,9 +94,9 @@ section {
 
 header {
   background-color: #403e3d;
-  position: inherit;
+  position: fixed;
   width: 100%;
-  height: 85px;
+  height: 65px;
   margin: 0 auto !important; 
   z-index: 999 !important;
   -webkit-transition: height 0.3s;
@@ -113,7 +108,7 @@ header {
   header .wrapper {
     margin: 0 auto; }
     header .logo img{
-		width: 185px;
+		width: 155px;
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -142,8 +137,8 @@ header {
             color: #fefbfb;
             font-family: 'Averta'; font-weight: 700;
             font-size: 16px;
-            line-height: 75px;
-            height: 75px;
+            line-height: 55px;
+            height: 55px;
             -webkit-transition: all 0.3s ease;
             transition: all 0.3s ease;
             cursor: pointer; 
@@ -192,10 +187,12 @@ header {
             header .wrapper .Menu ul li a.menu-item.active::before {
 				width: 100%;
 			}  
-
-body div.wpcf7-validation-errors, 
-div.wpcf7-acceptance-missing {
-  margin: 5px 0 0 0;
+.zparallax-section {
+  padding-top: 65px !important;
+}
+.zparallax-section .section-inside{
+  height: 100%;
+  position: relative;
 }
 #banner {
 	padding: 0;
@@ -204,14 +201,15 @@ div.wpcf7-acceptance-missing {
 }
   #banner .slide-banner {
     padding-bottom: 0;
-     /* box-shadow: 0 0 5px #e8e8e8; */
-     height: 740px;
+     /* box-shadow: 0 0 5px #e8e8e8; 
+     height: 740px; */
+     height: 100%;
   }
   #banner .slide-banner img {
     width: 100%; }
 	#banner .form-leftside {
 		position: absolute;
-		padding: 50px;
+		padding: 40px 50px;
 		top: 0;
 		left: 0;
 		width: 500px;
@@ -222,7 +220,7 @@ div.wpcf7-acceptance-missing {
 	#banner .form-leftside h2{
 		color: #fff;
 		font-size: 33px;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 	}
 	#banner .form-leftside p {
 		color: #fff;
@@ -232,7 +230,7 @@ div.wpcf7-acceptance-missing {
 		width: 382px;
 		height: 331px;
 		padding: 40px 40px 40px 30px;
-		margin: -10px auto 10px auto;
+		margin: -20px auto 10px auto;
 		background: url(../images/bg-form-home.png) center center no-repeat;
 		background-size: 100% 100%;
 	}
@@ -293,11 +291,6 @@ div.wpcf7-acceptance-missing {
 		-webkit-text-shadow: none;
 		text-shadow: none;
 	}
-  #banner .imageslider-linear.fullheight, .imageslider-linear.fullheight .imageslider-wrap, 
-  #banner .imageslider-linear.fullheight .image-view, 
-  #banner .imageslider-linear.fullheight .image-view .image-view-wrap {
-    height: 735px;
-  }
 .popup {
   width: 100%;
   display: none;
@@ -467,7 +460,12 @@ div.wpcf7-acceptance-missing {
 #Location .imageslider-linear.fullheight .imageslider-wrap, 
 #Location .imageslider-linear.fullheight .image-view, 
 #Location .imageslider-linear.fullheight .image-view .image-view-wrap{
-	height: 53vw !important;
+	/* height: 53vw !important; */
+  height: 100%;
+}
+#Location .imageslider-linear.fullwidth .image-view .image-view-wrap .image-hold, 
+#Location .imageslider-linear.fullwidth .image-view .image-view-wrap .image-hold-temp {
+  background-size: contain;
 }
 #payments {
   background: url("../images/icons/money symbol.png") top right no-repeat;
@@ -556,7 +554,7 @@ div.wpcf7-acceptance-missing {
 
 #contact {
 	background: url(../images/bg-section-06.jpg) top center no-repeat;
-    padding: 150px 0 50px 0;
+  padding: 150px 0 50px 0 !important;
 }
   #contact .container {
     max-width: 1140px;
@@ -702,10 +700,7 @@ body .imageslider-linear .nav-dot.active {
     background: url(../images/icons/paging-active-ico.png) center center no-repeat;
     background-size: 100% 100%;
 }
-#banner .imageslider-linear .nav-wrap {
-  height: auto;
-  bottom: 0;
-}
+
 #banner .imageslider-linear .image-view .image-view-wrap{
   height: 100%;
 }
@@ -734,19 +729,20 @@ body .imageslider-linear .nav-dot.active {
 #Featured .title h2{
 	color: #cdc19b;
     font-size: 32px;
-    padding-bottom: 30px;
-    margin: 10px 0 30px 0;
+    padding-bottom: 20px;
+    margin: 0px 0 10px 0;
     background: url(../images/icons/bottom-line-section-03.png) bottom center no-repeat;
 }
 #Featured .featured-list {
 	width: 100%;
 	display: flex;
 	align-items: stretch;
+  padding: 0 30px;
 }
 #Featured .featured-list .featured-list-column{
 	width: 25%;
-	height: 36vw;
-    padding: 0 0.1vw;
+	height: 35vw;
+  padding: 0 0.1vw;
 }
 #Featured .featured-list .featured-list-column .has-row-inside {
 	height: 100%;
@@ -846,8 +842,11 @@ body .imageslider-linear .nav-dot.active {
 
 #Products {
 	background: #c2b386 url(../images/bg-section-04.jpg) top right no-repeat;
-	padding: 0 0 40px 0;
+	padding: 0;
 	margin: 0;
+}
+#Products .section-inside{
+  padding-top: 50px;
 }
 #Products .zui-tabpanel{
 	border: 0;
@@ -889,13 +888,13 @@ body .imageslider-linear .nav-dot.active {
 	padding: 10px;
 	margin-bottom: 20px;
 	outline: none;
-	text-transform: uppercase;
 	-webkit-transition: all 0.5s;
 	transition: all 0.5s;
 }
 #Products .ztabpaneltabs .zui-tabpanel-nav-wrapper li.zui-active {
 	background: #2c2a24;
 	color: #fff;
+	text-transform: uppercase;
 }
 #Featured .swiper-pagination-bullets,
 #Products .swiper-pagination-bullets {
@@ -910,13 +909,12 @@ body .imageslider-linear .nav-dot.active {
 #Featured .swiper-pagination-bullets .swiper-pagination-bullet,
 #Products .swiper-pagination-bullets .swiper-pagination-bullet{
 	width: 18px;
-  height: 18px;
-  background: url(../images/icons/paging-ico.png) center center no-repeat;
-  background-size: 100% 100%;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
+    height: 18px;
+    background: url(../images/icons/paging-ico.png) center center no-repeat;
+    background-size: 100% 100%;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
 	opacity: 1;
-  margin: 0 4px;
 }
 #Featured .swiper-pagination-bullets .swiper-pagination-bullet:hover,
 #Featured .swiper-pagination-bullets .swiper-pagination-bullet-active,
@@ -1019,6 +1017,11 @@ body .fancybox-nav.fancybox-prev {
 	.show-on-mobile {
 		display: block !important;
 	}
+  .zparallax-section {
+    height: auto !important;
+    padding-top: 20px !important;
+  }
+  
 	header  {
 		height: 60px;
 	}
@@ -1103,28 +1106,17 @@ body .fancybox-nav.fancybox-prev {
 	.sidebuttons {
 		width: 100px;
 		z-index: 1000;
-    position: static;
 	}
 	.sidebuttons .btn-item {
 		text-align: right;
 		display: block;
-    position: fixed;
-    bottom: 20px;
-    z-index: 100;
-    opacity: 1;
 	}
-  .sidebuttons .btn-item.btn-register {
-    right: 0;
-  }
-  .sidebuttons .btn-item.btn-gotop {
-    left: 0;
-  }
 	.sidebuttons img{
-		width: 80px;
+		width: 60px;
 	}
 	#banner .form-leftside {
 		position: static;
-		padding: 25px 25px 50px 25px;
+		padding: 25px;
 	}
 	#banner .slide-banner {
 		height: 80vw !important;
@@ -1178,7 +1170,7 @@ body .fancybox-nav.fancybox-prev {
 	#Location .imageslider-linear.fullheight .image-view, 
 	#Location .imageslider-linear.fullheight .image-view .image-view-wrap {
 		height: 60vw !important;
-		margin-bottom: 10px;
+		margin-bottom: 40px;
 	}
 	#Location .imageslider-linear.fullheight .imageslider-wrap {
 		height: 70vw;
@@ -1226,6 +1218,9 @@ body .fancybox-nav.fancybox-prev {
 	.gallery-services.swiper-container {
 		height: 80vw;
 	}
+  #Products .section-inside {
+    padding-top: 0;
+  }
 	#Products .ztabpaneltabs {
 		float: none;
 		width: 100%;
@@ -1275,10 +1270,6 @@ body .fancybox-nav.fancybox-prev {
 	#contact .wrapper h3 {
 		font-size: 6.5vw;
 	}
-  #contact .partner-list img {
-    max-width: 40%;
-    margin: 0 10px;
-  }
 	footer .logo-footer {
 		float: none;
 		width: 100%;
@@ -1298,7 +1289,6 @@ body .fancybox-nav.fancybox-prev {
 	.page-template-thankyoupage-template article h1 {
 		font-size: 6.4vw;
 	}
-
 }
 
 @media only screen and (max-width: 400px ) {

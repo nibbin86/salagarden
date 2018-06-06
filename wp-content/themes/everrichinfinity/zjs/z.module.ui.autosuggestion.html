@@ -10,8 +10,8 @@
 		zjs.onready('ui.autosuggestion', function(){
 			// bind event
 			zjs('.zautosuggestion')
-				.on('ui:autosuggestion:highlight', function(event, element){console.log('highlight:', event.data)})
-				.on('ui:autosuggestion:choice', function(event, element){console.log('choice:', event.data)});
+				.on('ui.autosuggestion.highlight', function(event, element){console.log('highlight:', event.data)})
+				.on('ui.autosuggestion.choice', function(event, element){console.log('choice:', event.data)});
 				
 	
 			zjs('form').on('submit', function(event){
@@ -146,8 +146,6 @@ var source3 = {
 };
 
 var source = [
-	{id:83716, text:'chilischote'},
-	{id:83717, text:'chili'},
 	{id:8371633, text:'Tuan Luong Hoang'},
 	{id:19101998, text:'Khanh Nguyen'},
 	{id:507121153, text:'Lac Su'},

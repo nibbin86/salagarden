@@ -34,30 +34,15 @@
 		// tat nhien local khong the luu giu nhieu data duoc
 		// cho nen se can den 1 data source 
 		// va khi can thi dictionary se get more data (via ajax) 
-		this.cacheResponse = true;
-		this.usedCacheDataSource = false;
 		this.dataSourceUrl = '';
-		this.dataSourceDataStructure = '';
-		this.defaultSearchProperty = searchproperty || 'text';
+		this.defaultSearchProperty = 'text';
 		this.lastRawquery = '';
-
-		this.dataSourceUrlIsLoaded = false;
 		
 		return this;
 	};
 	
-	zDictionary.prototype.setCacheResponse = function(bool){
-		this.cacheResponse = bool;
-	};
-	zDictionary.prototype.useCacheDataSource = function(bool){
-		this.usedCacheDataSource = bool;
-	};
 	zDictionary.prototype.setDataSourceUrl = function(url){
 		this.dataSourceUrl = url;
-	};
-	
-	zDictionary.prototype.setDataSourceDataStructure = function(structure){
-		this.dataSourceDataStructure = structure;
 	};
 	
 	zDictionary.prototype.addIndex = function(raw, searchproperty){
@@ -95,15 +80,9 @@
 		
 		// kiem tra neu nhu cai data nay co id
 		// thi se dam bao la id khong bi trung
-		// trong truong hop khong co id
-		// thi se coi nhu id la cai searchproperty luon
-		if(typeof data == 'object'){
-			if(!('id' in data) && text !== ''){
-				data.id = text;
-			}
-			if(this.getItemById(data.id)){
+		if(typeof data == 'object' && 'id' in data){
+			if(this.getItemById(data.id))
 				return;
-			}
 		}
 		
 		// luu vao instance object
@@ -155,18 +134,6 @@
 		// done!
 		return this;
 	};
-
-	zDictionary.prototype.resetIndex = function(){
-		
-		this.datas = [];
-		this.lastSearchIndexs = [];
-		this.indexDictionary = [];
-		this.indexId = [];
-		this.indexWord = [];
-
-		// done!
-		return this;
-	};
 	
 	zDictionary.prototype.getItemById = function(id){
 		if(!id in this.indexId)return false;
@@ -174,10 +141,10 @@
 	};
 	
 	zDictionary.prototype.search = function(rawquery){
-		
+	
 		// xem coi neu nhu co data source thi se uu tien get tren data source
-		// if(this.dataSourceUrl != '')
-			// this.getDataFromDataSource(rawquery, false);
+		if(this.dataSourceUrl != '')
+			this.getDataFromDataSource(rawquery, false);
 	
 		// dau tien la xoa dau Tieng Viet trong query
 		var query = rawquery.removeVietnameseCharacter().toLowerCase();
@@ -189,11 +156,9 @@
 		var words = query.split(' ');
 		
 		var i,j,k,word,keywords,resultIndexsTemp,resultIndexsMerge,indextemp;
-		var _idofk = -1;
 		
 		// gio se tien hanh search tren tung thang
-		var wl = words.length;
-		for(i=0;i<wl;i++){
+		for(i=0;i<words.length;i++){
 			
 			// reset temp variable
 			word = words[i];
@@ -202,56 +167,30 @@
 			
 			// gio se thu thap cac keyword thoa man word nay
 			keywords = [];
-			for(j=0;j<this.indexWord.length;j++){
-				_idofk = this.indexWord[j].indexOf(word);
-				if(_idofk>=0){
-					// tang trong so them 10% neu nhu index = 0 luon
-					keywords.push({
-						keyword: this.indexWord[j],
-						strong: (word.length / this.indexWord[j].length) + (_idofk === 0 ? 0.2 * (wl-i) : 0)
-					});
-				}
-			}
+			for(j=0;j<this.indexWord.length;j++)if(this.indexWord[j].indexOf(word)>=0)keywords.push(this.indexWord[j]);
 			
 			// sau khi thu thap keyword xong thi se di search tren keyword
 			for(j=0;j<keywords.length;j++)
-				for(k=0;k<this.indexDictionary[keywords[j].keyword].length;k++)
-					resultIndexsTemp[this.indexDictionary[keywords[j].keyword][k].toString()] = keywords[j].strong;
-			
+				for(k=0;k<this.indexDictionary[keywords[j]].length;k++)
+					resultIndexsTemp[this.indexDictionary[keywords[j]][k].toString()] = true;
 			
 			// sau khi co index temp thi minh se merge voi index
-			for(var index in resultIndexsTemp){
-				if((i==0 || index in resultIndexs) && typeof resultIndexsTemp[index] != 'function' && index in this.datas && this.datas[index] != null)
-					resultIndexsMerge[index] = {
-						index: index, 
-						idof: (typeof this.datas[index].text === 'string') ? this.datas[index].text.removeVietnameseCharacter().toLowerCase().indexOf(query) : -1,
-						strong: resultIndexsTemp[index]
-					};
-			}
+			for(var index in resultIndexsTemp)
+				if((i==0 || index in resultIndexs) && typeof resultIndexsTemp[index] != 'function')
+					resultIndexsMerge[index] = true;
+			
 			// merge xong se ghi de
 			resultIndexs = resultIndexsMerge;
 			
 		};
 		// end search 1 word
 		
-		// sort 
-		resultIndexs.sort(function(a, b){
-			if((a.idof === 0 && b.idof === 0) || (a.idof !== 0 && b.idof !== 0))
-				return b.strong - a.strong;
-			if(a.idof === 0)return -1;
-			return 1;
-		});
 		// reset last search index
 		this.lastSearchIndexs = [];
 		
 		// convert to return
 		var returnIndexs = [];
-		for(i=0;i<resultIndexs.length;i++){
-			if(typeof resultIndexs[i] === 'object'){
-				returnIndexs.push(this.datas[resultIndexs[i].index]);
-				this.lastSearchIndexs.push(resultIndexs[i].index);
-			}
-		}
+		for(index in resultIndexs)if(resultIndexs[index]===true && index in this.datas && this.datas[index] != null){returnIndexs.push(this.datas[index]);this.lastSearchIndexs.push(index);};
 		
 		// done!
 		return returnIndexs;
@@ -259,45 +198,18 @@
 	
 	zDictionary.prototype.getDataFromDataSource = function(rawquery, callback){
 		var self = this;
-		
-		if(self.dataSourceUrlIsLoaded){
-			if(zjs.isFunction(callback))
-				callback();
-			return;
-		}
-
-		if(self.usedCacheDataSource)
-			self.dataSourceUrlIsLoaded = true;
-
-		var _srq = (rawquery||'');
-		if(zjs.isString(_srq))
-			_srq = _srq.toLowerCase();
-
 		zjs.ajax({
 			url:this.dataSourceUrl,
-			data: {f:'text',q:_srq},
+			data: {f:'text',q:rawquery},
 			type: 'json', 
 			method: 'get', 
-			cache: this.cacheResponse,
-			cacheResponse: this.cacheResponse,
+			cache: false,
 			onBegin: false,
 			onLoading: false,
-			onComplete: function(rawdata){
-
+			onComplete: function(data){
 				// >>> test
 				// console.log('json: ', data)
-				// fix raw data to usable data
-				var data = [];
-				if(self.dataSourceDataStructure != ''){
-					var st = self.dataSourceDataStructure.split('.');
-					if(st.length > 1 && st[0] == ''){
-						for(var si=1;si<st.length;si++){
-							rawdata = rawdata[st[si]];
-						}
-					}
-				}
-				data = rawdata;
-
+				
 				// add vao index thoi
 				self.addIndex(data, self.defaultSearchProperty);
 				
@@ -333,20 +245,9 @@
 			cache: false,
 			onBegin: false,
 			onLoading: false,
-			onComplete: function(rawdata){
+			onComplete: function(data){
 				// >>> test
 				// console.log('json: ', data)
-				// fix raw data to usable data
-				var data = [];
-				if(self.dataSourceDataStructure != ''){
-					var st = self.dataSourceDataStructure.split('.');
-					if(st.length > 1 && st[0] == ''){
-						for(var si=1;si<st.length;si++){
-							rawdata = rawdata[st[si]];
-						}
-					}
-				}
-				data = rawdata;
 				
 				// add vao index thoi
 				self.addIndex(data, self.defaultSearchProperty);

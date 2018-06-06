@@ -1,9 +1,7 @@
 // MODULE UI BUTTON
 zjs.require('transition', function(){"use strict";
 
-	var keyframeprefixkey = 'zjsmoduletransitionkeyframeprefix',
-		host = 'http://localhost',
-		hostpage = host+'/transitioneditor';
+	var keyframeprefixkey = 'zjsmoduletransitionkeyframeprefix';
 		
 	// global
 	var editorWindow = false,
@@ -24,11 +22,23 @@ zjs.require('transition', function(){"use strict";
 			if('moduleTransitionBannerOption' in zjs)
 				zjs('.zbanner').stopBanner();
 			
-			editorWindow = window.open(hostpage,'_blank','menubar=no,status=no,toolbar=no');	
-		},
-		transitionEditorGetInitializeInfo: function(){
-			// bay gio se di get ra het tat ca moi element 
-			// de xem coi thang element nao dang duoc setKeyframes
+			editorWindow = window.open('http://app.april.com.vn/transitioneditor','_blank','menubar=no,status=no,toolbar=no');	
+		}
+	});
+	
+	
+	// Listener message
+	zjs(window).on('message', function(event){
+		
+		//console.log(event.original);
+		// event.original.source is popup window
+		// event.original.data is [object]
+		if(!zjs.isObject(event.original.data))return;
+		
+		// message hoi thong tin init
+		if(event.original.data.action == 'sendmeinit'){
+			
+			// bay gio se di get ra het tat ca moi element de xem coi thang element nao dang duoc setKeyframes
 			var allEls = zjs('*');
 			
 			// reset global data
@@ -78,35 +88,9 @@ zjs.require('transition', function(){"use strict";
 					hasKeyframeElsInfo[uid] = keyframeElInfo;
 				}
 			});
-
-			return {
-				keyframeGroupNames: keyframeGroupNames, 
-				hasKeyframeElsInfo: hasKeyframeElsInfo
-			};
-		},
-		transitionaaaaa: function(){
-
-		}
-	});
-	
-	
-	// Listener message
-	zjs(window).on('message', function(event){
-		
-		//console.log(event.original);
-		// event.original.source is popup window
-		// event.original.data is [object]
-		if(!zjs.isObject(event.original.data))return;
-		
-		// message hoi thong tin init
-		if(event.original.data.action == 'sendmeinit'){
 			
 			//console.log(hasKeyframeEls, keyframeGroupNames);
-			editorWindow.postMessage(zjs.extend(
-				zjs.transitionEditorGetInitializeInfo(), {	
-					action:'init', 
-					websiteUrl:window.location.href
-				}), host);
+			editorWindow.postMessage({action:'init', websiteUrl:window.location.href, keyframeGroupNames:keyframeGroupNames, hasKeyframeElsInfo:hasKeyframeElsInfo}, 'http://app.april.com.vn');
 		};
 		
 		
@@ -130,23 +114,16 @@ zjs.require('transition', function(){"use strict";
 					editorWindow.postMessage({action:'syncpropertyvalue', 
 												uid:uid, 
 												propertyName:propertyName, 
-												propertyValue:hasKeyframeEls[uid].getStyleTransition(propertyName),
+												propertyValue:hasKeyframeEls[uid].getStyle(propertyName),
 												propertyUnit:hasKeyframeElsInfo[uid].groups[currentGroupName][propertyName].unit,
-											}, host);
-				}
-			}
-
-			// callback neu can thiet
-			if(typeof window.transitionEditorAfterSyncTimeline == 'function'){
-				window.transitionEditorAfterSyncTimeline(currentPoint);
-			}
-		}
+											}, 'http://app.april.com.vn');
+				};
+			};
+		};
 		
 		
-		// message yeu cau sync keyframes tu editor
-		// cho nay thi browser se "copy" het keyframe tu editor
-		// sau do browser se tu set cac style dua tren keyframe moi nhan duoc
-		if(event.original.data.action == 'synckeyframeswitheditor'){
+		// message yeu cau sync keyframes
+		if(event.original.data.action == 'synckeyframes'){
 			
 			var uid = event.original.data.uid,
 				keyframes = event.original.data.keyframes;
@@ -157,28 +134,21 @@ zjs.require('transition', function(){"use strict";
 			// di set lai style thoi
 			hasKeyframeEls[uid].setStyleByKeyframes(currentGroupName, currentPoint);
 			
-			// sau khi set style xong thi se 
-			// sync value cua cac property qua cho editor window
+			// sau khi set style xong thi se sync value cua cac property qua cho popup window
 			for(var propertyName in hasKeyframeElsInfo[uid].groups[currentGroupName]){
 				editorWindow.postMessage({action:'syncpropertyvalue', 
 											uid:uid, 
 											propertyName:propertyName, 
-											propertyValue:hasKeyframeEls[uid].getStyleTransition(propertyName),
+											propertyValue:hasKeyframeEls[uid].getStyle(propertyName),
 											propertyUnit:hasKeyframeElsInfo[uid].groups[currentGroupName][propertyName].unit,
-										}, host);
-			}
-
-			// callback neu can thiet
-			if(typeof window.transitionEditorAfterSyncKeyframes == 'function'){
-				window.transitionEditorAfterSyncKeyframes();
-			}
-		}
+										}, 'http://app.april.com.vn');
+			};
+		};
 		
 		
 		
-		// message yeu cau sync property voi editor
-		// tuc la se lay editor lam goc, client se "nghe theo" editor
-		if(event.original.data.action == 'syncnewpropertywitheditor'){
+		// message yeu cau sync property
+		if(event.original.data.action == 'syncproperty'){
 			
 			// update
 			currentGroupName = event.original.data.currentGroupName;
@@ -198,11 +168,11 @@ zjs.require('transition', function(){"use strict";
 		};
 		if(event.original.data.action == 'showuid'){	
 			hasKeyframeEls[event.original.data.uid].show();
-		};	
+		};
+		
+		
 		
 	});
-
-
 	
 	
 	// open editor window first time

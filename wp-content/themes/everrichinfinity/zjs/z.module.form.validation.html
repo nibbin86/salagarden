@@ -9,12 +9,12 @@
 	<script>
 		zjs.onready('ui.button, ui.datepicker, ui.autosuggestion, ui.imagepicker, form.validation', function(){
 			
-			zjs('form').on('form:validation:success', function(event){
+			zjs('form').on('form.validation.success', function(event){
 				
 				// neu muon ngan khong cho submit luon thi lam nhu the nay:
 				event.preventDefault();
 				
-				alert('form validation success');
+				alert('form.validation.success');
 				
 			});
 			
@@ -107,7 +107,7 @@
 			
 			
 			<h2>image picker</h2>
-			<input class="zimagepicker r-equired" type="hidden" name="imageid" data-option="autouploadUrl:'http://app.april.com.vn/zmvc/test/uploadimage'" />
+			<input class="zimagepicker required" type="hidden" name="imageid" data-option="autouploadUrl:'http://app.april.com.vn/zmvc/test/uploadimage'" />
 			
 			
 			<h2>custom (any dom element)</h2>

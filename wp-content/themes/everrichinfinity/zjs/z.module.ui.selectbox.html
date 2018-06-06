@@ -5,19 +5,19 @@
 	<title>zjs UI - selectbox</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	
-	<script type="text/javascript" src="z.js" data-debug="true"></script>
+	<script type="text/javascript" src="z.min.js" data-debug="true"></script>
 	<script>
 		zjs.onready('ui.selectbox', function(){
 			
 			window.handlerEvent = function(event){
-				console.log('ui:selectbox:clickchange:', event.getData());
-				console.log('ui:selectbox:change:', event.getData());
+				console.log('ui.selectbox.clickchange:', event.data);
+				console.log('ui.selectbox.change:', event.data);
 				console.log('original value:', this.getValue(''));
 				
 				alert('change: '+this.getValue());
 			};
 			
-			zjs('select[name=selectevent1]').on('ui:selectbox:change', handlerEvent);
+			zjs('select[name=selectevent1]').on('ui.selectbox.change', handlerEvent);
 			
 		});
 	</script>
@@ -25,26 +25,6 @@
 	<style>
 	body{font-family:arial,tahomal;padding:0;margin:0;font-size:14px;line-height:1.4;color:#444;background:#fff;}
 	.wrapper{width:900px;margin:0 auto;padding:50px 0;}
-
-	/* demo for render image inside selectbox */
-	.image-selectbox{
-		width: 300px;
-	}
-	.image-selectbox .zui-selectbox__button-wrap .zui-button{
-		height: auto;
-		padding: 5px 10px;
-	}
-	.image-selectbox .zui-selectbox__button-wrap .zui-button img{
-		width: 40px;
-	}
-	.image-selectbox .zui-selectbox__item{
-		height: auto;
-		padding: 5px 10px;
-	}
-	.image-selectbox .zui-selectbox__item img{
-		width: 40px;
-	}
-
 	</style>
 	
 </head>
@@ -130,57 +110,28 @@
 			<option>armscii8_bin</option>
 		
 		</select>
-
-
-		<h3>Custom template</h3>
-
-		<select class="zselectbox" data-option="
-				width: false,
-				customCssClass: 'image-selectbox',
-				itemtemplate: '<img src=\'${image}\' /> <b>${value}</b>. ${text}'
-			">
-
-			<optgroup label="You can set a template to render option data">
-
-				<option value="1" data-image="https://image.flaticon.com/icons/png/128/164/164826.png">option 1</option>
-
-				<option value="2" data-image="http://thammyvienngocdung.com/media/upload/images/flower%20icon.png">option 2</option>
-
-				<option value="3" data-image="http://www.iconsfind.com/wp-content/uploads/2013/11/20131108_527ce72064507.png">option 3</option>
-
-			</optgroup>
-
-			<optgroup label="you even can add different custom html for each option">
-
-				<option value="5" data-html="OPTION <b>FOUR</b>">option 4</option>
-				<option value="6" data-html="option <u>Five</u>">option 5</option>
-
-			</optgroup>
-
-		</select>
 		
 		
 		<h2>Events</h2>
 		
 		<h3>ui.selectbox.change</h3>
 		
-		<select name="selectevent1" class="zselectbox" data-option="itemtemplate:'${text} - <b>${value}</b>'">
-			<option value="1">option one</option>
-			<option value="2">option two</option>
-			<option value="3">option three</option>
-			<option value="4">option four</option>
+		<select name="selectevent1" class="zselectbox">
+			<option>option 1</option>
+			<option>option 2</option>
+			<option>option 3</option>
+			<option>option 4</option>
 		</select>
 		
 		
 		<h3>inline html attribute "onchange"</h3>
 		
-		<select class="zselectbox" onchange="handlerEvent" data-option="itemtemplate:'${text} - <b>${value}</b>'">
-			<option value="5">option five</option>
-			<option value="6">option six</option>
-			<option value="7">option seven</option>
-			<option value="8">option eight</option>
+		<select class="zselectbox" onchange="handlerEvent">
+			<option>option 5</option>
+			<option>option 6</option>
+			<option>option 7</option>
+			<option>option 8</option>
 		</select>
-
 		
 		
 

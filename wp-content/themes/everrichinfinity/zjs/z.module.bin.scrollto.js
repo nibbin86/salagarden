@@ -2,15 +2,12 @@
 ;(function(zjs){
 "use strict";
 	
-	// Authors: Luu Nghia Hoa (hoperwish), Nguyen Minh Nhut (bin bin), ... 
+	// Author: Nguyen Minh Nhut (bin bin), ... 
 	
 	var optionkey = 'zjsmodulebinScrollTooption',
 		zWindow = zjs(window),
 		zBody = zjs('body'),
-		binScrollRunning = false,
-		binScrollProcess = function(current){},
-		binScrollFinish = function(){},
-		version = 1.2;
+		binScrollRunning = false;
 	
 	// extend core option cho de dieu chinh
 	zjs.extendCore({
@@ -19,8 +16,6 @@
 			// here
 			// option1: '',
 			// option2: ''
-			onProcess: function(current){},
-			onFinish: function(){},
 			gotoValueElement: '',
 			gotoTop: 0,
 			gotoElement:'',
@@ -37,13 +32,9 @@
 	var binScrollTimer = zjs.timer({
 		onProcess: function(current){
 			window.scrollTo(0, current);
-			if( typeof binScrollProcess == 'function' )
-				binScrollProcess(current);
 		},
 		onFinish: function(){
 			binScrollRunning = false;
-			if( typeof binScrollFinish == 'function' )
-				binScrollFinish();
 		}
 	});
 	
@@ -71,23 +62,14 @@
 		
 		to += parseInt( option.extraPixel );
 		
-		//console.log( to , zBody.height() );
-		/*
+		console.log( to , zBody.height() );
+		
 		if( to >= zBody.height() ){
 			to = zBody.height();
 		
 			if(option.gotoValueElement != '')
 				zjs(option.gotoValueElement).setValue(to);
 		}
-		*/
-		
-		if( to < 0 ) to = 0;
-		
-		if( typeof option.onFinish == 'function' );
-			binScrollFinish = option.onFinish;
-			
-		if( typeof option.onProcess == 'function' );
-			binScrollProcess = option.onProcess;
 		
 		// stop current scroll
 		binScrollTimer.stop();

@@ -24,9 +24,7 @@ zjs.require('ui.button', function(){
 			notallowFileExt: 'php,exe,asp',
 			returntype: 'json',
 			uploadingText: '',
-			dropText: '',
-			getFileContent: false,
-			readEXIF: false
+			dropText: ''
 		}
 	});
 	
@@ -39,7 +37,6 @@ zjs.require('ui.button', function(){
 	//ui.button.file.upload.loading
 	//ui.button.file.upload.complete
 	//ui.button.file.upload.abort
-	//ui.button.file.getcontent
 	
 	
 	// template
@@ -290,32 +287,6 @@ zjs.require('ui.button', function(){
 				};
 			};
 			
-
-
-			// --------------
-			// READ FILE DATA
-			// --------------
-			if(option.getFileContent && 'FileReader' in window){
-				zjs.each(el.files, function(file, i){
-					if(!isFile(file))return;
-
-					var reader = new FileReader();
-				    reader.onload = function(e){
-				    	//e.target.result
-				    	var triggerData = {file:file, progressEvent:e, content:e.target.result};
-				    	if(option.readEXIF){
-				    		zjs.require('exif', function(){
-				    			triggerData.exif = zjs.readEXIFFromBase64(e.target.result);
-					    		zElement.trigger('ui.button.file.getcontent', triggerData);
-					    	});
-				    	}else{
-				    		zElement.trigger('ui.button.file.getcontent', triggerData);
-				    	}
-				    };
-				    reader.readAsDataURL(file);					
-				});
-			}
-
 			
 			
 			// --------------------
@@ -515,12 +486,7 @@ zjs.require('ui.button', function(){
 	uploadFileViaForm = (function(){
 		// private variable
 		var uniqueId = 0,
-			hiddenDivEl = false;
-
-		// make sure body is loaded before interaction with it
-		zjs.onready(function(){
 			hiddenDivEl = zjs('<div>').appendTo('body').style({position:'fixed',top:-5000,left:-5000,opacity:0,display:'none'});
-		});
 		
 		// main function
 		return function(el, url, returntype, data, option, callback){
@@ -865,15 +831,3 @@ zjs.require('ui.button', function(){
 	if('required' in zjs)
 	zjs.required('ui.button.file');
 });
-
-
-/****
-Orientation to remember
-  1        2       3      4         5            6           7          8
-
-888888  888888      88  88      8888888888  88                  88  8888888888
-88          88      88  88      88  88      88  88          88  88      88  88
-8888      8888    8888  8888    88          8888888888  8888888888          88
-88          88      88  88
-88          88  888888  888888
-****/

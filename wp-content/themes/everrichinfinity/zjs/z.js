@@ -1,8 +1,9 @@
 /////////////////////////////////////////////////////////////////////////////////
-// * ZJS - Zebra JavaScript Library
+// * ZJS - Zebra JavaScript Framework
 // * include Sizzle - CSS selector engine
 // * version: 1.1.14.12.25
-// * (c) 2009-2017 Zebra <tuzebra@gmail.com>
+// * (c) 2009-2014 Zebra <tuzebra@gmail.com>
+// * last update 25/12/2014
 /////////////////////////////////////////////////////////////////////////////////
 
 ;(function(window, undefined){
@@ -145,21 +146,6 @@ var version = '1.1',
 				return keys[i];
 		return false;
 	},
-
-	getValueByKey = function(object, key){
-		var value = object;
-		eachItem(key.split(/\.|\[|\]/), function(k){
-			if(typeof value == 'undefined')return;
-			if(k==='')return;
-			if(!isNaN(k))k=parseInt(k);
-			if(typeof value[k] == 'undefined'){
-				value = undefined;
-				return false;
-			}
-			value = value[k];
-		});
-		return value;
-	},
 	
 	// dung ham each thay cho Object.each() -> gay ra qua nhieu loi cho cac thu vien thu 3
 	each = function(obj, fn){ // each(object, function(value, key){} )
@@ -168,17 +154,15 @@ var version = '1.1',
 				if(fn.call(obj, obj[i], i) === false)
 					break;
 			return;
-		}
+		};
 		if(isObject(obj)){
 			var keys = objectKeys(obj);
 			for(var i=0,n=keys.length;i<n;i++)
 				if(fn.call(obj, obj[keys[i]], keys[i]) === false)
 					break;	
-		}
+		};
 	},
 	
-	eachItem = each,
-
 	clone = function(source){
 		if(isObject(source))return extend(new Object(), source);
 		if(isArray(source))return extend(new Array(), source);
@@ -335,8 +319,8 @@ var version = '1.1',
 		var div = document.createElement('div');
 		var vender = ['','webkit-','-webkit-','-moz-','-o-','ms-','-ms-'];
 		for(var i=0;i<vender.length;i++){
-			if(!('style' in div))continue;
-			if(!('display' in div.style))continue;
+			if(!'style' in div)continue;
+			if(!'display' in div.style)continue;
 			try{
 				div.style.display = vender[i]+'flex';
 				if(div.style.display === vender[i]+'flex')
@@ -444,14 +428,11 @@ var version = '1.1',
 			this.isReady = (document.readyState === 'complete');
 			this.add = function(fn){fns.push(fn)};
 			this.run = function(fn){try{fn.call(this, zjs)}catch(err){}};
-			this.runall = function(notClean){
-				notClean = notClean || false;
+			this.runall = function(){
 				// call all registered functions
 				for(var i = 0;i<fns.length;i++)this.run(fns[i]);
 				// clear handlers
-				if(!notClean){
-					fns = [];
-				}
+				fns = [];
 			};
 		};
 		return new domReadyFns();
@@ -470,14 +451,13 @@ var version = '1.1',
 
 		// define stack functions to call before
 		var sintid,
-			useDrupalBehaviors = ('Drupal' in window) && ('behaviors' in window.Drupal),
 			ready = function(){
 				if(domReadyFns.isReady)return;
 				domReadyFns.isReady = true;
 				if(sintid)clearInterval(sintid);
 				// check if all module required
 				// execute all function in stack
-				if(!useDrupalBehaviors && domReadyFns.isModuleRequired)
+				if(domReadyFns.isModuleRequired)
 					domReadyFns.runall();
 			};
 
@@ -503,27 +483,6 @@ var version = '1.1',
 				}catch(err){};
 			}, 30);
 		};
-
-		// Support Drupal bigpipe
-		if(useDrupalBehaviors){
-			if(!('zjs' in window.Drupal.behaviors)){
-				window.Drupal.behaviors.zjs = {
-					attach: function (context, settings) {
-						// console.log('Drupal.behaviors.zjs: context', context);
-						if(domReadyFns.isModuleRequired){
-							domReadyFns.runall(true);
-						}
-					}
-				};
-			}
-			return function(fn){
-				domReadyFns.add(fn);
-				// try to run it instant
-				if(domReadyFns.isReady && domReadyFns.isModuleRequired){
-					domReadyFns.run(fn);
-				}
-			};
-		}
 		
 		// return function to call
 		return function(fn){
@@ -658,9 +617,10 @@ var version = '1.1',
 			
 			// thang` function "each" la` thang` duy nhat'
 			// duoc phep' can thiep. truc tiep vao` cac' element
-			this.each = this.eachElement = function(fn){
+			this.each = function(fn){
 				if( ! isFunction(fn) || elements.length == 0)
 					return self;
+				
 				for(var i = 0; i < elements.length; i++){
 					// neu nhu ma` function "fn" return dung bang` "false"
 					// thi` se~ dung` vong` lap. for
@@ -674,7 +634,6 @@ var version = '1.1',
 			// dem' coi co' bao nhieu thang` element match
 			this.size = function(){return elements.length || 0;};
 			this.count = function(){return elements.length || 0;};
-			this.reverse = function(){elements = elements.reverse();return self;};
 			
 			// lay ra cau query de su dung sau
 			this.query = function(){return selector;};
@@ -685,17 +644,15 @@ var version = '1.1',
 			if(!selector)return this;
 			
 			// zjs( window || document || body )
-			if(selector == window || selector == 'window'){elements.push(window);return this;};
-			if(selector == document || selector == 'document'){elements.push(document);return this;};
-			if(selector == document.body || selector == 'body'){
-				elements.push(document.body);return this;
-			};
+			if(selector == window){elements.push(window);return this;};
+			if(selector == document){elements.push(document);return this;};
+			if(selector == document.body){elements.push(document.body);return this;};
 			
 			// zjs( DOM )
 			if(isElement(selector)){elements.push(selector);return this;};
 			
 			// zjs( zjs )
-			if(isZjs(selector)){selector.eachElement(function(el){elements.push(el)});return this;};
+			if(isZjs(selector)){selector.each(function(el){elements.push(el)});return this;};
 			
 			// zjs( array of [DOM1, DOM2, DOM3,... ] )
 			if( isArray( selector ) ){
@@ -705,9 +662,9 @@ var version = '1.1',
 						selector[i] == window )
 						elements.push( selector[i] );
 					if( isZjs(selector[i]) )
-						selector[i].eachElement(function(el){elements.push(el)});
+						selector[i].each(function(el){elements.push(el)});
 					if( isString(selector[i]) )
-						zjs.call(window, selector[i]).eachElement(function(el){elements.push(el)});
+						zjs.call(window, selector[i]).each(function(el){elements.push(el)});
 				};
 				return this;
 			};
@@ -778,7 +735,7 @@ var version = '1.1',
 			}, {version: version, extendFn: extendMethod, extendMethod: extendMethod, isZjs: isZjs});
 	})(),
 	
-	// TIMER CLASS
+	// KHAI BAO' LOP' TIMER (quan trong)
 	Timer = function(mainOpt){
 		
 		var transitionFunc = {
@@ -875,21 +832,14 @@ var version = '1.1',
 			return this;
 		};
 		
-		this.stop = function(options){
+		this.stop = function(){
 			window.clearTimeout(handler);
 			// reset lai. moi. thu'
 			handler = false;
 			onStarted = false;
 			x = 0;
 			// goi. onStop
-			if(onStop)onStop(from, to, options);
-			return this;
-		};
-
-		this.finish = function(){
-			this.stop();
-			// goi. onFinish
-			if(onFinish)onFinish(from, to);
+			if(onStop)onStop(from, to);
 			return this;
 		};
 		
@@ -906,7 +856,6 @@ var version = '1.1',
 	
 		// private variable phuc vu cho jsonp
 		var requestId = 0, outTime = 20, callbackStorage = {}, timeoutStorage = {};
-		var cacheResponseStorage = {};
 	
 		// 1 cai function global de phuc vu cho viec goi jsonp
 		extend(zjs,{jsonpcallback:function(data, rid){
@@ -937,39 +886,22 @@ var version = '1.1',
 					url:'',
 					data: '',
 					headers: {},
-					// type: 'raw', // html, json, jsonp
-					dataType: 'html', // json, jsonp
+					type: 'raw', // json, jsonp
 					method: 'get',
 					contentType: 'application/x-www-form-urlencoded',
 					repeat: -1,
 					cache: true,
-					cacheResponse: false,
 					onBegin: false,
 					onLoading: false,
 					onComplete: false,
 					onError: false,
-					onResponse: false,
 					debug: false,
-					processData: true,
-					withCredentials: false
+					processData: true
 				}, option);
 			
 			
 			var callajax = function(){
-				
-				// fix option
-				// (still fallback to support "type", 
-				// because now we re replace it with "dataType"
-				if('type' in option && typeof option.type != 'undefined' && !('isZepto' in zjs)){
-					option.dataType = option.type;
-				}
-
-				// fix option
-				// because we support Zepto, so need to support it "success" option
-				if('success' in option && isFunction(option.success) && !('isZepto' in zjs)){
-					option.onComplete = option.success;
-				}
-
+			
 				// get now time to avoid cache url
 				var now = 'zuid='+(new Date()).getTime(), url = option.url;
 			
@@ -980,9 +912,9 @@ var version = '1.1',
 				var data = option.data;
 				if(option.processData && !isString(data) && isObject(option.data)){
 					var str='';
-					eachItem(data, function(value, key){
+					each(data, function(value, key){
 						if(isArray(value))
-							eachItem(value, function(arrvalue){
+							each(value, function(arrvalue){
 								str += key + '[]=' + encodeURIComponent(arrvalue).replace(/%20/g,'+')+'&';
 							});
 						else 
@@ -994,36 +926,9 @@ var version = '1.1',
 				// begin load
 				if(typeof option.onBegin == 'function')option.onBegin();
 				zjs.trigger('ajax.begin');
-				
-				
-
-				// BUILD URL FIRST
+			
 				// jsonp
-				if(option.dataType.toLowerCase() == 'jsonp'){
-					// donothing
-				}
-				// normal xhr
-				else{
-					// method get?
-					if(option.method.toLowerCase() == 'get'){
-						if(isString(data) && data != '')url += (url.indexOf('?')+1 ? '&':'?') + data;
-						data = null;
-					};
-				};
-				if(option.debug && console)console.log('url', url);
-
-
-				// RUN AJAX
-				// cached
-				if(option.cacheResponse && (url in cacheResponseStorage)){
-					if(option.debug && console)console.log('[zjs ajax] use from cache: ' + url);
-					var result = cacheResponseStorage[url];
-					if(option.dataType.toLowerCase() == 'json')result = result.jsonDecode();
-			        if(typeof option.onComplete == 'function')option.onComplete(result);
-				}
-
-				// jsonp
-				else if(option.dataType.toLowerCase() == 'jsonp'){
+				if(option.type.toLowerCase() == 'jsonp'){
 				
 					if(typeof option.onLoading == 'function')option.onLoading();
 				
@@ -1061,53 +966,15 @@ var version = '1.1',
 					}, outTime*1000);
 				
 				}
-
-				// cordova local file
-				else if(
-					// is Cordova
-					((typeof cordova != 'undefined') && (typeof device != 'undefined') && device.platform != 'browser')
-					// url don't have http
-					&& url.indexOf('http') !== 0
-				){
-					if(option.debug && console)console.log('[zjs ajax] resolveLocalFileSystemURL start: ', url);
-					resolveLocalFileSystemURL(url, function (fileEntry) {
-					    // console.log('[zjs ajax] url: ' + url);
-					    if(option.debug && console)console.log('[zjs ajax] resolveLocalFileSystemURL recieve: ' + fileEntry.name);
-					    fileEntry.file(function (file) {
-						    var reader = new FileReader();
-						    reader.onloadend = function() {
-						        var result = this.result;
-						        if(option.cacheResponse){
-						        	cacheResponseStorage[url] = result;
-						        }
-						        if(option.dataType.toLowerCase() == 'json')result = result.jsonDecode();
-						        if(typeof option.onComplete == 'function')option.onComplete(result);
-						    };
-						    reader.readAsText(file);
-						}, 
-						function(err){
-							if(option.debug && console)console.log('[zjs ajax] onErrorReadFile: ', JSON.stringify(err));
-							if(typeof option.onError == 'function')option.onError();
-						});
-					    
-					}, function(err){
-						if(option.debug && console)console.log('[zjs ajax] onErrorReadFolder: ', JSON.stringify(err));
-						if(typeof option.onError == 'function')option.onError();
-					});
-
-				}
 			
 				// normal xhr
 				else{
 			
 					// get XHR
 					var xhr = false;
-					if(window.XMLHttpRequest){
-						xhr = new XMLHttpRequest();
-						xhr.withCredentials = option.withCredentials;
-					}
+					if(window.XMLHttpRequest){xhr = new XMLHttpRequest();}
 					else if(typeof ActiveXObject != 'undefined'){
-						eachItem(['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'], function(str){
+						each(['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'], function(str){
 							try{
 								xhr = new ActiveXObject(str);
 							}catch(e){};
@@ -1127,25 +994,25 @@ var version = '1.1',
 							zjs.trigger('ajax.loading');
 						};
 						if(xhr.readyState == 4){
-							var result = '';
-							if(option.debug && console)console.log('response: ' + xhr.responseText);
-							if(xhr.responseText)result = xhr.responseText.replace(/[\n\r]/g,'');
-							if(option.cacheResponse){
-					        	cacheResponseStorage[url] = result;
-					        }
-							if(option.dataType.toLowerCase() == 'json')result = result.jsonDecode();
 							//if(xhr.status == 200){
 							if(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304 || xhr.status === 0){
+								var result = '';
+								if(option.debug && console)console.log('response: ' + xhr.responseText);
+								if(xhr.responseText)result = xhr.responseText.replace(/[\n\r]/g,'');
+								if(option.type.toLowerCase() == 'json')result = result.jsonDecode();
 								if(typeof option.onComplete == 'function')option.onComplete(result);
-								zjs.trigger('ajax.complete', result);
+								zjs.trigger('ajax.complete',result);
 							}else{
-								if(typeof option.onError == 'function')option.onError(result);
-								zjs.trigger('ajax.error', result);
+								if(typeof option.onError == 'function')option.onError();
+								zjs.trigger('ajax.error');
 							}
-							// onResponse
-							if(typeof option.onResponse == 'function')option.onResponse(result);
-							zjs.trigger('ajax.response', result);
 						}
+					};
+				
+					// get?
+					if(option.method.toLowerCase() == 'get'){
+						if(isString(data) && data != '')url += (url.indexOf('?')+1 ? '&':'?') + data;
+						data = null;
 					};
 				
 					// view log ?
@@ -1188,8 +1055,8 @@ var version = '1.1',
 			// kieu nhu the nay:
 			// eventTypes = {
 			// 		click: {
-			// 			el1: [[handler,query,el,options], [handler,query,el,options]], 
-			// 			el2: [[handler,query,el,options]]
+			// 			el1: [[handler,query,el], [handler,query,el]], 
+			// 			el2: [[handler,query,el]]
 			// 		}
 			// }	
 			// trong do el1,el2,el3,.. la cac unique id 
@@ -1232,7 +1099,7 @@ var version = '1.1',
 			};
 			
 			// method co nhiem vu add them handler vao luu tru
-			this.addEventHandler = function(type, element, handler, query, options){
+			this.addEventHandler = function(type, element, handler, query){
 				// fix agruments
 				if(!type || !element)return;
 				handler = handler || false;if(handler===false)handler = function(){return false};
@@ -1248,7 +1115,7 @@ var version = '1.1',
 				if(typeof eventTypes[type] == 'undefined')eventTypes[type] = {};
 				// set den elid
 				if(typeof eventTypes[type]['el'+eventid] == 'undefined')eventTypes[type]['el'+eventid] = [];
-				eventTypes[type]['el'+eventid].push([handler, query, element, options]);
+				eventTypes[type]['el'+eventid].push([handler, query, element]);
 			};
 			
 			// method co nhiem vu remove tat ca cac handler cua 1 element
@@ -1260,7 +1127,7 @@ var version = '1.1',
 				if(typeof element.zjseventid != 'undefined')eventid = parseInt(element.zjseventid);
 				if(eventid<=-1)return;
 				// bat dau tim kiem va remove tat ca
-				eachItem(eventTypes, function(value, type){
+				each(eventTypes, function(value, type){
 					if(typeof eventTypes[type]['el'+eventid] != 'undefined')
 						eventTypes[type]['el'+eventid] = [];
 				});
@@ -1280,14 +1147,6 @@ var version = '1.1',
 				if(typeof eventTypes[type]['el'+eventid] == 'undefined')return false;
 				// gio se check cac handler return
 				var handlers = [];
-				// handlers = [
-				// 	 [
-				// 	   handler, 
-				// 	   eventElement, 
-				// 	   options (pass at "on()" method)
-				// 	 ],
-				// 	 ...
-				// ];
 				for(var i=0,len=eventTypes[type]['el'+eventid].length;i<len;i++){
 					// kiem tra query that can than
 					var query = eventTypes[type]['el'+eventid][i][1];
@@ -1301,7 +1160,7 @@ var version = '1.1',
 						// thang con cua thang element ma query dang tim
 						// de biet chac chan
 						if(targetElement)
-							zjs(element).find(query).eachElement(function(el){
+							zjs(element).find(query).each(function(el){
 								// kiem tra thang nay co phai la thang target hay khong
 								if(targetElement===el){
 									eventElement = el;
@@ -1310,7 +1169,7 @@ var version = '1.1',
 								};
 								// neu nhu thang nay khong phai thi phai kiem tra
 								// tat ca cac thang con cua no cho chinh xac
-								zjs(el).find('*').eachElement(function(childEl){
+								zjs(el).find('*').each(function(childEl){
 									if(targetElement===childEl){
 										eventElement = el;
 										ok=true;
@@ -1321,11 +1180,7 @@ var version = '1.1',
 						// neu nhu khong on thi thoi
 						if(!ok)continue;
 					};
-					handlers.push([
-						eventTypes[type]['el'+eventid][i][0], 
-						eventElement,
-						eventTypes[type]['el'+eventid][i][3]
-					]);
+					handlers.push([eventTypes[type]['el'+eventid][i][0], eventElement]);
 				};
 				return handlers;
 			};
@@ -1345,7 +1200,7 @@ var version = '1.1',
 				for(var i=0,len=elids.length;i<len;i++){
 					var elHandlers = eventTypes[type][elids[i]];
 					for(var j=0,l2=elHandlers.length;j<l2;j++)
-						handlers.push([elHandlers[j][0],elHandlers[j][2],elHandlers[j][3]]);
+						handlers.push([elHandlers[j][0],elHandlers[j][2]]);
 				};
 				return handlers;
 			};
@@ -1405,11 +1260,6 @@ var version = '1.1',
 		this.preventDefault = function(){
 			this.isDefaultPrevented = true;
 		};
-		this.getData = function(){
-			return this.data;
-		}
-		// just a interface
-		this.setPassiveMode = function(passive){}
 	},
 	
 	// EVENT OBJECT for default browser event
@@ -1419,8 +1269,6 @@ var version = '1.1',
 		
 		var ePageX = e.pageX ? e.pageX : 0,
 			ePageY = e.pageY ? e.pageY : 0;
-
-		var passiveMode = false;
 		
 		// may' method co ban
 		this.x = function(){ return this.xy().x; };
@@ -1444,9 +1292,9 @@ var version = '1.1',
 			};
 			return {x:x, y:y};
 		};
-		this.target = this.getTarget = function(){ return (e.target || e.srcElement); };
+		this.target = function(){ return (e.target || e.srcElement); };
 		this.fromTarget = function(){ return (e.relatedTarget || e.fromElement); };
-		this.toTarget = this.getToTarget = function(){ return (e.relatedTarget || e.toElement || e.target || e.srcElement || false); };
+		this.toTarget = function(){ return (e.relatedTarget || e.toElement || e.target || e.srcElement || false); };
 		
 		// fix pageX, pageY tren touchdevice
 		if(e.type == "touchstart" || e.type == "touchmove" || e.type == "touchend"){
@@ -1458,38 +1306,23 @@ var version = '1.1',
 			}
 		};
 		
-		this.clientX = this.getClientX = function(){ return (e.clientX ? e.clientX + document.body.scrollLeft : ePageX); };
-		this.clientY = this.getClientY = function(){ return (e.clientY ? e.clientY + document.body.scrollTop : ePageY); };
+		this.clientX = function(){ return (e.clientX ? e.clientX + document.body.scrollLeft : ePageX); };
+		this.clientY = function(){ return (e.clientY ? e.clientY + document.body.scrollTop : ePageY); };
 		
 		// touch
 		this.touchX = function(i){i=i||0; return ePageX; };
 		this.touchY = function(i){i=i||0; return ePageY; };
 		
 		// key
-		this.keyCode = this.getKeyCode = function(){return e.keyCode || -1};
+		this.keyCode = function(){return e.keyCode};
 		this.shiftKey = function(){return e.shiftKey};
 		this.altKey = function(){return e.altKey};
 		this.ctrlKey = function(){return e.ctrlKey};
 		this.metaKey = function(){return e.metaKey};
 		
-		this.setPassiveMode = function(passive){
-			passiveMode = passive;
-		};
-
 		// stop event
 		this.isDefaultPrevented = false;
 		this.preventDefault = function(){
-			this.isDefaultPrevented = true;
-
-			// fix issue 
-			// "Unable to preventDefault inside passive event listener invocation."
-			if(passiveMode)return;
-
-			// https://www.chromestatus.com/features/5093566007214080
-			if(('defaultPrevented' in e) && e.defaultPrevented === true){
-				return;
-			}
-
 			if(e.preventDefault)
 				e.preventDefault();
 			else if(e.stop)
@@ -1497,21 +1330,20 @@ var version = '1.1',
 			try{
 				e.returnValue = false;
 			}catch(err){};
+			this.isDefaultPrevented = true;
 		};
 		this.stopPropagation = function(){
-			if(passiveMode)return;
 			try{
 				if(browser.msie)e.cancelBubble = true;
 				else if(e.stopPropagation)e.stopPropagation();
 			}catch(err){};
 		};
 		this.stop = function(){
-			if(passiveMode)return;
 			return this.stopPropagation();
 		};
 		
 		// method cho mouse scroll - mousewheel
-		this.deltas = this.getDeltas = function(){
+		this.deltas = function(){
 			var delta = 0,
 				deltaX = 0,
 				deltaY = 0;
@@ -1538,14 +1370,14 @@ var version = '1.1',
 
 			return [delta, deltaX, deltaY];
 		};
-		this.deltaX = this.getDeltaX = function(){
-			return this.getDeltas()[1];
+		this.deltaX = function(){
+			return this.deltas()[1];
 		};
-		this.deltaY = this.getDeltaY = function(){
-			return this.getDeltas()[2];
+		this.deltaY = function(){
+			return this.deltas()[2];
 		};
 		this.isTouchpad = function(){
-			var a = Math.abs(this.getDeltaY());return parseInt(a)<a;
+			var a = Math.abs(this.deltaY());return parseInt(a)<a;
 		};
 		
 		// mouse button
@@ -1562,9 +1394,6 @@ var version = '1.1',
 		
 		// save original event
 		this.original = e;
-		this.getOriginal = function(){
-			return e;
-		};
 	},
 	
 	// HOOK
@@ -1693,10 +1522,10 @@ extend(String.prototype, {
 		if(typeof obj != 'object'){
 			var s = this, length = arguments.length; 
 			while (--length >= 0)  s = s.replace(new RegExp('(\\$|#){' + length + '\\}', 'g'), arguments[length]);
-			return s+'';
+			return s;
 		};
 		var s = this;
-		eachItem(obj, function(value, key){
+		each(obj, function(value, key){
 			if(typeof value == 'object'){
 				for(var j in value)
 					s = s.format(value, _prefix+key+'\\.');
@@ -1706,7 +1535,7 @@ extend(String.prototype, {
 				s = s.replace(new RegExp('(\\$|#){'+_prefix+key+'\\+1\\}', 'g'), parseInt(value)+1);
 			};
 		});
-		return s+'';
+		return s;
 	},
 	test: function(reg){
 		return reg.test(this);
@@ -1764,116 +1593,20 @@ extend(String.prototype, {
 	},
 	removeVietnameseCharacter: function(){
 		return''==this?'':this
-			.replace(/[\u0061\u24D0\uFF41\u1E9A\u00E0\u00E1\u00E2\u1EA7\u1EA5\u1EAB\u1EA9\u00E3\u0101\u0103\u1EB1\u1EAF\u1EB5\u1EB3\u0227\u01E1\u00E4\u01DF\u1EA3\u00E5\u01FB\u01CE\u0201\u0203\u1EA1\u1EAD\u1EB7\u1E01\u0105\u2C65\u0250]/g,'a')
-			.replace(/[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g,'A')
-			.replace(/[\uA733]/g,'aa')
-			.replace(/[\uA732]/g,'AA')
-			.replace(/[\u00E6\u01FD\u01E3]/g,'ae')
-			.replace(/[\u00C6\u01FC\u01E2]/g,'AE')
-			.replace(/[\uA735]/g,'ao')
-			.replace(/[\uA734]/g,'AO')
-			.replace(/[\uA737]/g,'au')
-			.replace(/[\uA736]/g,'AU')
-			.replace(/[\uA739\uA73B]/g,'av')
-			.replace(/[\uA738\uA73A]/g,'AV')
-			.replace(/[\uA73D]/g,'ay')
-			.replace(/[\uA73C]/g,'AY')
-
-			.replace(/[\u0062\u24D1\uFF42\u1E03\u1E05\u1E07\u0180\u0183\u0253]/g,'b')
-			.replace(/[\u0042\u24B7\uFF22\u1E02\u1E04\u1E06\u0243\u0182\u0181]/g,'B')
-
-			.replace(/[\u0063\u24D2\uFF43\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184]/g,'c')
-			.replace(/[\u0043\u24B8\uFF23\u0106\u0108\u010A\u010C\u00C7\u1E08\u0187\u023B\uA73E]/g,'C')
-
-			.replace(/[\u0064\u24D3\uFF44\u1E0B\u010F\u1E0D\u1E11\u1E13\u1E0F\u0111\u018C\u0256\u0257\uA77A]/g,'d')
-			.replace(/[\u0044\u24B9\uFF24\u1E0A\u010E\u1E0C\u1E10\u1E12\u1E0E\u0110\u018B\u018A\u0189\uA779]/g,'D')
-			.replace(/[\u01F3\u01C6]/g,'dz')
-			.replace(/[\u01F1\u01C4]/g,'DZ')
-			.replace(/[\u01F2\u01C5]/g,'Dz')
-
-			.replace(/[\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u025B\u01DD]/g,'e')
-			.replace(/[\u0045\u24BA\uFF25\u00C8\u00C9\u00CA\u1EC0\u1EBE\u1EC4\u1EC2\u1EBC\u0112\u1E14\u1E16\u0114\u0116\u00CB\u1EBA\u011A\u0204\u0206\u1EB8\u1EC6\u0228\u1E1C\u0118\u1E18\u1E1A\u0190\u018E]/g,'E')
-
-			.replace(/[\u0066\u24D5\uFF46\u1E1F\u0192\uA77C]/g,'f')
-			.replace(/[\u0046\u24BB\uFF26\u1E1E\u0191\uA77B]/g,'F')
-
-			.replace(/[\u0067\u24D6\uFF47\u01F5\u011D\u1E21\u011F\u0121\u01E7\u0123\u01E5\u0260\uA7A1\u1D79\uA77F]/g,'g')
-			.replace(/[\u0047\u24BC\uFF27\u01F4\u011C\u1E20\u011E\u0120\u01E6\u0122\u01E4\u0193\uA7A0\uA77D\uA77E]/g,'G')
-
-			.replace(/[\u0068\u24D7\uFF48\u0125\u1E23\u1E27\u021F\u1E25\u1E29\u1E2B\u1E96\u0127\u2C68\u2C76\u0265]/g,'h')
-			.replace(/[\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g,'H')
-			.replace(/[\u0195]/g,'hv')
-
-			.replace(/[\u0069\u24D8\uFF49\u00EC\u00ED\u00EE\u0129\u012B\u012D\u00EF\u1E2F\u1EC9\u01D0\u0209\u020B\u1ECB\u012F\u1E2D\u0268\u0131]/g,'i')
-			.replace(/[\u0049\u24BE\uFF29\u00CC\u00CD\u00CE\u0128\u012A\u012C\u0130\u00CF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g,'I')
-
-			.replace(/[\u006A\u24D9\uFF4A\u0135\u01F0\u0249]/g,'j')
-			.replace(/[\u004A\u24BF\uFF2A\u0134\u0248]/g,'J')
-
-			.replace(/[\u006B\u24DA\uFF4B\u1E31\u01E9\u1E33\u0137\u1E35\u0199\u2C6A\uA741\uA743\uA745\uA7A3]/g,'k')
-			.replace(/[\u004B\u24C0\uFF2B\u1E30\u01E8\u1E32\u0136\u1E34\u0198\u2C69\uA740\uA742\uA744\uA7A2]/g,'K')
-
-			.replace(/[\u006C\u24DB\uFF4C\u0140\u013A\u013E\u1E37\u1E39\u013C\u1E3D\u1E3B\u017F\u0142\u019A\u026B\u2C61\uA749\uA781\uA747]/g,'l')
-			.replace(/[\u004C\u24C1\uFF2C\u013F\u0139\u013D\u1E36\u1E38\u013B\u1E3C\u1E3A\u0141\u023D\u2C62\u2C60\uA748\uA746\uA780]/g,'L')
-			.replace(/[\u01C9]/g,'lj')
-			.replace(/[\u01C7]/g,'LJ')
-			.replace(/[\u01C8]/g,'Lj')
-
-			.replace(/[\u006D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g,'m')
-			.replace(/[\u004D\u24C2\uFF2D\u1E3E\u1E40\u1E42\u2C6E\u019C]/g,'M')
-
-			.replace(/[\u006E\u24DD\uFF4E\u01F9\u0144\u00F1\u1E45\u0148\u1E47\u0146\u1E4B\u1E49\u019E\u0272\u0149\uA791\uA7A5]/g,'n')
-			.replace(/[\u004E\u24C3\uFF2E\u01F8\u0143\u00D1\u1E44\u0147\u1E46\u0145\u1E4A\u1E48\u0220\u019D\uA790\uA7A4]/g,'N')
-			.replace(/[\u01CC]/g,'nj')
-			.replace(/[\u01CA]/g,'NJ')
-			.replace(/[\u01CB]/g,'Nj')
-
-			.replace(/[\u006F\u24DE\uFF4F\u00F2\u00F3\u00F4\u1ED3\u1ED1\u1ED7\u1ED5\u00F5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\u00F6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\u00F8\u01FF\u0254\uA74B\uA74D\u0275]/g,'o')
-			.replace(/[\u004F\u24C4\uFF2F\u00D2\u00D3\u00D4\u1ED2\u1ED0\u1ED6\u1ED4\u00D5\u1E4C\u022C\u1E4E\u014C\u1E50\u1E52\u014E\u022E\u0230\u00D6\u022A\u1ECE\u0150\u01D1\u020C\u020E\u01A0\u1EDC\u1EDA\u1EE0\u1EDE\u1EE2\u1ECC\u1ED8\u01EA\u01EC\u00D8\u01FE\u0186\u019F\uA74A\uA74C]/g,'O')
-			.replace(/[\u01A3]/g,'oi')
-			.replace(/[\u01A2]/g,'OI')
-			.replace(/[\u0223]/g,'ou')
-			.replace(/[\u0222]/g,'OU')
-			.replace(/[\uA74F]/g,'oo')
-			.replace(/[\uA74E]/g,'OO')
-
-			.replace(/[\u0070\u24DF\uFF50\u1E55\u1E57\u01A5\u1D7D\uA751\uA753\uA755]/g,'p')
-			.replace(/[\u0050\u24C5\uFF30\u1E54\u1E56\u01A4\u2C63\uA750\uA752\uA754]/g,'P')
-
-			.replace(/[\u0071\u24E0\uFF51\u024B\uA757\uA759]/g,'q')
-			.replace(/[\u0051\u24C6\uFF31\uA756\uA758\u024A]/g,'Q')
-
-			.replace(/[\u0072\u24E1\uFF52\u0155\u1E59\u0159\u0211\u0213\u1E5B\u1E5D\u0157\u1E5F\u024D\u027D\uA75B\uA7A7\uA783]/g,'r')
-			.replace(/[\u0052\u24C7\uFF32\u0154\u1E58\u0158\u0210\u0212\u1E5A\u1E5C\u0156\u1E5E\u024C\u2C64\uA75A\uA7A6\uA782]/g,'R')
-
-			.replace(/[\u0073\u24E2\uFF53\u00DF\u015B\u1E65\u015D\u1E61\u0161\u1E67\u1E63\u1E69\u0219\u015F\u023F\uA7A9\uA785\u1E9B]/g,'s')
-			.replace(/[\u0053\u24C8\uFF33\u1E9E\u015A\u1E64\u015C\u1E60\u0160\u1E66\u1E62\u1E68\u0218\u015E\u2C7E\uA7A8\uA784]/g,'S')
-
-			.replace(/[\u0074\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g,'t')
-			.replace(/[\u0054\u24C9\uFF34\u1E6A\u0164\u1E6C\u021A\u0162\u1E70\u1E6E\u0166\u01AC\u01AE\u023E\uA786]/g,'T')
-			.replace(/[\uA729]/g,'tz')
-			.replace(/[\uA728]/g,'TZ')
-
-			.replace(/[\u0075\u24E4\uFF55\u00F9\u00FA\u00FB\u0169\u1E79\u016B\u1E7B\u016D\u00FC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g,'u')
-			.replace(/[\u0055\u24CA\uFF35\u00D9\u00DA\u00DB\u0168\u1E78\u016A\u1E7A\u016C\u00DC\u01DB\u01D7\u01D5\u01D9\u1EE6\u016E\u0170\u01D3\u0214\u0216\u01AF\u1EEA\u1EE8\u1EEE\u1EEC\u1EF0\u1EE4\u1E72\u0172\u1E76\u1E74\u0244]/g,'U')
-
-			.replace(/[\u0076\u24E5\uFF56\u1E7D\u1E7F\u028B\uA75F\u028C]/g,'v')
-			.replace(/[\u0056\u24CB\uFF36\u1E7C\u1E7E\u01B2\uA75E\u0245]/g,'V')
-			.replace(/[\uA761]/g,'vy')
-			.replace(/[\uA760]/g,'VY')
-
-			.replace(/[\u0077\u24E6\uFF57\u1E81\u1E83\u0175\u1E87\u1E85\u1E98\u1E89\u2C73]/g,'w')
-			.replace(/[\u0057\u24CC\uFF37\u1E80\u1E82\u0174\u1E86\u1E84\u1E88\u2C72]/g,'W')
-
-			.replace(/[\u0078\u24E7\uFF58\u1E8B\u1E8D]/g,'x')
-			.replace(/[\u0058\u24CD\uFF38\u1E8A\u1E8C]/g,'X')
-
-			.replace(/[\u0079\u24E8\uFF59\u1EF3\u00FD\u0177\u1EF9\u0233\u1E8F\u00FF\u1EF7\u1E99\u1EF5\u01B4\u024F\u1EFF]/g,'y')
-			.replace(/[\u0059\u24CE\uFF39\u1EF2\u00DD\u0176\u1EF8\u0232\u1E8E\u0178\u1EF6\u1EF4\u01B3\u024E\u1EFE]/g,'Y')
-
-			.replace(/[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g,'z')
-			.replace(/[\u005A\u24CF\uFF3A\u0179\u1E90\u017B\u017D\u1E92\u1E94\u01B5\u0224\u2C7F\u2C6B\uA762]/g,'Z')
-
+			.replace(/[\u00e0\u00e1\u1ea1\u1ea3\u00e3\u00e2\u1ea7\u1ea5\u1ead\u1ea9\u1eab\u0103\u1eb1\u1eaf\u1eb7\u1eb3\u1eb5]/g,'a')
+			.replace(/[\u00c0\u00c1\u1ea0\u1ea2\u00c3\u00c2\u1ea6\u1ea4\u1eac\u1ea8\u1eaa\u0102\u1eb0\u1eae\u1eb6\u1eb2\u1eb4]/g,'A')
+			.replace(/[\u00e8\u00e9\u1eb9\u1ebb\u1ebd\u00ea\u1ec1\u1ebf\u1ec7\u1ec3\u1ec5]/g,'e')
+			.replace(/[\u00c8\u00c9\u1eb8\u1eba\u1ebc\u00ca\u1ec0\u1ebe\u1ec6\u1ec2\u1ec4]/g,'E')
+			.replace(/[\u00f2\u00f3\u1ecd\u1ecf\u00f5\u00f4\u1ed3\u1ed1\u1ed9\u1ed5\u1ed7\u01a1\u1edd\u1edb\u1ee3\u1edf\u1ee1]/g,'o')
+			.replace(/[\u00d2\u00d3\u1ecc\u1ece\u00d5\u00d4\u1ed2\u1ed0\u1ed8\u1ed4\u1ed6\u01a0\u1edc\u1eda\u1ee2\u1ede\u1ee0]/g,'O')
+			.replace(/[\u00ec\u00ed\u1ecb\u1ec9\u0129]/g,'i')
+			.replace(/[\u00cc\u00cd\u1eca\u1ec8\u0128]/g,'I')
+			.replace(/[\u00f9\u00fa\u1ee5\u1ee7\u0169\u01b0\u1eeb\u1ee9\u1ef1\u1eed\u1eef]/g,'u')
+			.replace(/[\u00d9\u00da\u1ee4\u1ee6\u0168\u01af\u1eea\u1ee8\u1ef0\u1eec\u1eee]/g,'U')
+			.replace(/[\u1ef3\u00fd\u1ef5\u1ef7\u1ef9]/g,'y')
+			.replace(/[\u1ef2\u00dd\u1ef4\u1ef6\u1ef8]/g,'Y')
+			.replace(/[\u0111]/g,'d')
+			.replace(/[\u0110]/g,'D')
 			.replace(/[\u0301\u0300\u0323\u0309\u0303]/g, ''); // Unicode to hop ('`.?~)
 	},
 	isEmail: function(){
@@ -1961,15 +1694,7 @@ extend(String.prototype, {
 	
 },false, true);
 extend(Array.prototype, {
-	each: function(fun, step){ // eachItem( function( value , index ,this){} )
-		var me=this;
-		step = step || 1;
-		for (var i = 0; i < this.length; i += step)
-			if(fun.call(this, this[i], i, me) === false)
-				break;
-		return this;
-	},
-	eachItem: function(fun, step){ // eachItem( function( value , index ,this){} )
+	each: function(fun, step){ // each( function( value , index ,this){} )
 		var me=this;
 		step = step || 1;
 		for (var i = 0; i < this.length; i += step)
@@ -2013,16 +1738,6 @@ extend(Array.prototype, {
 				res[i] = fun.call(thisp, this[i], i, this);
 
 		return res;
-	},
-	unique: function() {
-	    var a = this.concat();
-	    for(var i=0; i<a.length; ++i) {
-	        for(var j=i+1; j<a.length; ++j) {
-	            if(a[i] === a[j])
-	                a.splice(j--, 1);
-	        }
-	    }
-	    return a;
 	}
 },false, true);
 extend(Function.prototype, {
@@ -2093,7 +1808,6 @@ extend(zjs, {
 	isWindow: isWindow,
 	isFile: isFile,
 	each: each,
-	eachItem: eachItem,
 	clone: clone,
 	foreach: each,
 	extend: extend,
@@ -2101,7 +1815,6 @@ extend(zjs, {
 	makeArray: makeArray,
 	objectKeys: objectKeys,
 	objectIndexOf: objectIndexOf,
-	getValueByKey: getValueByKey,
 	isTouchDevice: isTouchDevice,
 	isMobileDevice: isMobileDevice,
 	supportFlexbox: supportFlexbox,
@@ -2120,7 +1833,7 @@ extend(zjs, {
 	},
 	hook: function(name, fn){
 		if(isString(name))Hook.reg(name, fn);
-		if(isObject(name))eachItem(name, function(fn, name){Hook.reg(name, fn)});
+		if(isObject(name))each(name, function(fn, name){Hook.reg(name, fn)});
 	},
 	enablehook: Hook.enable,
 	getUniqueId: (function(){
@@ -2179,7 +1892,7 @@ zjs.extendMethod({
 	// check all element matches the selector
 	is: function(selector){
 		var matchall = true;
-		this.eachElement(function(el){
+		this.each(function(el){
 			if(!Sizzle.matchesSelector(el, selector))
 				return (matchall = false);
 		});
@@ -2191,13 +1904,13 @@ zjs.extendMethod({
 			elems = [ elems ];
 		if( zjs.isZjs(elems) ){
 			var _elems = [];
-			elems.eachElement(function(_el){
+			elems.each(function(_el){
 				_elems.push(_el);
 			});
 			elems = _elems;
 		};
 		var theSame = true;
-		this.eachElement(function(elem){
+		this.each(function(elem){
 			for(var i=0;i < elems.length;i++)
 				if(elem != elems[i]){
 					theSame = false;
@@ -2215,7 +1928,7 @@ zjs.extendMethod({
 	},
 	filter: function(selector){
 		var matchedEls = [];
-		this.eachElement(function(elem){
+		this.each(function(elem){
 			if(zjs(elem).is(selector))
 				matchedEls.push(elem);
 		});
@@ -2223,14 +1936,14 @@ zjs.extendMethod({
 	},
 	find: function(selector){
 		var contexts = [];
-		this.eachElement(function(el){contexts.push(el)});
+		this.each(function(el){contexts.push(el)});
 		return zjs(selector, contexts);
 	},
 	findUp: function(selector){
 		// dau tien se co gang liet ke ra het cac parent cua element
 		// ma thoa man selector
 		var parentEls = [];
-		this.eachElement(function(el){
+		this.each(function(el){
 			var parentEl = el.parentNode;
 			while(parentEl){
 				// neu nhu len toi cap document roi thi thoi luon
@@ -2272,21 +1985,21 @@ zjs.extendMethod({
 	},
 	nextSibling: function(){
 		var els = [];
-		this.eachElement(function(el){els.push(el.nextSibling)});
+		this.each(function(el){els.push(el.nextSibling)});
 		return zjs(els);
 	},
 	previousSibling: function(){
 		var els = [];
-		this.eachElement(function(el){els.push(el.previousSibling)});
+		this.each(function(el){els.push(el.previousSibling)});
 		return zjs(els);
 	},
-	getParent: function(relative){
+	parent: function(relative){
 		// relative option se get ra parent element
 		// nhung ma parent nay se la parent co position relative/absolute/fixed
 		// hoac la body luon
 		relative = relative || false;
 		var elem = false;
-		this.eachElement(function(e){elem = e;return false;});
+		this.each(function(e){elem = e;return false;});
 		elem = elem.parentNode;
 		
 		// neu nhu khong yeu cau get ra relative thi vay la xong roi
@@ -2309,15 +2022,9 @@ zjs.extendMethod({
 		};
 		return zjs(elem);
 	},
-	parent: function(relative){
-		return this.getParent(relative);
-	},
-	relativeParent: function(){
-		return this.getParent(true);
-	},
 	child: function(reverse){
 		var elems = [];
-		this.eachElement(function(e){
+		this.each(function(e){
 			var childs = e.childNodes,
 				n = childs.length;
 			for(var i=0;i<n;i++)
@@ -2330,9 +2037,6 @@ zjs.extendMethod({
 	childReverse: function(){
 		return this.child(true);
 	},
-	lastChild: function(realElement){
-		return this.item(this.count()-1, realElement);
-	},
 	next: function(){
 		//
 		return this;
@@ -2343,7 +2047,7 @@ zjs.extendMethod({
 	},
 	item: function( index, realElement ){
 		var elem = false, i = 0;
-		this.eachElement(function(e){
+		this.each(function(e){
 			if( i == index ){
 				elem = e;
 				return false;
@@ -2354,14 +2058,17 @@ zjs.extendMethod({
 			return elem;
 		return zjs( elem );
 	},
+	lastChild: function(realElement){
+		return this.item(this.count()-1, realElement);
+	},
 	clone: function(deep){
 		var _cloneEl = false;
-		this.eachElement(function(e){
+		this.each(function(e){
 			try{_cloneEl = e.cloneNode(deep);return;}catch(er){};
 		});
 		return zjs(_cloneEl);
 	},
-	setInnerHTML: function(){
+	html: function(){
 		var args = makeArray(arguments);
 		if(args.length<1)return this.getInnerHTML('');
 		if(isFunction(args[0]))args[0]=args[0].call(this);
@@ -2371,16 +2078,12 @@ zjs.extendMethod({
 		
 		// call main loop
 		var string = args[0], stringBk = args[0];
-		this.eachElement(function(el){
+		this.each(function(el){
 			if(Hook.enable('before_setInnerHTML'))string = Hook.run('before_setInnerHTML',el,stringBk);
 			try{el.innerHTML = string;}catch(er){};
 			if(Hook.enable('after_setInnerHTML'))Hook.run('after_setInnerHTML',el,stringBk);
 		});
 		return this;
-	},
-	html: function(){
-		var args = makeArray(arguments);
-		return this.setInnerHTML.apply(this, args);
 	},
 	getInnerHTML: function(defaultStr){
 		defaultStr = defaultStr || '';
@@ -2400,7 +2103,7 @@ zjs.extendMethod({
 	},
 	isChecked:function(){
 		var checked = false;
-		this.eachElement(function(el){
+		this.each(function(el){
 			checked = el.checked;
 			return false;
 		});
@@ -2408,7 +2111,7 @@ zjs.extendMethod({
 	},
 	check: function(value){
 		if(typeof value == 'undefined')value = '';
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			// gio se xem coi cai element nay thuoc radio/checkbox
 			var zEl = zjs(el);
 			if(zEl.is('[type=radio]')){
@@ -2421,7 +2124,7 @@ zjs.extendMethod({
 	},
 	selected:function(value){
 		if(typeof value == 'undefined')value = '';
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			try{el.selected = value;}catch(err){};
 		});
 	},
@@ -2430,28 +2133,19 @@ zjs.extendMethod({
 		var args = makeArray(arguments);
 		if(args.length<2)return this;
 		// bat dau get arguments
-		var types = args[0], handler = args[1], query = '', options = false;
+		var types = args[0], handler = args[1], query = '';
 		if(!types)return this;
-		if(args.length >= 3 && isFunction(args[2])){
-			query = args[1];
+		if(args.length >= 3){
 			handler = args[2];
-		};
-		if(args.length >= 3 && isFunction(args[1]) && isObject(args[2])){
-			handler = args[1];
-			options = args[2];
-		};
-		if(args.length >= 4 && isFunction(args[2]) && isObject(args[3])){
 			query = args[1];
-			handler = args[2];
-			options = args[3];
 		};
 		
 		// normal event
 		var self = this;
-		return this.eachElement(function(elem){
+		return this.each(function(elem){
 			
 			// co the truyen vao nhieu type 1 luc nen se tach ra
-			types.split(/\s*,\s*/i).eachItem(function(type){
+			types.split(/\s*,\s*/i).each(function(type){
 				
 				// special event
 				if(type=='clickout')return self.clickout(handler);
@@ -2463,7 +2157,7 @@ zjs.extendMethod({
 				var callback = !EventStore.typeExist(type, elem);
 				
 				// bind handler vao eventStore
-				EventStore.addEventHandler(type, elem, handler, query, options);
+				EventStore.addEventHandler(type, elem, handler, query);
 			
 				// neu nhu khong co callback thi thoi out luon
 				// noi chung cho nay return tuc la 
@@ -2479,7 +2173,7 @@ zjs.extendMethod({
 				// va cai nay chi bind dung 1 lan ma thoi
 				// (can't use [].include because conflit with mootools)
 				if(['swipe', 'swipeleft', 'swiperight', 'swipeup', 'swipedown', 
-					'touch', 'doubletap', 'tap', 'singletap', 'longtap'].isInclude(type)){
+					'doubletap', 'tap', 'singletap', 'longtap'].isInclude(type)){
 					zjs.initTouchEvent();
 					return;
 				};
@@ -2514,15 +2208,8 @@ zjs.extendMethod({
 						if(type=='touchmove')type='MSPointerMove';
 						if(type=='touchend')type='MSPointerUp';
 					};*/
-					// support passive event
-					// https://developers.google.com/web/updates/2017/01/scrolling-intervention
-					// if(type=='touchstart' || type=='touchmove'){
-						// elem.addEventListener(type, callback, {passive: true});
-					// }
 					// normal
-					// else{
-						elem.addEventListener(type, callback, options);
-					// }
+					elem.addEventListener(type, callback, false);
 				}
 				else if(elem.attachEvent){
 					if(type == 'scroll')type = 'mousewheel';
@@ -2567,9 +2254,6 @@ zjs.extendMethod({
 			
 			var isDefaultPrevented = false;
 			for(var i=0;i<handlers.length;i++){
-
-				// coi coi cai handler co options passive mode hay khong?
-				newEvent.setPassiveMode(isObject(handlers[i][2]) && handlers[i][2].passive);
 				
 				// bay gio khong biet la event nay se tac dong len dau
 				// nen phai get ra distract element thu
@@ -2595,7 +2279,7 @@ zjs.extendMethod({
 		};
 		
 		
-		return this.eachElement(function(elem){
+		return this.each(function(elem){
 		
 			// tao moi event
 			if(!data)var newEvent = new Event(event, elem);
@@ -2610,7 +2294,7 @@ zjs.extendMethod({
 				// nhung ma trong truong hop tap/... (su dung touch vao cai thang document)
 				// cho nen neu get ra handler cua thang elem nay thi se khong chinh xac
 				// ma nen go up de tim ra cai thang chinh xac ma can event nay
-				if(['touch', 'doubletap', 'tap', 'singletap', 'longtap'].include(type)){
+				if(['doubletap', 'tap', 'singletap', 'longtap'].include(type)){
 					
 					// bay gio se co gang go up (find parent) de ma tim thoi
 					try{
@@ -2628,36 +2312,24 @@ zjs.extendMethod({
 				
 				// neu nhu lan nay ma van khong get ra duoc
 				// thi thoi, return luon
-				// if(!handlers || !handlers.length)
-				//	return;
-				// update:
-				// boi vi nhieu khi trigger trong khi chua bind event nao
-				// cho nen van phai thuc hien callback
-				// nen cho nay se khong return lien
+				if(!handlers || !handlers.length)
+					return;
 			};
 			
 			var isDefaultPrevented = false;
 			
 			// call callback thoi (callback get ra tu event store)
-			if(handlers && handlers.length){
-				isDefaultPrevented = callEventStoreCallback(handlers, newEvent);
-			}
+			isDefaultPrevented = callEventStoreCallback(handlers, newEvent);
 			
 			// xong roi thi truyen qua cho thang callback
-			if(callback){
+			if(callback)
 				callback(newEvent, elem);
-			}
-
-			// neu nhu khong co handler thi thoi khong can lam nua
-			if(!handlers || !handlers.length){
-				return;
-			}
 			
 			// neu nhu su dung may cai tap, singletap,... linh tinh
 			// vi su dung custom event cua zjs, nen phai back len tren
 			// de check coi thang cha ben tren co bind event hay khong
 			// neu nhu co thi lam luon thang ben tren
-			if(!isDefaultPrevented && ['touch', 'doubletap', 'tap', 'singletap', 'longtap'].include(type)){
+			if(!isDefaultPrevented && ['doubletap', 'tap', 'singletap', 'longtap'].include(type)){
 				// bay gio se co gang go up (find parent) de ma tim thoi
 				try{
 					elem = elem.parentElement;
@@ -2715,16 +2387,16 @@ zjs.extendMethod({
 		if(!zEls)return this;
 		
 		var listDomEls = Array();
-		zEls.eachElement(function(el){
+		zEls.each(function(el){
 			listDomEls.push(el);
 		});
 		
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			EventStore.setEventDistract(el, listDomEls);
 		});
 	},
 	removeAllDistractEvent: function(){
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			EventStore.removeEventDistract(el);
 		});
 	},
@@ -2752,104 +2424,56 @@ zjs.extendMethod({
 	longHover: function(fn, fno, miliseconds){
 	
 		miliseconds = miliseconds || 0;
-
-		return this.eachElement(function(element){
-
-			var self = zjs(element),
-				// cho 1 xiu roi moi goi function cua nguoi dung
-				waitOnInCallback = -1,
-				// xem coi co cho phep thuc hien function call out hay khong?
-				allowCallOnOutCallback;
-
-			var isIn = false;
 			
-			// var catchEl = 
-			// console.log('element', element);
+		var waitHandler = false,
+			justDoIt = false;
+		
+		this.on('mouseover', function(event, element){
 
-			self.on('mouseover', function(event){
-				if(typeof fn != 'function')return;
-				if(isIn)return;isIn = true;
-				if(waitOnInCallback > 0)return;
-
-				// tu gio tro di se khong allow outCallback duoc thuc hien
-				allowCallOnOutCallback = false;
-
-				// cai nay la dien ra tuc thi luon
-				if(miliseconds <= 0){
-					fn.call(self, event, element);
-					allowCallOnOutCallback = true;
-					waitOnInCallback = -1;
-					return;
-				};
-
-				// support truong hop delay callback
-				waitOnInCallback = window.setTimeout(function(){
-					fn.call(self, event, element);
-					allowCallOnOutCallback = true;
-				}, miliseconds);
+			// neu nhu dang wait roi` thi` se~ ko cho wait nua~
+			if( waitHandler !== false )return;
+			
+			var self = this;
+			
+			// khi hover vao` thi` bat' dau` count
+			waitHandler = window.setTimeout( function(){
+				// thuc. hien. function cua? nguoi` dung`
+				if(typeof fn == 'function')fn.call(self, event, element);
 				
-			});
-
-			var onMouseOut = function(event, forceOut){
-				// neu nhu thang onInCallback chua duoc goi
-				// thi se khong cho thang onOutCallback goi
-				if(!allowCallOnOutCallback)return;
-				if(!isIn)return;
-				// khong the set isIn cho nay
-				// boi vi co the onMouseOut
-				// nhung ma cai element bi out ra
-				// khong phai la cai element chinh xac can track
-				// wrong >>> isIn = false;
-
-				// xem coi co the la out cai thang cha, boi vi chay vo trong thang con
-				// nen cho nay can track
-				if(!forceOut){
-					try{
-						// xem coi thang to element la di toi dau
-						// var toElement = currentMouseElement;
-						// var toElement = event.toElement;
-						// console.log('toElement', mouseTop, toElement);
-						var toElement = event.toTarget();
-					
-						// neu nhu co nguon goc tu element dang xet
-						// thi se bo qua
-						while(toElement){
-							if(toElement == element)return;
-							if(toElement == document)break;
-							toElement = toElement.parentNode;	
-						};
-					}catch(err){};
-				};
-				
-				// clear & reset timer ngay
-				if(waitOnInCallback > 0){
-					window.clearTimeout(waitOnInCallback);
-					waitOnInCallback = -1;
-				};
-
-				isIn = false;
-
-				if(isFunction(fno))
-					fno.call(self, event, element);
-			};
-
-			self.on('mouseout', function(event){
-				onMouseOut(event, false);
-			});
-			// zjs(document).on('mouseout', onMouseOut);
-
-			zjs(window).on('mouseout', function(event){
-				if(event.getOriginal().toElement == null && event.getOriginal().relatedTarget == null){
-					onMouseOut(event, true);
-				};
-
-			});
-
-
+				justDoIt = true;
+			}, miliseconds );
 		});
+		this.on('mouseout', function(event, element){
+			
+			try{
+				// xem coi thang to element la di toi dau
+				var toElement = event.toTarget();
+				//var toElement = event.target();
+			
+				// neu nhu co nguon goc tu element dang xet
+				// thi se bo qua
+				while(toElement){
+					if(toElement == element)return;
+					if(toElement == document)break;
+					toElement = toElement.parentNode;	
+				};
+			}catch(err){};
+			
+			// clear timer ngay
+			window.clearTimeout( waitHandler );
+			waitHandler = false;
+		
+			// khi mouse out ra thi` se~ xem coi
+			// da~ thuc. hien chua.
+			// neu thuc hien roi` thi` moi' lam` function cua? nguoi` dung`
+			if( justDoIt && typeof fno == 'function')
+				fno.call(this, event, element);
+		});
+		
+		return this;
 	},
 	clickout: function(handler){
-		return this.eachElement(function(element){
+		return this.each(function(element){
 			zjs(document).click(function(event){
 				try{
 					// xem coi thang to element la di toi dau
@@ -2892,7 +2516,7 @@ zjs.extendMethod({
 			};
 		};
 	
-		return this.eachElement(function(element){
+		return this.each(function(element){
 			
 			var option = extend({
 				onStart: function(event, element){},
@@ -2900,8 +2524,7 @@ zjs.extendMethod({
 				onDrop: function(event, element, mouse, style){},
 				// mac dinh se ho tro 2 direction luon
 				// con neu nhu thiet lap direction la vertical, horizontal
-				direction: '',
-				willPreventDefault: false,
+				direction: ''
 			}, opt);
 		
 			var mouseStart = {},
@@ -2922,10 +2545,10 @@ zjs.extendMethod({
 				mousemoveHandler = function(event){
 					if( ! readyToMove )return;
 					
-					mouse = {x: event.getClientX() - mouseStart.x, y: event.getClientY() - mouseStart.y};
+					mouse = {x: event.clientX() - mouseStart.x, y: event.clientY() - mouseStart.y};
 									
-					var eventTouchX = event.getClientX(),
-						eventTouchY = event.getClientY();
+					var eventTouchX = event.clientX(),
+						eventTouchY = event.clientY();
 				
 					// phuc vu cho muc dich prevent drag theo direction khong mong muon
 					if(option.direction != ''){
@@ -2972,10 +2595,6 @@ zjs.extendMethod({
 						option.onDrop( event, currentElement, mouse, style );
 				};
 			
-			var addEventOptions = {
-				passive: !option.willPreventDefault
-			};
-
 			// bind event cho no
 			zjs(element).on(mousedownevent, function(event, element){
 						
@@ -2986,17 +2605,17 @@ zjs.extendMethod({
 						event.preventDefault();
 				}catch(err){};
 				
-				mouseStart = { x: event.getClientX(), y: event.getClientY() };
+				mouseStart = { x: event.clientX(), y: event.clientY() };
 				
 				// khoi tao cac gia tri cho muc dich prevent drag theo direction khong mong muon
 				checkedReponsibilityHandler = false;
 				if(option.direction == 'horizontal'){
-					touchStartPos = event.getClientX();
-					touchOtherStartPos = event.getClientY();
+					touchStartPos = event.clientX();
+					touchOtherStartPos = event.clientY();
 				};
 				if(option.direction == 'vertical'){
-					touchStartPos = event.getClientY();
-					touchOtherStartPos = event.getClientX();
+					touchStartPos = event.clientY();
+					touchOtherStartPos = event.clientX();
 				};
 				
 				
@@ -3013,11 +2632,11 @@ zjs.extendMethod({
 				currentElement = element;
 				if( option.onStart )
 					option.onStart( event, currentElement);
-			}, addEventOptions);
+			});
 
 			// luc' nay` moi bat dau` bind event cho document
-			zjs(document).on(mousemoveevent, mousemoveHandler, addEventOptions)
-						.on(mouseupevent, mouseupHandler, addEventOptions);
+			zjs(document).on(mousemoveevent, mousemoveHandler)
+						.on(mouseupevent, mouseupHandler);
 			
 			// bind luon event click de xu ly khong cho goi onclick khi ma drag
 			zjs(element).on('click', function(event){
@@ -3045,7 +2664,7 @@ zjs.extendMethod({
 	remove: function(){
 		var args = makeArray(arguments);
 		var deep = (args.length == 0 ? true : args[0]);
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra stop fadeout/fadein truoc khi remove
@@ -3083,7 +2702,7 @@ zjs.extendMethod({
 		var defaultVal = null;
 		var attr = null;
 		var lowerAtt = att.toLowerCase();
-		this.eachElement(function(e){
+		this.each(function(e){
 			
 			// for
 			if(lowerAtt == 'for')try{attr = e.htmlFor;if(attr != null)return false;}catch(e){};
@@ -3107,12 +2726,12 @@ zjs.extendMethod({
 		// truyen vo 1 tap. gia' tri.
 		if(isObject(att)){
 			var self = this;
-			eachItem(att, function(value, key){self.setAttr(key, value)});
+			each(att, function(value, key){self.setAttr(key, value)});
 			return this;
 		};
 		var lowerAtt = att.toLowerCase();
 		// chi? truyen` vao` 1 gia tri
-		this.eachElement(function(e){
+		this.each(function(e){
 
 			var done = false;
 			
@@ -3129,24 +2748,19 @@ zjs.extendMethod({
 			// other	
 			if(!done)try{e.setAttribute(att, val);}catch(e){};
 			
-			// run hook
-			if(Hook.enable('after_setAttr'))Hook.run('after_setAttr', e, att, val);
 		});
 		return this;
 	},
 	removeAttr: function(att){
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			if(typeof el.removeAttribute == 'function')
 				el.removeAttribute(att);
-
-			// run hook
-			if(Hook.enable('after_removeAttr'))Hook.run('after_removeAttr', el, att);
 		});
 	},
 	getValue: function(defaultVal){
 		defaultVal = defaultVal || '';
 		var val = null;
-		this.eachElement(function(e){
+		this.each(function(e){
 			try{val = e.value;}catch(e){};
 			if(val == null){try{val = e.getAttribute('value');}catch(e){};};
 			return false;
@@ -3156,7 +2770,7 @@ zjs.extendMethod({
 	},
 	setValue: function(val){
 		if(typeof val == 'undefined')val='';
-		this.eachElement(function(el){
+		this.each(function(el){
 			try{el.value = val;
 			
 			// run hook
@@ -3186,32 +2800,7 @@ zjs.extendMethod({
 			return this.setStyle(args[0], args[1]);
 	},
 	getStyle: function(key, num){
-
-		if(zjs.isArray(key)){
-			var returnValue = {};
-			for(var i =0;i<key.length;i++)
-				returnValue[key[i]] = zjs(this).getStyle(key[i], num);
-			return returnValue;
-		};
-
-		if(!zjs.isString(key))
-			return false;
-
 		var val = false;
-
-		// 1 so truong hop dat biet khong phai la style
-		if(key == 'scrollLeft'){
-			var el = this.item(0, true);
-			if(el === document.body)
-				return (document.scrollingElement || document.documentElement || document.body).scrollLeft;
-			return el.scrollLeft;
-		}
-		if(key == 'scrollTop'){
-			var el = this.item(0, true);
-			if(el === document.body)
-				return (document.scrollingElement || document.documentElement || document.body).scrollTop;
-			return el.scrollTop;
-		}
 		
 		// dau tien la phai replace lai cai key cho chuan
 		// marginTop -> margin-top
@@ -3234,7 +2823,7 @@ zjs.extendMethod({
 		if(key in stylePropertyNames)
 			key = stylePropertyNames[key].cssname;
 		
-		this.eachElement(function(e){
+		this.each(function(e){
 			// may cai dac biet
 			if(e==document && key=='height'){val = Math.max(Math.max(document.body.scrollHeight, document.documentElement.scrollHeight), Math.max(document.body.offsetHeight, document.documentElement.offsetHeight), Math.max(document.body.clientHeight, document.documentElement.clientHeight));return false;};
 			if(e==document && key=='width'){val = Math.max(Math.max(document.body.scrollWidth, document.documentElement.scrollWidth), Math.max(document.body.offsetWidth, document.documentElement.offsetWidth), Math.max(document.body.clientWidth, document.documentElement.clientWidth));return false;};
@@ -3252,7 +2841,7 @@ zjs.extendMethod({
 					// voi bottom thi phai lay height cua parent element tru di top
 					// nhung ma top dc baseon parent nao ma co position la relative/absolute/fixed
 					// nen phai di get duoc parent element nao ma co position relative/absolute/fixed moi dung
-					var parent = zjs(e).relativeParent().item(0,true);
+					var parent = zjs(e).parent(true).item(0,true);
 					// neu nhu ma get ra duoc thi quoc thoi - con khong thi bo tay
 					if(parent){
 						var pheight = parent.offsetHeight;
@@ -3271,7 +2860,7 @@ zjs.extendMethod({
 				};
 				if(key == 'right'){
 					if(e == document.body){val = 0;return false;};
-					var parent = zjs(e).relativeParent().item(0,true);
+					var parent = zjs(e).parent(true).item(0,true);
 					// neu nhu ma get ra duoc thi quoc thoi - con khong thi bo tay
 					if(parent){
 						var pwidth = parent.offsetWidth;
@@ -3309,47 +2898,15 @@ zjs.extendMethod({
 		// pass an object
 		if( isObject(key) ){
 			var self = this;
-			eachItem(key, function(value, key){self.setStyle(key, value)});
+			each(key, function(value, key){self.setStyle(key, value)});
 			return this;
 		};
 		
-		if(isString(val)){
-			if(val.indexOf('+=')===0)
-				val = this.getStyle(key).toFloat() + val.replace('+=', '').toFloat();
-			else if(val.indexOf('-=')===0)
-				val = this.getStyle(key).toFloat() - val.replace('-=', '').toFloat();
-		}
-
 		// pass an single value
 		key = key.camelCase();
 		
 		// --
 		// hack
-		// 1 so truong hop dat biet khong phai la style
-		if(key == 'scrollLeft'){
-			return this.eachElement(function(el){
-				// Fix to have better compatible (Firefox)
-				if(el === document.body){
-					var scrollTop = (document.scrollingElement || document.documentElement || document.body).scrollTop;
-					window.scrollTo(val, scrollTop);
-				}
-				else{
-					el.scrollLeft = val;
-				}
-			});
-		}
-		if(key == 'scrollTop'){
-			return this.eachElement(function(el){
-				// Fix to have better compatible (Firefox)
-				if(el === document.body){
-					var scrollLeft = (document.scrollingElement || document.documentElement || document.body).scrollLeft;
-					window.scrollTo(scrollLeft, val);
-				}
-				else{
-					el.scrollTop = val;
-				}
-			});
-		}
 		// truong hop dat biet cua zjs
 		if(key == 'zjsInteger'){
 			val = parseInt(val);
@@ -3375,7 +2932,7 @@ zjs.extendMethod({
 		if(key in stylePropertyNames)key = stylePropertyNames[key].name;
 		
 		// fix css3 value
-		if(isString(val))eachItem(stylePropertyNames, function(style, prop){
+		if(isString(val))each(stylePropertyNames, function(style, prop){
 			val = val.replace(new RegExp(prop,'gi'), style.prefix + prop);
 		});
 		
@@ -3425,11 +2982,11 @@ zjs.extendMethod({
 		};
 		
 		// start set style
-		return this.eachElement(function(el){try{el.style[key] = val;}catch(e){};});
+		return this.each(function(el){try{el.style[key] = val;}catch(e){};});
 	},
 	copyStyleFrom: function(element){
 		var csstext = zjs(element).getCss();
-		this.eachElement(function(elem){
+		this.each(function(elem){
 			elem.setAttribute('style',csstext);
 		});
 		return this;
@@ -3469,7 +3026,7 @@ zjs.extendMethod({
 		var zEl = this.item(0),
 			top = zEl.top() - zEl.scrollTop(),
 			// get ra thang parent relative
-			parent = zEl.relativeParent().item(0,true),
+			parent = zEl.parent(true).item(0,true),
 			_parentTop = 0;
 		
 		// support zscrollbar
@@ -3481,7 +3038,7 @@ zjs.extendMethod({
 			zEl = zjs(parent);
 			_parentTop = zEl.getData(scrollbarIsContentElkey, false) ? 0 : zEl.top();
 			top += _parentTop - zEl.scrollTop();
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 		};
 		return top;
 	},
@@ -3489,14 +3046,14 @@ zjs.extendMethod({
 		var zEl = this.item(0),
 			bottom = zEl.bottom(),
 			// get ra thang parent relative
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 			
 		// neu nhu ma get ra duoc thi quoc thoi - con khong thi bo tay
 		// get tu tu ra bottom luon
 		while(parent && parent != document.body){
 			zEl = zjs(parent);
 			bottom += zEl.bottom();
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 		};
 		return bottom;
 	},
@@ -3504,7 +3061,7 @@ zjs.extendMethod({
 		var zEl = this.item(0),
 			left = zEl.left(),
 			// get ra thang parent relative
-			parent = zEl.relativeParent().item(0,true),
+			parent = zEl.parent(true).item(0,true),
 			_parentLeft = 0;
 		
 		// support zscrollbar
@@ -3516,7 +3073,7 @@ zjs.extendMethod({
 			zEl = zjs(parent);
 			_parentLeft = zEl.left();
 			left += _parentLeft;
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 		};
 		return left;
 	},
@@ -3524,14 +3081,14 @@ zjs.extendMethod({
 		var zEl = this.item(0),
 			right = zEl.right(),
 			// get ra thang parent relative
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 			
 		// neu nhu ma get ra duoc thi quoc thoi - con khong thi bo tay
 		// get tu tu ra right luon
 		while(parent && parent != document.body){
 			zEl = zjs(parent);
 			right += zEl.right();
-			parent = zEl.relativeParent().item(0,true);
+			parent = zEl.parent(true).item(0,true);
 		};
 		return right;
 	},
@@ -3564,7 +3121,7 @@ zjs.extendMethod({
 	scrollTop: function(val){
 		// set
 		if(isDefined(val)){
-			this.eachElement(function(elem){
+			this.each(function(elem){
 				// try{
 				elem.scrollTop = val;
 				// }catch(e){};
@@ -3573,7 +3130,7 @@ zjs.extendMethod({
 		}
 		// get
 		var elem = false;
-		this.eachElement(function(e){
+		this.each(function(e){
 			elem = e;
 			return false;
 		});
@@ -3587,7 +3144,7 @@ zjs.extendMethod({
 	scrollLeft: function(val){
 		// set
 		if(isDefined(val)){
-			this.eachElement(function(elem){
+			this.each(function(elem){
 				// try{
 				elem.scrollLeft = val;
 				// }catch(e){};
@@ -3596,7 +3153,7 @@ zjs.extendMethod({
 		}
 		// get
 		var elem = false;
-		this.eachElement(function(e){
+		this.each(function(e){
 			elem = e;
 			return false;
 		});
@@ -3609,7 +3166,7 @@ zjs.extendMethod({
 	},
 	offsetTop: function(){
 		var top = 0;
-		this.eachElement(function(e){
+		this.each(function(e){
 			top = e.offsetTop;
 			return false;
 		});
@@ -3617,14 +3174,14 @@ zjs.extendMethod({
 	},
 	offsetLeft: function(){
 		var left = 0;
-		this.eachElement(function(e){
+		this.each(function(e){
 			left = e.offsetLeft;
 			return false;
 		});
 		return left;
 	},
 	focus: function(){
-		this.eachElement(function(e){
+		this.each(function(e){
 			if(e.focus){
 				e.focus();
 				zjs(e).trigger('focus');
@@ -3650,8 +3207,8 @@ zjs.extendMethod({
 	},
 	addClass: function(name){
 		var args = makeArray(arguments), className = args.join(' ');
-		this.eachElement(function(elem){
-			eachItem(className.split(/[^A-Za-z0-9-_]+/), function(name){
+		this.each(function(elem){
+			each(className.split(/[^A-Za-z0-9-_]+/), function(name){
 				// native way
 				var donenative=false;if(supportClassList)
 					try{elem.classList.add(name);donenative=true;}catch(e){donenative=true};
@@ -3668,8 +3225,8 @@ zjs.extendMethod({
 	},
 	removeClass: function(){
 		var args = makeArray(arguments), className = args.join(' ');
-		this.eachElement(function(elem){
-			eachItem(className.split(/[^A-Za-z0-9-_]+/), function(name){
+		this.each(function(elem){
+			each(className.split(/[^A-Za-z0-9-_]+/), function(name){
 				// native way
 				var donenative=false;if(supportClassList)
 					try{elem.classList.remove(name);donenative=true;}catch(e){donenative=true};
@@ -3684,7 +3241,7 @@ zjs.extendMethod({
 		return this;
 	},
 	toggleClass: function(name){
-		this.eachElement(function(elem){
+		this.each(function(elem){
 			// native way
 			if(supportClassList){
 				try{elem.classList.toggle(name);}catch(e){};
@@ -3696,21 +3253,21 @@ zjs.extendMethod({
 		return this;
 	},
 	show: function(){
-		this.eachElement(function(e){
+		this.each(function(e){
 			e.style.display = '';
 			zjs(e).trigger('show');
 		});
 		return this;
 	},
 	hide: function(){
-		this.eachElement(function(e){
+		this.each(function(e){
 			e.style.display = 'none';
 			zjs(e).trigger('hide');
 		});
 		return this;
 	},
 	toggleShowHide:function(){
-		this.eachElement(function(e){
+		this.each(function(e){
 			if(e.style.display == 'none')
 				zjs(e).show();
 			else
@@ -3728,7 +3285,7 @@ zjs.extendMethod({
 		}, options);
 
 		// main each
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra neu nhu co 1 timer 
@@ -3777,7 +3334,7 @@ zjs.extendMethod({
 		}, options);
 
 		// main each
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra neu nhu co 1 timer 
@@ -3816,7 +3373,7 @@ zjs.extendMethod({
 		});
 	},
 	fadeStop: function(){
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra stop fadeout/fadein de stop
@@ -3856,18 +3413,13 @@ zjs.extendMethod({
 		}, options);
 
 		// main each
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra neu nhu co 1 timer 
 			// truoc roi thi se ko lam gi ca
 			if(typeof zEl.getData(zjsshowscaletimerkey) == 'object')
 				return;
-
-			var hideScaleTimer = zEl.getData(zjshidescaletimerkey);
-			if(hideScaleTimer){
-				hideScaleTimer.finish();
-			}
 			
 			// bay gio quan trong, phai di tinh toan width, height cua cai element 
 			// khi ma element show ra
@@ -3931,7 +3483,7 @@ zjs.extendMethod({
 		}, options);
 
 		// main each
-		return this.eachElement(function(el){
+		return this.each(function(el){
 			var zEl = zjs(el);
 			
 			// kiem tra neu nhu co 1 timer 
@@ -3939,11 +3491,6 @@ zjs.extendMethod({
 			if(typeof zEl.getData(zjshidescaletimerkey) == 'object')
 				return;
 			
-			var showScaleTimer = zEl.getData(zjsshowscaletimerkey);
-			if(showScaleTimer){
-				showScaleTimer.finish();
-			}
-
 			// bay gio quan trong, phai di tinh toan width, height cua cai element hien tai
 			var orgHeight = zEl.height(),
 				orgWidth = zEl.width();
@@ -4006,8 +3553,8 @@ zjs.extendMethod({
 		if(isArray(args[0])){for(var i=0;i<args[0].length;i++)this.append(args[0][i]);return this;};
 		
 		// string
-		if(isString(args[0]))return this.eachElement(function(el){
-			zjs('<div>').setInnerHTML(args[0]).child().eachElement(function(cel){
+		if(isString(args[0]))return this.each(function(el){
+			zjs(args[0]).each(function(cel){
 				el.appendChild(cel);
 				if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',cel);
 			});
@@ -4015,17 +3562,13 @@ zjs.extendMethod({
 		
 		// element
 		var thisEl = this.item(0,true);
-		if(!thisEl){
-			return this;
-		}
-		
 		if(isElement(args[0])){
 			thisEl.appendChild(args[0]);
 			if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',args[0]);
 		};
 		
 		// zjs
-		if(zjs.isZjs(args[0]))args[0].eachElement(function(el){
+		if(zjs.isZjs(args[0]))args[0].each(function(el){
 			thisEl.appendChild(el);
 			if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',el);
 		});
@@ -4044,8 +3587,8 @@ zjs.extendMethod({
 		if(isArray(args[0])){for(var i=0;i<args[0].length;i++)this.prepend(args[0][i]);return this;};
 		
 		// string
-		if(isString(args[0]))return this.eachElement(function(el){
-			zjs('<div>').setInnerHTML(args[0]).child().eachElement(function(cel){
+		if(isString(args[0]))return this.each(function(el){
+			zjs(args[0]).each(function(cel){
 				prependElement(el, cel);
 				if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',cel);
 			});
@@ -4059,7 +3602,7 @@ zjs.extendMethod({
 		};
 		
 		// zjs
-		if(zjs.isZjs(args[0]))args[0].eachElement(function(el){
+		if(zjs.isZjs(args[0]))args[0].each(function(el){
 			prependElement(thisEl, el);
 			if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',el);
 		});
@@ -4097,13 +3640,13 @@ zjs.extendMethod({
 		if( isString( element) )
 			targetElem = zjs(element).item(0, true);
 		if( zjs.isZjs( element ) )
-			element.eachElement(function(el){
+			element.each(function(el){
 				targetElem = el;
 				return false;
 			});
 		if( ! isElement( targetElem ) )
 			return this;
-		this.eachElement(function(el){
+		this.each(function(el){
 			var parent = targetElem.parentNode;
 			if(parent.lastchild == targetElem)parent.appendChild(el);
 			else parent.insertBefore(el, targetElem.nextSibling);
@@ -4118,13 +3661,13 @@ zjs.extendMethod({
 		if( isString( element) )
 			targetElem = zjs(element).item(0, true);
 		if( zjs.isZjs( element ) )
-			element.eachElement(function(el){
+			element.each(function(el){
 				targetElem = el;
 				return false;
 			});
 		if( ! isElement( targetElem ) )
 			return this;
-		this.eachElement(function(el){
+		this.each(function(el){
 			targetElem.parentNode.insertBefore(el,targetElem);
 			if(Hook.enable('after_insertDOM'))Hook.run('after_insertDOM',el);
 		});
@@ -4134,7 +3677,7 @@ zjs.extendMethod({
 	
 		if( zjs.isZjs( elem) ){
 			var _elem = false;
-			elem.eachElement(function(e){
+			elem.each(function(e){
 				_elem = e;
 				return false;
 			});
@@ -4145,7 +3688,7 @@ zjs.extendMethod({
 			return this;
 			
 		var thisElem = false;
-		this.eachElement(function(e){
+		this.each(function(e){
 			thisElem = e;
 			return false;
 		});
@@ -4168,12 +3711,12 @@ zjs.extendMethod({
 			var data = this.getFormData();
 			// bay gio moi di truy xuat ra tung thang haha
 			var tx = function(name){
-				if(!(name in data) || typeof data[name] == 'undefined'){
+				if(!name in data || typeof data[name] == 'undefined'){
 					// check to tryto fix the name
 					if(name.match(/^(.+)\[\]$/))
 						name = RegExp.$1;
 				};
-				if(!(name in data) || typeof data[name] == 'undefined'){
+				if(!name in data || typeof data[name] == 'undefined'){
 					// nan roi, return luon
 					return;
 				};
@@ -4201,7 +3744,7 @@ zjs.extendMethod({
 			};
 			
 		// loop all input and get data
-		formEl.find('[name]').eachElement(function(element){
+		formEl.find('[name]').each(function(element){
 			inputEl = zjs(element);
 			if(!inputEl.is('input') && !inputEl.is('textarea') && !inputEl.is('select') && !inputEl.is('button'))return;
 			name = inputEl.getAttr('name','');
@@ -4209,14 +3752,14 @@ zjs.extendMethod({
 			// test de fix name lien
 			if(name.match(/^(.+)\[\]$/)){
 				name = RegExp.$1;
-				if(!(name in data) || typeof data[name] == 'undefined')data[name] = new Array();
+				if(!name in data || typeof data[name] == 'undefined')data[name] = new Array();
 				else if(!isArray(data[name]))data[name]=[data[name]];
 			};
 			if(name=='')return;
 			try{
 				if(inputEl.is('[type=checkbox]') || inputEl.is('[type=radio]')){
 					// get cai ten cai da
-					if(!(name in data) || typeof data[name] == 'undefined')
+					if(!name in data || typeof data[name] == 'undefined')
 						assignData(name, "");
 					
 					// neu la checkbox hoac radio thi phai checked moi get value
@@ -4279,14 +3822,12 @@ zjs.extendMethod({
 			var el = this.item(0,true);
 			if('submit' in el){
 				// trigger submit event
+				//this.trigger('submit');
 				this.trigger('submit', {}, function(customEvent){
 					if(!customEvent.isDefaultPrevented){
+						//event.preventDefault();
 						// submit that su
 						// nhung truoc khi submit thi phai xem coi co bi prevent default khong cai da
-						// boi vi khi goi ham el.submit() thi se khong bi trigger event submit
-						// event submit chi duoc trigger khi user thao tac tren UI (click button submit)
-						// con khi su dung method el.submit() thi se khong trigger
-						// cho nen phai trigger truoc
 						el.submit();
 					};
 				});
@@ -4319,7 +3860,7 @@ zjs.extendMethod({
 			name = name || '';if(name=='')return this;
 			// moi element se co 1 data rieng biet
 			// khong con chung data nhu old version
-			this.eachElement(function(el){
+			this.each(function(el){
 				var dataid = -1;
 				if(typeof el.zjsdataid != 'undefined')dataid = parseInt(el.zjsdataid);
 				if(dataid<=-1){
@@ -4340,7 +3881,6 @@ zjs.extendMethod({
 			if(name=='')return defaultData;
 			// chi can lay 1 thang element dau tien lam dai dien thoi
 			var el = this.item(0,true);
-			if(!el)return defaultData;
 			var dataid = -1;
 			if(typeof el.zjsdataid != 'undefined')dataid = parseInt(el.zjsdataid);
 			if(dataid<=-1 || dataid>=dataarray.length)return defaultData;
@@ -4357,7 +3897,7 @@ zjs.extendMethod({
 		},
 		delData: function(name){
 			name = name || '';if(name=='')return false;
-			this.eachElement(function(el){
+			this.each(function(el){
 				var dataid = -1;
 				if(typeof el.zjsdataid != 'undefined')dataid = parseInt(el.zjsdataid);
 				if(dataid<=-1 || dataid>=dataarray.length)return;
@@ -4368,7 +3908,7 @@ zjs.extendMethod({
 			return this;
 		},
 		unsetData: function(){
-			this.eachElement(function(el){
+			this.each(function(el){
 				if(typeof el.zjsdataid == 'undefined')return;
 				var dataid = parseInt(el.zjsdataid);
 				// don gian la ko link data id vo nua
@@ -4399,21 +3939,13 @@ zjs.extendMethod({
 		loadCss: true,
 		cssFolder: '',
 		prefix: 'z.module.',
-		autoLoadJs: true,
 		timeout: 10000,
 		debug: false
 	}});
 	
 	// thu auto get root
-	zjs('script[src]').eachElement(function(el){
-		var zScriptEl = zjs(el),
-			src = zScriptEl.attr('src');
-		if(zScriptEl.is('[data-auto-load-js=false]')){
-			zjs.requireOption.autoLoadJs = false;
-		};
-		if(zScriptEl.is('[data-load-css=false]')){
-			zjs.requireOption.loadCss = false;
-		};
+	zjs('script[src]').each(function(el){
+		var src = zjs(el).attr('src');
 		if(src.test(/z\.js/)){
 			zjs.requireOption.root = src.replace(/z\.js.*$/gi, '');
 			zjs.requireOption.debug = (zjs(el).getAttr('data-debug', '') == 'true');
@@ -4442,22 +3974,20 @@ zjs.extendMethod({
 			headEl.appendChild(linkEl);
 		},
 		loadList = function(){
-			if(!zjs.requireOption.autoLoadJs)return;
 			if(listLoaded)return;
 			if(listLoading)return;
 			listLoading = true;
 			loadJs(zjs.requireOption.root + zjs.requireOption.listFile, 'zjsmodulerequirelist');
 		},
 		loadRequire = function(){
-			if(!zjs.requireOption.autoLoadJs)return;
 			if(!listLoaded)return loadList();
-			eachItem(requiresList, function(requiresListValue, name){
+			each(requiresList, function(requiresListValue, name){
 				if(!isArray(requiresList[name]) || requiresList[name].length<=0)return;
 				var allLoaded = true;
-				eachItem(name.split(/[^A-Za-z0-9-_\.\*]+/), function(na){
+				each(name.split(/[^A-Za-z0-9-_\.\*]+/), function(na){
 								
 					//for(var fullname in allModuleFiles){
-					eachItem(allModuleFiles, function(v, fullname){
+					each(allModuleFiles, function(v, fullname){
 						
 						// neu nhu fullname la file min thi khong cho autoload (chuc nang load .*)
 						fullname = fullname.replace('.min.js', '.js');
@@ -4522,7 +4052,7 @@ zjs.extendMethod({
 			// cho nen neu nhu kiem tra o day ma empty, chung to la da xong het
 			// luc nay ta moi that su call nhung handler onready o day
 			var count = 0;
-			eachItem(requiresList, function(){count++;});
+			each(requiresList, function(){count++;});
 			if(count>0)return;
 			
 			domReadyFns.isModuleRequired = true;
@@ -4547,7 +4077,6 @@ zjs.extendMethod({
 			loadRequire();
 		},
 		required: function(name){
-			if(!zjs.requireOption.autoLoadJs)return;
 			var fullname = name.replace(/\.js$/gi, '')+'.js';
 			// kiem tra truoc chu khong thi se bi lap vo han
 			if(allModuleFiles[fullname] == 'loaded')return;
@@ -4561,12 +4090,6 @@ zjs.extendMethod({
 	
 	// ham lam nhiem vu quan trong nhat
 	var require = function(name, callback){
-		// khong can quan tam require cai gi, chi can chay callback ngay va luon
-		if(!zjs.requireOption.autoLoadJs && callback){
-			callback.call(this, zjs);
-			return;
-		};
-
 		if(typeof requiresList[name] == 'undefined')requiresList[name] = [];
 		domReadyFns.isModuleRequired = false;
 		requiresList[name].push(callback);
@@ -4607,7 +4130,6 @@ zjs.extendMethod({
 	
 	// 1 so option cho mobile event
 	zjs.extendCore({mobileEventOption:{
-		touchDelay: 35,
 		longTapDelay: 750,
 		doubleTapDelay: 250,
 		twoNormalTapDelay: 800,
@@ -4617,7 +4139,7 @@ zjs.extendMethod({
 	
 	// cac bien se su dung
 	var justInited = false,
-	touchTimeout, tapTimeout, doubleTapTimeout, swipeTimeout, longTapTimeout,
+	touchTimeout, tapTimeout, swipeTimeout, longTapTimeout,
 	
 	// luu lai may cai thong tin cua 1 lan touch
 	touch = {
@@ -4626,7 +4148,6 @@ zjs.extendMethod({
 		y1: 0,
 		isDoubleTap: false,
 		isTap: false,
-		isTouch: false,
 		last: 0
 	},
 	
@@ -4653,10 +4174,9 @@ zjs.extendMethod({
 	cancelAll = function(){
 		if(touchTimeout)clearTimeout(touchTimeout);
 		if(tapTimeout)clearTimeout(tapTimeout);
-		if(doubleTapTimeout)clearTimeout(doubleTapTimeout);
 		if(swipeTimeout)clearTimeout(swipeTimeout);
 		if(longTapTimeout)clearTimeout(longTapTimeout);
-		touchTimeout = tapTimeout = doubleTapTimeout = swipeTimeout = longTapTimeout = null;
+		touchTimeout = tapTimeout = swipeTimeout = longTapTimeout = null;
 		touch = {};
 	},
 	
@@ -4693,17 +4213,16 @@ zjs.extendMethod({
 		});
 		
 		// on touch start
-		// zjs(document).on('touchstart, MSPointerDown, pointerdown', function(e){
-		zjs(document).on('touchstart', function(e){
+		zjs(document).on('touchstart, MSPointerDown, pointerdown', function(e){
 			
 			// neu nhu ma day la pointer event (khong phai touch event)
 			// va no khong phai la primary touch thi thoi cho out
-			if((_isPointerType = isPointerEventType(e.getOriginal(), 'down')) && !isPrimaryTouch(e.getOriginal()))
+			if((_isPointerType = isPointerEventType(e.original, 'down')) && !isPrimaryTouch(e.original))
 				return;
 			
-			firstTouch = _isPointerType ? e.getOriginal() : e.getOriginal().touches[0];
+			firstTouch = _isPointerType ? e.original : e.original.touches[0];
 			
-			if(e.getOriginal().touches && e.getOriginal().touches.length === 1 && touch.x2){
+			if(e.original.touches && e.original.touches.length === 1 && touch.x2){
 				// Clear out touch movement data if we have it sticking around
 				// This can occur if touchcancel doesn't fire due to preventDefault, etc.
 				touch.x2 = undefined;
@@ -4718,8 +4237,8 @@ zjs.extendMethod({
 			touch.zEl = zjs('tagName' in firstTouch.target ? firstTouch.target : firstTouch.target.parentNode);
 			
 			// neu co timeout thi clear
-			if(doubleTapTimeout)clearTimeout(doubleTapTimeout);
-			if(touchTimeout)clearTimeout(touchTimeout);
+			if(touchTimeout)
+				clearTimeout(touchTimeout);
 				
 			touch.x1 = firstTouch.pageX;
 			touch.y1 = firstTouch.pageY;
@@ -4733,12 +4252,6 @@ zjs.extendMethod({
 			// update lai cai last time
 			if(touch.isTap)
 				touch.last = now;
-
-			// set cai timeout de ma fire cai "touch"
-			touchTimeout = setTimeout(function(){
-				touchTimeout = null;
-				if(touch.zEl)touch.zEl.trigger('touch');
-			}, zjs.mobileEventOption.touchDelay);
 			
 			// set cai timeout de ma fire cai long tap
 			longTapTimeout = setTimeout(function(){
@@ -4750,7 +4263,7 @@ zjs.extendMethod({
 			}, zjs.mobileEventOption.longTapDelay);
 			
 			// adds the current touch contact for IE gesture recognition
-			if(gesture && _isPointerType)gesture.addPointer(e.getOriginal().pointerId);
+			if(gesture && _isPointerType)gesture.addPointer(e.original.pointerId);
 		});
       	
       	// on touch move
@@ -4758,13 +4271,13 @@ zjs.extendMethod({
 			
 			// neu nhu ma day la pointer event (khong phai touch event)
 			// va no khong phai la primary touch thi thoi cho out
-			if((_isPointerType = isPointerEventType(e.getOriginal(), 'move')) && !isPrimaryTouch(e.getOriginal()))
+			if((_isPointerType = isPointerEventType(e.original, 'move')) && !isPrimaryTouch(e.original))
 				return;
 			
 			// neu ma move roi thi khong co con longtap gi nua het ah
 			cancelLongTap();
 			
-			firstTouch = _isPointerType ? e.getOriginal() : e.getOriginal().touches[0];
+			firstTouch = _isPointerType ? e.original : e.original.touches[0];
 			touch.x2 = firstTouch.pageX;
 			touch.y2 = firstTouch.pageY;
 			
@@ -4775,7 +4288,6 @@ zjs.extendMethod({
 			// cho neu neu kiem tra thay duoc thi fire swipe event luon cho roi 
 			// fire event: swipe
 			if((touch.x2 && deltaX > zjs.mobileEventOption.swipePoint) || (touch.y2 && deltaY > zjs.mobileEventOption.swipePoint)){
-				if(touchTimeout)clearTimeout(touchTimeout);
 				if(swipeTimeout)clearTimeout(swipeTimeout);
 				swipeTimeout = setTimeout(function(){
 					if(touch.zEl){
@@ -4788,12 +4300,11 @@ zjs.extendMethod({
 		});
 		
 		// on touch end
-		// zjs(document).on('touchend, MSPointerUp, pointerup', function(e){
-		zjs(document).on('touchend', function(e){
+		zjs(document).on('touchend, MSPointerUp, pointerup', function(e){
 			
 			// neu nhu ma day la pointer event (khong phai touch event)
 			// va no khong phai la primary touch thi thoi cho out
-    	    if((_isPointerType = isPointerEventType(e.getOriginal(), 'up')) && !isPrimaryTouch(e.getOriginal()))
+    	    if((_isPointerType = isPointerEventType(e.original, 'up')) && !isPrimaryTouch(e.original))
     	    	return;
         	
         	// cho den en luon roi thi thoi, cancel cai thang longtap luon
@@ -4829,7 +4340,7 @@ zjs.extendMethod({
 						//console.log('touch', touch);
 						
 						if(!touch.isDoubleTap && touch.zEl){
-							touch.zEl.trigger('tap', e.getOriginal());
+							touch.zEl.trigger('tap', e.original);
 						}
 
 						// trigger double tap immediately
@@ -4846,8 +4357,8 @@ zjs.extendMethod({
 						// double tap hay khong, cho nen se delay lai 1 xiu xem thu
 						// default la cho 250ms
 						else{
-							doubleTapTimeout = setTimeout(function(){
-								doubleTapTimeout = null;
+							touchTimeout = setTimeout(function(){
+								touchTimeout = null;
 								if(touch.zEl)touch.zEl.trigger('singletap');
 								// reset cai touch, nhung ma phai giu lai cai isTap
 								//touch = {};
@@ -4895,6 +4406,6 @@ if(typeof window.zjs == 'undefined')window.zjs = zjs;
 if(typeof window.z == 'undefined')window.z = zjs;
 
 // make sure console.log donot show an error
-if(!('console' in window))window.console = {log:zjs.log};
+if(!'console' in window)window.console = {log:zjs.log};
 
 })(window);

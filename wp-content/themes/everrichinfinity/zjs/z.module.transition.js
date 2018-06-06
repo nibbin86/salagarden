@@ -19,39 +19,25 @@
 	// ham tinh toan lai styles
 	// ham nay cung se phu thuoc 
 	// vao la css3 hay javascript
-	var calculateStyleCss = function(fromstyles, tostyles, percent, runtimeFromstyles){ /* percent:0% -> 100% */
+	var calculateStyleCss = function(fromstyles, tostyles, percent){ /* percent:0% -> 100% */
 			if(percent==100)return tostyles;
 			return fromstyles;
 		},
-		calculateStyleScript = function(fromstyles, tostyles, percent, runtimeFromstyles){ /* percent:0% -> 100% */
+		calculateStyleScript = function(fromstyles, tostyles, percent){ /* percent:0% -> 100% */
 			var stepstyles={};
-			for(var x in tostyles){
-				var fromstyleValue = null,
-					tostyleValue = null;
-				if(x in fromstyles)
-					fromstyleValue = fromstyles[x];
-				else if(x in runtimeFromstyles)
-					fromstyleValue = runtimeFromstyles[x];
-				if(fromstyleValue !== null){
-					tostyleValue = tostyles[x];
-					if(zjs.isString(tostyleValue)){
-						if(tostyleValue.indexOf('+=')===0)
-							tostyleValue = fromstyleValue + tostyleValue.replace('+=', '').toFloat();
-						else if(tostyleValue.indexOf('-=')===0)
-							tostyleValue = fromstyleValue - tostyleValue.replace('-=', '').toFloat();
-					}
-
-					
-					// >>>>>>>>>>>>>>>>>
-					// if(x == 'scrollLeft'){
-						// console.log('fromstyleValue', fromstyleValue);
-					// }
-					var onepercent;
-					if(percent === 0)stepstyles[x] = fromstyleValue;
-					else if(percent === 100)stepstyles[x] = tostyleValue;
-					else stepstyles[x] = fromstyleValue+(tostyleValue-fromstyleValue)/100*percent;
-				}
-			}
+			for(x in fromstyles){if(x in tostyles){
+				//tinh ra 1%
+				var onepercent = (tostyles[x]-fromstyles[x])/100;
+				stepstyles[x] = fromstyles[x]+onepercent*percent;
+		
+				//if(x.indexOf('olor')<0)
+				//	stepstyles[x] = z.calculate(startstyles[x],endstyles[x],true,'/'+totalFrames,true);
+				//if(x.indexOf('olor')>=0)
+				//	stepstyles[x] = [z.calculate(startstyles[x][0],endstyles[x][0],true,'/'+totalFrames,true),
+				//					z.calculate(startstyles[x][1],endstyles[x][1],true,'/'+totalFrames,true),
+				//					z.calculate(startstyles[x][2],endstyles[x][2],true,'/'+totalFrames,true)];
+		
+			}};
 			return stepstyles;
 		};
 	
@@ -156,12 +142,12 @@
 		self._settranstyle('none');
 		
 		// thuc hien onStart callback
-		self.option.onStart.apply(self);
+		self.option.onStart();
 		
 		// thuc hien set style
 		// khac voi zjs.timer, csstimer chi thuc hien setstyle 2 lan
 		// con lai di chuyen thi se do css transition thuc hien
-		// lan 1 la from
+		// lan 1 la to
 		self.option.onProcess(self.option.from, self.option.from, self.option.to);
 		// enable transition
 		// lan 2 la to, nhung phai delay 1 xiu
@@ -319,28 +305,7 @@
 				// hien tai thi keyframes chi support tren js ma thoi
 				if(option.keyframes && zjs.isObject(option.keyframes))
 					option.usecss = false;
-
-				// co the se pass may cai thuoc tinh style vao trong option luon
-				// ma khong phai la qua "to" object
-				// nen se check o day
-				var allkey = zjs.objectKeys(defaultoption);
-				for(var x in option){
-					if(!allkey.include(x))
-						option.to[x] = option[x];
-				}
 				
-				// neu nhu co scrollLeft hoac scrollTop gi do
-				// thi se khong cho choi css luon
-				allkey = zjs.objectKeys(option.from).concat(zjs.objectKeys(option.to)).unique();
-				if(allkey.include('scrollLeft') || allkey.include('scrollTop')){
-					option.usecss = false;
-					// handler to stop scroll-to-top when user 
-					// manualy scroll while scroll-to-top transiton is running
-					((element === document.body || element === window) ? zjs(window) : zElement).on('mousewheel', function(){
-						zElement.stopTransition();
-					});
-				}
-
 				// save option
 				zElement.setData(optionkey, option);
 				
@@ -439,8 +404,6 @@
 					return zjs.timer(transOpt);
 				};
 				
-				var runtimeFromProps;
-
 				// neu chua co thi se tao ra timer
 				transitionTimer = getTransitionTimer({
 					element: zElement.item(0,true),
@@ -450,55 +413,24 @@
 						if(direction == 0 && typeof option.onStart == 'function')option.onStart();
 						// overwrite lai cai option 
 						option = zElement.getData(optionkey);
-						// backup 1 cai fromProps tai thoi diem bat dau chay hieu ung
-						// nhung chi can lam voi hieu ung su dung js thoi
-						// voi css thi khoi, de do mat cong
-						if(!(transitionTimer instanceof CSSTimer))
-							runtimeFromProps = zElement.getStyle(zjs.objectKeys(option.from).concat(zjs.objectKeys(option.to)).unique());
 					},
 					onProcess: function(current, from, to){
 						// xem coi co phai la su dung keyframe hay khong
 						if(zElement.isExistsKeyframes(transitionKeyframename))
 							zElement.setStyleByKeyframes(transitionKeyframename, current);
-						else{
-							var stepstyle = zElement.data(calstylefnkey).call(this, option.from, option.to, current, runtimeFromProps);
-							zElement.setStyle(stepstyle).setData('ztransp',current);
-						}
+						else
+							zElement.setStyle(zElement.data(calstylefnkey).call(this, option.from, option.to, current)).setData('ztransp',current);
 					},
-					// onStop: function(from, to){
-					// 	if(zElement.getAttr('id')=='demo11')
-					// 		console.log('onStop');
-					// 	if(option.fillmode=='backwards')zElement.setStyle(option.to);
-					// 	if(option.fillmode=='forwards')zElement.setStyle(option.from);
-					// 	zElement.setData('ztransp',-1);
-					// },
 					onStop: function(from, to){
-						zElement.setData('ztransp',-1);
-						return;
-						// khong nen lam gi het, qua mat cong
-						if(option.fillmode=='backwards' || option.fillmode=='forwards'){
-							if(!(transitionTimer instanceof CSSTimer))
-								runtimeFromProps = zElement.getStyle(
-									zjs.objectKeys(option.fillmode=='backwards'?option.to:option.from)
-								);
-							var callStyleFn = zElement.getData(calstylefnkey);
-							if(callStyleFn){
-								zElement.setStyle(callStyleFn.call(
-									this, 
-									option.fillmode=='forwards'?{}:option.from, 
-									option.fillmode=='backwards'?{}:option.to, 
-									option.fillmode=='backwards'?100:0, 
-									runtimeFromProps
-								));
-							}
-						}
+						if(option.fillmode=='backwards')zElement.setStyle(option.to);
+						if(option.fillmode=='forwards')zElement.setStyle(option.from);
 						zElement.setData('ztransp',-1);
 					},
 					onFinish: function(from, to){
 						if(zElement.isExistsKeyframes(transitionKeyframename))
 							zElement.setStyleByKeyframes(transitionKeyframename, to);
 						else
-							zElement.setStyle(zElement.data(calstylefnkey).call(this, option.from, option.to, to, runtimeFromProps)).setData('ztransp',-1);
+							zElement.setStyle(zElement.data(calstylefnkey).call(this, option.from, option.to, to)).setData('ztransp',-1);
 						// on finish
 						finishHandler();
 					}
@@ -509,8 +441,6 @@
 				
 				// run timer thoi nao ^^
 				// thuc hien first style truoc khi delay
-				// >>>>>>>>>>>>>
-				// console.log('setStyle', option.from);
 				zElement.setStyle(option.from);
 				if(option.autoplay)(function(){transitionTimer.run()}).delay(option.delay);
 				
@@ -545,32 +475,9 @@
 			});
 		},
 		playTransition: function(option){
-
-			if(arguments.length == 3){
-				var opt = arguments[2];
-				if(zjs.isNumeric(opt))
-					opt = {time: opt};
-				opt.to = {};
-				opt.to[arguments[0]] = arguments[1];
-				return this.playTransition(opt);
-			}
-			if(arguments.length == 2){
-				var to = arguments[0];
-				if(zjs.isString(to)){
-					to = {};
-					to[arguments[0]] = arguments[1];
-					return this.playTransition({to:to});
-				}
-				var opt = arguments[1];
-				if(zjs.isNumeric(opt))
-					opt = {time: opt};
-				opt.to = arguments[0];
-				return this.playTransition(opt);
-			}
-
 			return this.each(function(element){
 				var zElement = zjs(element);
-
+				
 				// xem xet net ma co option thi phai set lai transition
 				if(typeof option != 'undefined'){
 					zElement.unsetTransition();
@@ -711,8 +618,7 @@
 		},
 		setStyleByKeyframes: function(name, duration){
 			return this.each(function(element){
-				var zElement = zjs(element),
-					fabricObj = zElement.getData('fabricObj', false);
+				var zElement = zjs(element);
 				
 				if(zElement.getAttr('data-allow-keyframes','true')=='false')return;
 				
@@ -738,25 +644,11 @@
 						if((propertyName == 'backgroundImage' || propertyName == 'content') && zjs.isString(value))
 							value = value.format({zjsInteger:zElement.getStyle('zjs-integer'), zjsString:zElement.getStyle('zjs-string')});
 						
-						// support render to fabric
-						if(fabricObj && window.applyStyleToFabric)
-							window.applyStyleToFabric(fabricObj, propertyName, value);
-						else 
-							zElement.setStyle(propertyName, value);
+						zElement.setStyle(propertyName, value);
 					}
 				};
 				
 			});
-		},
-		getStyleTransition: function(propertyName){
-			var zElement = this.item(0),
-				fabricObj = zElement.getData('fabricObj', false);
-
-			// support fabric
-			if(fabricObj && window.getStyleFromFabric)
-				return window.getStyleFromFabric(fabricObj, propertyName);
-
-			return this.getStyle(propertyName);
 		},
 		isExistsKeyframes: function(name){
 			return (this.item(0).getData(keyframeprefixkey+name, false) != false);
